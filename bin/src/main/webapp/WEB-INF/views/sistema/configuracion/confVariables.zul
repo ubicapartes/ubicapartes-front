@@ -1,0 +1,81 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winConfVariables" border="none" width="80%"
+		apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.ConfVariablesViewModel')"
+		onClose="@command('onCloseWindow')">
+		<groupbox closable="false">
+			<groupbox closable="false">
+				<caption sclass="custom_caption"
+					label="Variables Globales" />
+				<div>
+					<grid>
+						<columns>
+							<column width="35%" align="right" />
+							<column width="65%" />
+							<column width="35%" align="right" />
+							<column width="65%" />
+						</columns>
+
+						<rows>
+							<row>
+								<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Valor Libra: " />
+								<vbox>
+								<textbox id="txtValorLibra" placeholder="EJ: 28$" sclass="form-control"
+								constraint="@bind(vm.notEmptyValidator)" value="@bind(vm.vLibra)"></textbox>
+								</vbox>
+
+
+								<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Porcentaje Ganancia: " />
+								<vbox>
+								<textbox id="txtPorcentajeGanancia" placeholder="EJ: 30%" sclass="form-control" 
+								constraint="@bind(vm.notEmptyValidator)" value="@bind(vm.pGanancia)"></textbox>
+								</vbox>
+
+							</row>
+							<row>
+								<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Porcentaje IVA: " />
+								<vbox>
+								<textbox id="txtPorcentajeIVA" placeholder="EJ: 12%" sclass="form-control"
+								constraint="@bind(vm.notEmptyValidator)" value="@bind(vm.pIva)"></textbox>
+								</vbox>
+
+								
+								<!--<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Moneda: "/> 
+								<vbox>
+								<bandbox id="bandbMoneda" mold="rounded" autodrop="true" width="100%"
+										constraint="@bind(vm.getNotEmptyValidator())" readonly="true"
+										value="@bind(vm.monedaSeleccionada.nombre)">
+										
+										<bandpopup>
+											<listbox height="250px" width="200px" model="@load(vm.listaMonedas)" 
+												selectedItem="@bind(vm.monedaSeleccionada)" onSelect="@command('seleccionMoneda')">
+												<listhead>
+													<listheader label="Nombre" />
+												</listhead>
+												<template name="model">
+													<listitem >
+														<listcell label="@bind(each.withSimbolo(each.nombre))"/>
+													</listitem>
+												</template>
+											</listbox>
+											<paging id="pagMonedas" onPaging="@command('paginarListaMonedas')" autohide="true"/>
+										</bandpopup>
+									</bandbox>
+								</vbox>-->
+							</row>
+						</rows>
+					</grid>
+				</div>
+			</groupbox>
+		</groupbox>
+		<div sclass="panel-footer" align="right">
+
+			<button id="btnLimpiar" label="Limpiar" type="submit"
+				onClick="@command('limpiar')" sclass="btn-sm btn-info" />
+
+			<button label="Modificar" type="submit"
+				onClick="@command('enviar', btnEnviar=self, btnLimpiar=btnLimpiar)"
+				sclass="btn-sm btn-primary" />
+		</div>
+	</window>
+</zk>

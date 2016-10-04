@@ -1,0 +1,6 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<hbox>
+		<label value="${requestScope.field}" sclass="form-label" style="margin-left: 10px"/>
+		<label value="*" sclass="requerido"/>
+	</hbox>
+</zk>

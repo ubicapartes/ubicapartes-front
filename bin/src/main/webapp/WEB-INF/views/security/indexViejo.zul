@@ -1,0 +1,43 @@
+<?page title="Inicio de Sesion" contentType="text/html;charset=UTF-8" session="false" ?>
+<?link href="/resources/css/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css"?>
+<?link href="/resources/css/fonts.css" rel="stylesheet" type="text/css"?>
+<?link href="/resources/css/less/index.css.dsp" rel="stylesheet" type="text/css"?>
+<?link href="/resources/css/font-awesome.min.css" rel="stylesheet" type="text/css"?>
+<?link href="/resources/css/aplication.css" rel="stylesheet" type="text/css"?>
+<?link href="/resources/css/grid.css" rel="stylesheet" type="text/css"?>
+
+<!-- MATERIAL DESIGN -->
+<!-- <?link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"?> -->
+<?link href="/resources/css/material-design/css/base.min.css" rel="stylesheet"?>
+<?link href="/resources/css/checkbox_material.css" rel="stylesheet"?>
+
+<zk xmlns:w="client" xmlns:n="native">
+	<borderlayout id="principal" hflex="1" vflex="1"
+		sclass="avoid-fout page-blue">
+
+		<north  height="68px">
+			<div>
+				<include src="/WEB-INF/views/portal/head.zul" />
+			</div>
+		</north>
+
+		<center autoscroll="true" style="border-style: solid;">
+			<vlayout width="100%" sclass="z-fondo-principal">
+				<space/>
+				<div align="center" height="100%">
+					<div width="30%"><!-- class="card-wrap" -->
+						<div class="card">
+							<div class="card-main">
+								<include src="/WEB-INF/views/template/title.zul" titulo="Inicio de Sesión" />
+								<div class="card-inner"
+									align="center">
+									<include src="login.zul" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</vlayout>
+		</center>
+	</borderlayout>
+</zk>

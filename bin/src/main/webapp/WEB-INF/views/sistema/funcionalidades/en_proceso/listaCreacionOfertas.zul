@@ -1,0 +1,37 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window border="none" width="0px"
+		apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.ListaCreacionOfertasViewModel')">
+		
+		<n:div aria-hidden="false" class="modal fade in" role="dialog" tabindex="-1" style="display: block;">
+			<div class="modal-dialog modal-full"  height="auto" width="100%"><!-- modal-xs -->
+				<div sclass="modal-content">
+					<include src="/WEB-INF/views/template/modal/titleModal.zul" titulo="Mejores Ofertas a enviar al Cliente" />
+					<n:div class="modal-inner">
+						<tabbox sclass="tab-nav tab-nav-blue" maximalHeight="true" model="@bind(vm.ofertas)">
+							<template name="model:tab">
+								<tab label="@bind(each.titleNroOferta)" sclass="waves-color-blue waves-effect"/>
+							</template>
+							<template name="model:tabpanel">
+								<tabpanel>
+            						<include src="/WEB-INF/views/template/decorator_oferta/decorator_oferta.zul" oferta="${ each }" listener="${ vm }" />
+        						</tabpanel>
+							</template>
+						</tabbox>
+					</n:div>
+					<n:div class="modal-footer">
+						<div align="right" hflex="1">
+							<button label="Cancelar" sclass="btn-sm btn-danger"
+								onClick="@command('cancelar')"/>
+							<button label="Guardar y Enviar Luego" type="submit" sclass="btn-sm btn-primary"
+								onClick="@command('guardarEnviarLuego')" />
+							<button label="Enviar al Cliente" type="submit" sclass="btn-sm btn-primary"
+								onClick="@command('enviarCliente')" />
+						</div>
+					</n:div>
+				</div>
+			</div>
+		</n:div>
+		
+	</window>
+</zk>

@@ -1,0 +1,11 @@
+.lhDetalleOfertas {
+	width: 16%;
+}
+
+.btnProcesarCompra, .btnProcesarCompra:hover, .btnProcesarCompra:active, .btnProcesarCompra:focus  {
+	background-color: blue !important;
+	color: white !important;
+	padding: 10px;
+	font-size: 14px;
+	font-weight: bold;
+}

@@ -1,0 +1,104 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window border="none" apply="org.zkoss.bind.BindComposer"  sclass="winMyList"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.MisRequerimientosOfertadosViewModel')">
+		
+		<!-- LISTA DE REQUERIMIENTOS OFERTADOS-->
+		<panel sclass="borderGrid">
+			<panelchildren>
+		  		<hbox width="100%" align="center">
+					<paging id="pagMisRequerimientos" hflex="1"
+						onPaging="@command('paginarLista')" autohide="true" />
+					<div sclass="z-paging z-paging-info" height="28px">
+						<label id="lblMisRequerimientos" sclass="rRmWwb-info"/>
+					</div>
+				</hbox>
+				<listbox id="gridMisRequerimientos" mold="paging" pageSize="10" pagingPosition="top" emptyMessage="No hay solicitudes"
+					sclass="mylist" model="@load(vm.listaRequerimientos)"
+					onAfterRender="@command('updatePaging', paging = pagMisRequerimientos, label=lblMisRequerimientos)">
+					
+					<auxhead>
+						<auxheader/>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<spinner constraint="no negative, no zero" value="@bind(vm.requerimientoFiltro.idRequerimiento)"
+								instant="true" placeholder="" onChange="@command('aplicarFiltro')"
+								width="70px" />
+						</auxheader>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<textbox instant="true" hflex="1"
+								value="@bind(vm.requerimientoFiltro.cliente.nombre)"
+								onChange="@command('aplicarFiltro')"/>
+						</auxheader>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<datebox instant="true" hflex="1"
+								format="@bind(vm.formatDate)"
+								value="@bind(vm.requerimientoFiltro.fechaCreacion)"
+								onChange="@command('aplicarFiltro')"/>
+						</auxheader>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<textbox instant="true" hflex="1"
+								value="@bind(vm.requerimientoFiltro.modeloV)"
+								onChange="@command('aplicarFiltro')"/>
+						</auxheader>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<combobox instant="true" readonly="true" hflex="1"
+								selectedItem="@bind(vm.estatusFiltro)" 
+								model="@load(vm.listaEstatus)"
+								onChange="@command('aplicarFiltro')"
+								value="@bind(vm.estatusFiltro.nombre)">
+								<template name="model">
+									<comboitem label="@bind(each.nombre)" />
+								</template>
+							</combobox>
+						</auxheader>
+					</auxhead>
+					
+					<listhead>
+						<listheader width="2%"/>
+						<listheader value="idRequerimiento" width="10%" 
+							label="Nro." sort="auto(idRequerimiento)"/>
+						<listheader value="cliente.nombre" label="Cliente"
+							sort="auto(idRequerimiento)" width="20%"/>
+						<listheader value="fechaCreacion" label="F. Creación"
+							sort="auto(fechaCreacion)" width="15%"/>
+						<listheader value="modeloV" label="Modelo"
+							sort="auto(modeloV)" width="15%"/>
+						<listheader value="estatus" label="Estado" sort="none"  width="20%"/>
+						<listheader sort="none" label="Operaciones" />
+
+					</listhead>
+					<template name="model">
+						<listitem>
+							<listcell label="${forEachStatus.index+1}" sclass="boxed-grey" />
+							<listcell label="@bind(each.idRequerimiento)" />
+							<listcell label=" @bind((each.cliente.nombre).concat(' ').concat(each.cliente.apellido))" />
+							<listcell label="@bind(each.fechaCreacion)
+												@converter('formatedDate', format=vm.formatDate)"/>
+							<listcell label="@bind(each.modeloV)" />
+							<listcell label="@bind(each.determinarEstatus())"/>
+							<listcell>
+								<hbox spacing="20px">
+									<div class="btn-group btn-group-sm">
+										<button  iconSclass="z-icon-eye blue bigger-160" tooltiptext="Ver Requerimiento"  
+								   			onClick="@command('verRequerimiento', requerimiento = each)" if="${ !each.editar() }"/>
+										<button iconSclass="z-icon-fa fa-files-o red bigger-130" tooltiptext="Ofertas"
+											onClick="@command('mostrarOfertas', requerimiento = each)"/>
+								<!--    <button  iconSclass="fa fa-check-square-o blue bigger-160" tooltiptext="Seleccionar Cotizaciones"  
+								    	onClick="@command('seleccionarCotizaciones', requerimiento = each)" if="${ !each.editar() and !each.editarCotizacion() and each.seleccionarCotizacion() }"/> -->
+										<!-- SE COMENTO POR QUE NO ESTAMOS SEGURO SI ESTA OPCION VA O NO-->
+								<!-- 	<button  iconSclass="fa fa-shopping-cart green bigger-160" tooltiptext="Ver Compras"  
+								    	onClick="@command('verCompras', requerimiento = each)"/> -->
+									</div>
+								</hbox>
+							</listcell>
+						</listitem>
+					</template>
+				</listbox>
+			</panelchildren>
+		</panel>
+	</window>
+</zk>
