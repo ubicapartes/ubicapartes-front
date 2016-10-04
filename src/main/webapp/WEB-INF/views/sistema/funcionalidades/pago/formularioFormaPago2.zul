@@ -1,0 +1,127 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winPagoFactura" border="none" height="0px" 
+		apply="org.zkoss.bind.BindComposer" closable="true"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.RegistrarPagoFacturaViewModel')">
+		<script src="/resources/js/braintree/creditCard.js" type="text/javascript"></script>		
+		<script type="text/javascript">
+			var client = null;
+			function loadForm(clientToken){
+				client = new braintree.api.Client({clientToken: clientToken});
+			};
+		</script>
+		<n:div aria-hidden="false" class="modal fade in" role="dialog" tabindex="-1" style="display: block;">
+			<div class="modal-dialog modal-full" height="auto"><!-- modal-xs -->
+				<div sclass="modal-content">
+					<include src="/WEB-INF/views/template/modal/titleModal.zul" titulo="Pago de Factura (Tarjeta de Débito/Tarjeta de credito)" />
+					<n:div class="modal-inner" >
+						<groupbox id="cmpPayment" closable="false" onPaymentSuccess="@command('onPaymentSuccess')" onPaymentError="@command('onPaymentError')">
+							<!-- DATOS DEL PAGO -->
+							<grid>
+								<columns>
+									<column width="15%"/>
+									<column width="20%"/>
+									<column width="25%"/>
+									<column width="20%"/>
+									<column />
+								</columns>
+							</grid>
+							
+							<tabbox maximalHeight="true" sclass="tab-nav tab-nav-blue">
+								<tabs>
+									<tab sclass="waves-color-blue waves-effect">
+										<label value="Información general" />
+									</tab>
+								</tabs>
+								<tabpanels>
+									<tabpanel>
+										<grid>
+											<columns>
+												<column width="20%" />
+												<column  width="25%"/>
+												<column  width="25%"/>
+												<column  width="20%"/>
+											</columns>
+										<rows>
+<!-- 										<row> -->
+<!-- 											<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Forma de pago:" /> -->
+<!-- 											<hbox> -->
+<!-- 												<textbox value="Debito/Credito" width="115%" sclass="label-not-mandatory" disabled="true"/>	 -->
+<!-- 											</hbox> -->
+<!-- 										</row>	 -->
+										<row id="">	
+											<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Titular de la tarjeta:" />
+											<vbox>
+												<textbox id="txtTitular" maxlength="255" width="110%" placeholder="Ej.: José Perez"
+												constraint="@bind(vm.notEmptyValidator)"/>
+											</vbox>
+											<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Nro. de tarjeta:" />
+											<vbox>
+												<textbox id="txtTarjeta" maxlength="16" width="96%" placeholder="Ej.: 0015 2225 2225 3336"
+												constraint="@bind(vm.notEmptyValidator)"/>
+											</vbox>	
+										</row>	
+										<row>
+											<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Tipo de tarjeta:" />
+											<vbox>
+													<combobox id="cmbTipoTarjeta" readonly="true" constraint="@bind(vm.notEmptyValidator)" width="96%"
+														selectedItem="@bind(vm.tipoTarjeta)"
+														value="@bind(vm.tipoTarjeta.nombre)" 
+														model="@load(vm.listaTipoTarjeta)" placeholder = "Seleccione"
+														onSelect="@command('seleccionarTipoTarjeta')">
+														<template name="model">
+															<comboitem label="@bind(each.nombre)" />
+														</template>
+													</combobox>
+											</vbox>	
+											<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Código de seguridad:" />
+											<vbox>
+												<textbox id="txtCodigo"  width="96%" 
+													constraint="@bind(vm.cvvConstraint)"/>
+											</vbox>	
+										</row>
+										<row>
+											<!-- 	<label value="Correo electrónico:" sclass="label-not-mandatory" />
+												<textbox id="txtemail" width="90%" placeholder="Ej.: micorreo@gmail.com"
+												constraint="@bind(vm.constraintMensaje)"/>  -->	
+											<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Monto total a pagar:" />	
+											<vbox>
+<!--  												<textbox name="monto" width="115%" value="@bind(vm.pago.monto) @converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber,   -->
+<!-- 														converterMoneda=vm.monedaBase, monedaBase=vm.monedaBase)" sclass="label-not-mandatory" disabled="true"/>	--> 
+												<textbox name="monto" width="115%" sclass="label-not-mandatory" disabled="false"/>	
+											</vbox>	
+										</row>
+										
+										<row>
+											<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Año de vencimiento:" />
+											<vbox>
+												<textbox id="txtAnoVence" maxlength="4" width="110%" placeholder="Ej.: 2016"
+												constraint="@bind(vm.notEmptyValidator)"/>
+											</vbox>	
+											<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Mes de vencimiento:" />
+											<vbox>
+												<textbox id="txtMesVence" maxlength="2" width="95%" placeholder="Ej.: 02"
+												constraint="@bind(vm.notEmptyValidator)"/>
+											</vbox>	
+										</row>	
+										</rows>
+										</grid>
+									</tabpanel>
+								</tabpanels>
+							</tabbox>
+						</groupbox>
+					</n:div>
+					<n:div class="modal-footer">
+						<button id="btnLimpiar" label="Limpiar" sclass="btn-sm btn-info"
+							onClick="@command('limpiar')"/>
+						<button label="Registrar Pago" sclass="btn-sm btn-primary"
+							onClick="@command('registrarPago', btnEnviar=self, btnLimpiar=btnLimpiar)"/>
+						<button label="Cancelar" sclass="btn-sm btn-danger"
+							onClick="@command('closeModal')"/>
+					</n:div>
+				</div>
+			</div>
+		</n:div>
+	</window>
+</zk>
+
+

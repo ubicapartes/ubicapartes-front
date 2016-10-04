@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security.xsd">
+          
+    <!-- ZK -->
+    
+    <bean id="formatedNumber" class="com.okiimport.app.mvvm.model.FormatedNumberConverter"/>
+    <bean id="formatedMoneda" class="com.okiimport.app.mvvm.model.FormatedMonedaConverter"/>
+    
+    <!-- SPRING SECURITY -->
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<security:http pattern="/css/**" security="none"/>
+	
+	<!-- Enable the @Secured annotation to secure service layer methods -->
+	<security:global-method-security secured-annotations="enabled" />
+	
+	<security:http auto-config="true" use-expressions="true" authentication-manager-ref="authenticationManager">
+		<security:intercept-url pattern="/admin/**" access="isAuthenticated()" /> <!-- URL de los Archivos a Proteger -->
+		<security:intercept-url pattern="/WEB-INF/views/sistema/*.zul" access="isAuthenticated()"/>
+		<!-- 
+		@param login-processing-url: url a la que se va a enviar la informacion de acceso (no definida en los controladores)
+		@param login-page: url de la pagina del login
+		@param default-target-url: define la url por defecto que se usara cuando se inicia session
+		@param always-use-default-target: define si se usara la url por defecto siempre al iniciar session
+		@param authentication-failure-url: url que define la vista cuando falla la session
+		@param authentication-success-handler-ref: bean responsable del inicio de session
+		 -->
+		<security:form-login login-processing-url="/login" login-page="/inicioSession" 
+			default-target-url="/admin/home" always-use-default-target="true"
+			authentication-failure-url="/inicioSession?auth=false" 
+			authentication-success-handler-ref="authenticationHandler"
+		/>
+		
+		<!-- Recordar Session
+		@param token-validity-seconds: tiempo de expiracion de la session (en segundos): 1209600 -> 2 semanas, 14 dias
+		@param remember-me-parameter: nombre del parametro que viene del formulario (default: _spring_security_remember_me)
+		@param data-source-ref: referencia a la funte de datos
+		@param user-service-ref: referencia al servicio usado para iniciar session
+		 -->
+    	<security:remember-me 
+        	token-validity-seconds="1209600"
+			remember-me-parameter="remember-me" 
+			data-source-ref="dataSource" 
+			user-service-ref="sAcceso"
+		/>
+		
+		<!-- 
+		@param logout-url: url para cerrar la session (no definida en los controladores)
+		@param logout-success-url: url despues de habar cerrado session (no usada en este caso: logout-success-url="/")
+		@param invalidate-session: borra los datos de session
+		@param delete-cookies: borrara los datos del cookie JSESSIONID  
+		@param success-handler-ref: bean responsable del cierre de session
+		 -->
+		<security:logout logout-url="/logout" invalidate-session="true" delete-cookies="JSESSIONID" 
+			success-handler-ref="logoutHandler"/>
+		
+		<!-- @param invalid-session-url: url para cuando la session ha expirado (Revisar)   
+		<security:session-management>
+			<security:concurrency-control max-sessions="1" error-if-maximum-exceeded="true" expired-url="/sessionExpirada" />
+		</security:session-management>
+		-->
+		
+	</security:http>
+	
+	<!-- Procesador del Login -->
+	<bean name="authenticationHandler" class="com.okiimport.app.AuthenticationSuccessHandler"/>
+	
+	<!-- Procesador de Logout -->
+	<bean name="logoutHandler" class="com.okiimport.app.LogoutSuccessHandler" />
+	
+	<!-- Bean Encriptador de Claves -->
+	<bean name="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+	
+	<security:authentication-manager id="authenticationManager">
+		<!-- Servicio que provee la interfaz para la validacion del usuario con la base de datos  -->
+		<security:authentication-provider user-service-ref="sAcceso">
+			<!-- Encriptamos las Claves por medio de la referencia al Encriptador 
+			<security:password-encoder ref="bcryptEncoder"/> -->
+			<!-- Forma Manual
+				<security:user-service>
+					<security:user name="euge" password="1234" authorities="ROLE_USER"/>
+				</security:user-service>
+			-->
+		 </security:authentication-provider>
+	</security:authentication-manager>
+
+</beans>

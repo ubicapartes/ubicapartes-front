@@ -1,0 +1,80 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<style src="/resources/css/shoppingCar.css" />
+
+	<window id="winCarrito" border="none"
+		apply="org.zkoss.bind.BindComposer" closable="true"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.cliente.carrito.MiCarritoCompraViewModel')"
+		onClose="@command('cerrar')"
+		binder="@init(queueName='carrito',queueScope='application')">
+		<panel sclass="borderGrid">
+			<panelchildren>
+				<listbox id="gridOfertasCliente"
+					emptyMessage="No hay elementos en el carrito" sclass="mylist"
+					model="@load(vm.listaDetalleOfertas)">
+					<listhead>
+						<listheader sclass="lhDetalleOfertas"
+							label="Repuesto" sort="none" />
+						<listheader sclass="lhDetalleOfertas"
+							label="Marca" sort="none" />
+						<listheader sclass="lhDetalleOfertas"
+							label="Pcio. Unit. BsF." sort="none" />
+						<listheader sclass="lhDetalleOfertas"
+							label="Cantidad" sort="none">
+						</listheader>
+						<listheader sclass="lhDetalleOfertas"
+							label="Total Repuesto BsF." sort="none">
+						</listheader>
+						<listheader sclass="lhDetalleOfertas"
+							label="Operaciones" sort="none" />
+					</listhead>
+					<template name="model">
+						<listitem>
+							<listcell
+								label="@bind(each.detalleCotizacion.detalleRequerimiento.descripcion)" />
+							<listcell
+								label="@bind(each.detalleCotizacion.marcaRepuesto)" />
+							<listcell
+								label="@bind(each.calcularPrecioVentaUnit()) @converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+									 							converterMoneda=each.detalleCotizacion.cotizacion.historicoMoneda, monedaBase=vm.monedaBase)" />
+							<listcell
+								label="@bind(each.cantidadSeleccionada)" />
+							<listcell
+								label="@bind(each.calcularPrecioVentaUnit() * each.cantidadSeleccionada) @converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+									 							converterMoneda=each.detalleCotizacion.cotizacion.historicoMoneda, monedaBase=vm.monedaBase)" />
+							<listcell>
+								<hbox spacing="20px">
+									<div
+										class="btn-group btn-group-sm">
+										<button
+											iconSclass="z-icon fa fa-trash red bigger-160"
+											tooltiptext="Quitar del Carrito"
+											onClick="@command('eliminarElemento', detalle = each)" />
+									</div>
+								</hbox>
+							</listcell>
+						</listitem>
+					</template>
+					<listfoot sclass="listFootShoppingCar"
+						visible="@load(not empty vm.listaDetalleOfertas)">
+						<listfooter span="4">
+							<label
+								style="float:right; font-size: 16px;	font-weight: bold;"
+								value="Total a Pagar:" />
+						</listfooter>
+						<listfooter>
+							<label
+								style="font-size: 16px;	font-weight: bold;"
+								value="@bind(vm.getTotalCarrito()) @converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+									 							converterMoneda=vm.historicoMoneda, monedaBase=vm.monedaBase)" />
+						</listfooter>
+						<listfooter>
+							<button sclass="btnProcesarCompra"
+								id="btnProcesarCompra" label="Procesar Compra"
+								onClick="@command('procesarCompra')" />
+						</listfooter>
+					</listfoot>
+				</listbox>
+			</panelchildren>
+		</panel>
+	</window>
+</zk>

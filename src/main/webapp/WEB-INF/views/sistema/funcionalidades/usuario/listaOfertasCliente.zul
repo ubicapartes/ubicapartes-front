@@ -1,0 +1,138 @@
+<zk xmlns:w="client" xmlns:n="native">
+
+	<window id="winListaOfertas" border="none" width="0px" height="0px" title="@bind(vm.titulo)"
+		apply="org.zkoss.bind.BindComposer" closable="true"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.cliente.oferta.ListaDetalleOfertaClienteViewModel')"
+		onClose="@command('cambiarRequerimientos')"
+		binder="@init(queueName='listOfertas',queueScope='application')">
+		
+		<n:div aria-hidden="false" class="modal fade in" role="dialog"
+			tabindex="-1" style="display: block;">
+			<div class="modal-dialog modal-full" height="auto"><!-- modal-xs -->
+				<div sclass="modal-content">
+					<include
+						src="/WEB-INF/views/template/modal/titleModal.zul"
+						titulo="Ofertas Disponibles"/>
+					<n:div class="modal-inner">
+				
+							<borderlayout height="400px">
+								<center title="">
+									<div>
+										<!-- LISTA DE OFERTAS-->
+										<panel>
+											<panelchildren>
+												<hbox width="100%"
+													align="center">
+													<paging
+														id="pagOfertasCliente" hflex="1"
+														onPaging="@command('paginarLista')" autohide="true" />
+													<div
+														sclass="z-paging z-paging-info" height="28px">
+														<label
+															id="lblOfertasCliente" sclass="rRmWwb-info" />
+													</div>
+												</hbox>
+												<listbox
+													id="gridOfertasCliente" mold="paging"
+													emptyMessage="No hay solicitudes" pageSize="10"
+													pagingPosition="top" sclass="mylist"
+													model="@load(vm.listaDetalleOfertas)"
+													onAfterRender="@command('updatePaging', paging = pagOfertasCliente, label=lblOfertasCliente)">
+
+													<listhead>
+
+														<listheader
+															value="" width="160px" 
+															label="Repuesto" sort="none" />
+															
+														<listheader
+															value="" width="110px" 
+															label="Marca" sort="none" />
+														
+														<listheader
+															value="" width="120px" 
+															label="Pcio. Unit. BsF." sort="none" />
+
+														<listheader
+															value="" label="Unid. Disponibles"
+															width="125px" sort="none" />
+
+														<listheader
+															value="" label="Cant. Adquirir" 
+															width="115px" sort="none">
+
+														</listheader>
+														<listheader
+															value="" label="Pcio. Venta s/Flete" 
+															width="130px" sort="none">
+
+														</listheader>
+														<listheader
+															label="Operaciones" sort="none" />
+
+													</listhead>
+													<template
+														name="model">
+														<listitem>
+															<listcell
+																label="@bind(each.detalleCotizacion.detalleRequerimiento.descripcion)" />
+															<listcell
+																label="@bind(each.detalleCotizacion.marcaRepuesto)"/>
+															<listcell
+																label="@bind(each.calcularPrecioVentaUnit()) @converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+									 							converterMoneda=each.detalleCotizacion.cotizacion.historicoMoneda, monedaBase=vm.monedaBase)"/>
+															<listcell
+																label="@bind(each.detalleCotizacion.cantidad)" />
+															<listcell>
+															   <vbox>
+																<spinner instant="true" value="@bind(each.cantidadSeleccionada)" width="75px" 
+																constraint="@bind(vm.getValidatorCantidad(each.detalleCotizacion.cantidad))" onChange="@command('refrescar')"
+																/>
+																</vbox>
+															</listcell>
+															<listcell
+																label="@bind(each.calcularPrecioVentaSinFlete()) @converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+									 							converterMoneda=each.detalleCotizacion.cotizacion.historicoMoneda, monedaBase=vm.monedaBase)"/>
+															<listcell>
+																<hbox
+																	spacing="20px">
+																	<div
+																		class="btn-group btn-group-sm">
+																		<button
+																			iconSclass="z-icon fa fa-shopping-cart black bigger-160"
+																			tooltiptext="Añadir al Carrito"
+																			onClick="@command('agregarFavorito', detalle = each)" if="${ !each.mostrarEsatusFavorito()}" />
+																			<button
+																			iconSclass="z-icon fa fa-shopping-cart red bigger-160"
+																			tooltiptext="Quitar del Carrito"
+																			onClick="@command('quitarFavorito', detalle = each)" if="${ each.mostrarEsatusFavorito()}" />
+																		
+																	</div>
+																</hbox>
+															</listcell>
+														</listitem>
+													</template>
+												</listbox>
+											</panelchildren>
+										</panel>
+									</div>
+								</center>
+								
+							</borderlayout>
+							
+					</n:div>
+					<n:div class="modal-footer">
+						<hbox width="100%" >
+							<include  hflex="1" />
+							<div align="right">
+								<button
+												label="Aceptar" type="submit" sclass="btn-sm btn-primary"
+												onClick="@command('cerrar')" />
+							</div>
+						</hbox>
+					</n:div>
+				</div>
+			</div>
+		</n:div>
+	</window>
+</zk>

@@ -1,0 +1,288 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winCompras" border="none" width="0px"
+		apply="org.zkoss.bind.BindComposer" closable="true"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.RegistrarCompraViewModel')"
+		onClose="@command('onCloseWindow')">
+
+		<n:div aria-hidden="false" class="modal fade in" role="dialog"
+			tabindex="-1" style="display: block;">
+			<div class="modal-dialog modal-full" height="auto"><!-- modal-xs -->
+				<div sclass="modal-content">
+					<include
+						src="/WEB-INF/views/template/modal/titleModal.zul"
+						titulo="Compra" />
+					<n:div class="modal-inner">
+
+						<groupbox closable="false">
+							<div>
+								<space></space>
+								<space></space>
+								<label value="Nro. Compra:"
+									sclass="label-not-mandatory" />
+								<label
+									value="@bind(vm.compra.idCompra)" />
+								<space></space>
+								<space></space>
+								<label value="Nro. Requerimiento: "
+									sclass="label-not-mandatory" />
+								<label
+									value="@bind(vm.requerimiento.idRequerimiento)" />
+								<space></space>
+								<space></space>
+								<label value="Fecha: "
+									sclass="label-not-mandatory" />
+								<label
+									value="@bind(vm.compra.fechaCreacion)
+		    					@converter('formatedDate', format=vm.formatDate)" />
+							</div>
+
+							<tabbox maximalHeight="true"
+								sclass="tab-nav tab-nav-blue">
+								<tabs>
+									<tab
+										sclass="waves-color-blue waves-effect">
+										<label value="Datos Generales" />
+									</tab>
+									<tab
+										sclass="waves-color-blue waves-effect">
+										<label value="Detalle Compra" />
+									</tab>
+								</tabs>
+								<tabpanels>
+									<!-- DATOS GENERALES -->
+									<tabpanel>
+										<!-- DATOS DEL CLIENTE -->
+										<include
+											src="/WEB-INF/views/template/modal/subTitleModal.zul"
+											subtitulo="Datos del Cliente" />
+										<div
+											sclass="card card-main card-inner">
+											<grid>
+												<columns>
+													<column width="35%"
+														align="right" />
+													<column width="65%" />
+													<column width="35%"
+														align="right" />
+													<column width="65%" />
+												</columns>
+
+												<rows>
+													<row>
+														<!-- CEDULA/RIF -->
+														<label
+															value="Cédula / RIF: " sclass="label-not-mandatory" />
+														<vbox>
+															<label
+																value="@bind(vm.requerimiento.cliente.cedula)" />
+														</vbox>
+														<!-- NOMBRE/RAZON SOCIAL -->
+														<label
+															value="Nombre / Razón Social: "
+															sclass="label-not-mandatory" />
+														<vbox>
+															<label
+																value="@bind(vm.requerimiento.cliente.nombre)" />
+														</vbox>
+
+													</row>
+
+												</rows>
+											</grid>
+										</div>
+
+										<!-- DATOS DEL VEHICULO -->
+										<include
+											src="/WEB-INF/views/template/modal/subTitleModal.zul"
+											subtitulo="Datos del Vehículo" />
+										<tabbox
+											sclass="tab-nav tab-nav-blue">
+											<tabs>
+												<tab
+													sclass="waves-color-blue waves-effect">
+													<label
+														value="Datos Básicos" />
+												</tab>
+												<tab
+													sclass="waves-color-blue waves-effect">
+													<label
+														value="Datos Adicionales" />
+												</tab>
+											</tabs>
+											<tabpanels>
+												<!-- DATOS BASICOS -->
+												<tabpanel>
+													<grid>
+														<columns>
+															<column
+																width="35%" align="right" />
+															<column
+																width="65%" />
+															<column
+																width="35%" align="right" />
+															<column
+																width="65%" />
+														</columns>
+
+														<rows>
+															<row>
+																<!-- MARCA -->
+																<label
+																	value="Marca: " sclass="label-not-mandatory" />
+																<vbox>
+																	<label
+																		value="@bind(vm.requerimiento.marcaVehiculo.nombre)"
+																		sclass="label-not-mandatory" />
+																</vbox>
+
+																<!-- MODELO -->
+																<label
+																	value="Modelo: " sclass="label-not-mandatory" />
+																<vbox>
+																	<label
+																		value="@bind(vm.requerimiento.modeloV)"
+																		sclass="label-not-mandatory" />
+																</vbox>
+
+															</row>
+
+														</rows>
+													</grid>
+												</tabpanel>
+
+												<!-- DATOS ADICIONALES -->
+												<tabpanel>
+													<grid>
+														<columns>
+															<column
+																width="35%" align="right" />
+															<column
+																width="65%" />
+															<column
+																width="35%" align="right" />
+															<column
+																width="65%" />
+														</columns>
+
+														<rows>
+															<row>
+																<!-- TIPO REPUESTO -->
+																<label
+																	value="Tipo Repuesto: " sclass="label-not-mandatory" />
+																<vbox>
+																	<label
+																		value="@bind(vm.requerimiento.determinarTipoRepuesto())"
+																		sclass="label-not-mandatory" />
+																</vbox>
+															</row>
+
+														</rows>
+													</grid>
+												</tabpanel>
+											</tabpanels>
+										</tabbox>
+									</tabpanel>
+
+									<!-- DETALLE COMPRA -->
+									<tabpanel>
+										<panel sclass="borderGrid">
+											<panelchildren>
+												<hbox width="100%"
+													align="center">
+													<paging
+														id="pagDetallesCompra" hflex="1"
+														onPaging="@command('paginarLista')" autohide="true" />
+													<div
+														sclass="z-paging z-paging-info" height="28px">
+														<label
+															id="lblDetallesCompra" sclass="rRmWwb-info" />
+													</div>
+												</hbox>
+												<listbox
+													id="gridDetallesCompra" style="margin-top:10px"
+													emptyMessage="No hay solicitudes"
+													model="@load(vm.listaDetallesCompra)" pagingPosition="top"
+													onAfterRender="@command('updatePaging', paging = pagDetallesCompra, label=lblDetallesCompra)">
+
+													<listhead>
+														<listheader
+															label="Descripción" sort="none" />
+														<listheader
+															label="Marca" sort="none" />
+														<listheader
+															label="Cant. Encontrada" sort="none" />
+														<listheader
+															label="Precio Venta" sort="none" />
+													</listhead>
+
+													<template
+														name="model">
+														<listitem>
+															<listcell
+																label="@bind(each.detalleCotizacion.detalleRequerimiento.descripcion)" />
+															<listcell
+																label="@bind(each.detalleCotizacion.marcaRepuesto)" />
+															<listcell
+																label="@bind(each.detalleCotizacion.cantidad)" />
+															<listcell
+																label="@bind(each.calcularPrecioVenta()) 
+									 					@converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+									 						converterMoneda=each.detalleCotizacion.cotizacion.historicoMoneda, monedaBase=vm.monedaBase) " />
+														</listitem>
+													</template>
+
+													<listfoot
+														sclass="footerTotal">
+														<listfooter />
+														<listfooter />
+														<listfooter />
+														<listfooter>
+															<vbox>
+																<hbox>
+																	<label
+																		value="Total Compra" />
+																	<label
+																		value="@bind(vm.totalCompra)
+														@converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+									 						converterMoneda=vm.monedaBase, monedaBase=vm.monedaBase)" />
+																</hbox>
+																<hbox>
+																	<label
+																		value="Flete: " />
+																	<label
+																		value="@bind(vm.compra.precioFlete)
+														@converter(vm.formatedNumber, format=vm.formatNumber, locale=vm.localeNumber)" />
+																</hbox>
+																<hbox>
+																	<label
+																		value="Total Neto:" />
+																	<label
+																		value="@bind(vm.totalCompraNeto)
+														@converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+									 						converterMoneda=vm.monedaBase, monedaBase=vm.monedaBase)" />
+																</hbox>
+															</vbox>
+														</listfooter>
+													</listfoot>
+												</listbox>
+											</panelchildren>
+										</panel>
+									</tabpanel>
+								</tabpanels>
+							</tabbox>
+
+						</groupbox>
+
+					</n:div>
+					<n:div class="modal-footer">
+						<hbox width="100%">
+							<include hflex="1" />
+							<div align="right"></div>
+						</hbox>
+					</n:div>
+				</div>
+			</div>
+		</n:div>
+
+	</window>
+</zk>

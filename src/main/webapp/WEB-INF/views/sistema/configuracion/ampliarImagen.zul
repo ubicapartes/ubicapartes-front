@@ -1,0 +1,6 @@
+<zk>
+	<window title="${arg.title}" border="normal" closable="true" width="70%" 
+				sclass="btn-primary card-header">
+		<image src="${arg.image}" width="100%" sclass="img-rounded"/>			
+	</window>
+</zk>

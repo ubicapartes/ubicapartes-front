@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?page language="xul/html"?>
+
+<zk xmlns:h="http://www.w3.org/1999/xhtml"
+	xmlns:zk="http://www.zkoss.org/2005/zk">
+	<window title="${arg.title}" border="normal" closable="false" width="300px" sclass="btn-primary card-header"
+		use="org.zkoss.zul.impl.MessageboxDlg">
+
+		<hbox>
+			<div class="${arg.icon}" />
+			<div sclass="z-messagebox" width="100%">
+				<label multiline="true" sclass="word-wrap" width="100%"
+					value="${arg.message}" />
+			</div>
+		</hbox>
+		
+		<hbox style="margin-left:auto; margin-right:auto;">
+			<button identity="${arg.OK}" autodisable="self"
+				sclass="btn-sm btn-primary btn-md z-messagebox-btn"
+				use="org.zkoss.zul.impl.MessageboxDlg$Button" if="${!empty arg.OK}" />
+			<button identity="${arg.YES}"
+				sclass="btn-sm btn-info btn-md z-messagebox-btn" autodisable="self"
+				use="org.zkoss.zul.impl.MessageboxDlg$Button"
+				if="${!empty arg.YES}" />
+			<button identity="${arg.NO}" autodisable="self"
+				sclass="btn-sm btn-danger btn-md z-messagebox-btn"
+				use="org.zkoss.zul.impl.MessageboxDlg$Button" if="${!empty arg.NO}" />
+			<button identity="${arg.CANCEL}" autodisable="self"
+				sclass="btn-sm btn-success btn-md z-messagebox-btn"
+				use="org.zkoss.zul.impl.MessageboxDlg$Button"
+				if="${!empty arg.CANCEL}" />
+			<button identity="${arg.RETRY}" autodisable="self"
+				sclass="btn-sm btn-info btn-md z-messagebox-btn"
+				use="org.zkoss.zul.impl.MessageboxDlg$Button"
+				if="${!empty arg.RETRY}" />
+			<button identity="${arg.ABORT}" autodisable="self"
+				sclass="btn-sm btn-warning btn-md z-messagebox-btn"
+				use="org.zkoss.zul.impl.MessageboxDlg$Button"
+				if="${!empty arg.ABORT}" />
+			<button identity="${arg.IGNORE}" autodisable="self"
+				sclass="btn-sm btn-inverse btn-md z-messagebox-btn"
+				use="org.zkoss.zul.impl.MessageboxDlg$Button"
+				if="${!empty arg.IGNORE}" />
+		</hbox>
+	</window>
+</zk>

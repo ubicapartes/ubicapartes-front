@@ -1,0 +1,34 @@
+<zk>
+	<style src="/resources/css/menubar.css"/>
+	<menubar sclass="user-menu light-blue" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.seguridad.PerfilViewModel')"
+		binder="@init(queueName='perfil',queueScope='application')">
+		<menuitem id="menInfoUsuario" tooltiptext="John's Avatar" label="Welcome, Jason" 
+			image="/resources/img/user.png" sclass="menubarCustom"/>
+		<menu label="">
+			<menupopup>
+				<menuitem label="Configuración" iconSclass="z-icon-cog" />
+				<menuitem label="Profile" iconSclass="z-icon-user" onClick="@command('editarPerfil')" />
+				<menuseparator />
+				<menuitem label="Logout" iconSclass="z-icon-off" onClick="@command('logout')" />
+			</menupopup>
+		</menu>
+		
+		<menuitem id="menCarrito" tooltiptext="Carrito de Compra" iconSclass="z-icon-fa fa-shopping-cart" sclass="menubarCustom menuCarrito" onClick="@command('mostrarCarrito')" />
+	</menubar>
+	<!-- 
+		<div class="shortcuts" align="left">
+		<vlayout>
+		<hlayout>
+		<button id="btnEditP" type="button"
+		class="btn-info" iconSclass="z-icon-pencil" />
+		<button id="btnSalir" type="button"
+		class="btn-danger" iconSclass="z-icon-cogs" />
+		</hlayout>
+		
+		<label id="labUsuario"></label>
+		</vlayout>
+		
+		</div>
+	-->
+</zk>

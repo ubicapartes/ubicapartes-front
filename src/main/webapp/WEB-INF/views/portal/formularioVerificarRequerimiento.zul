@@ -1,0 +1,128 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<include src="/WEB-INF/views/template/title.zul" titulo="Verificar Requerimiento" />
+	<vlayout sclass="card-inner" apply="org.zkoss.bind.BindComposer" width="100%"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.VerificarRequerimientosViewModel')"><!--  -->
+		<vlayout sclass="search"  width="30%">
+			<hbox>
+				<!-- CEDULA -->
+				<include src="/WEB-INF/views/template/fieldMandatory.zul" field="ID / RIF:"/>
+
+				<combobox width="30%" readonly="true"
+					selectedItem="@bind(vm.tipoPersona)"
+					model="@load(vm.listaTipoPersona)">
+					<template name="model">
+						<comboitem label="@bind(each.nombre)"/>
+					</template>
+				</combobox>
+				
+				<vbox>
+					<intbox placeholder="Ej: 402405375" mold="rounded" 
+						maxlength="9" hflex="1"
+						value="@bind(vm.cliente.cedula)"
+						constraint="@bind(vm.validatorClienteCedulaRif2)" 
+						onOK="@global-command('cambiarRequerimientos')" />
+				</vbox>
+				
+				<button label="Buscar" onClick="@global-command('cambiarRequerimientos')" sclass="btn-primary" />
+			</hbox>
+		</vlayout>
+		
+		<!-- LISTA DE REQUERIMIENTOS -->
+		<div width="95%">
+			<include src="/WEB-INF/views/template/subTitle.zul" subtitulo="Mis Solicitudes" />
+			<panel sclass="borderGrid">
+				<panelchildren>
+					<hbox width="100%" align="center">
+						<paging id="pagRequerimientosCliente" autohide="true" hflex="1"
+							onPaging="@command('paginarLista')" />
+						<div sclass="z-paging z-paging-info" height="28px">
+							<label id="lblRequerimientosCliente" sclass="rRmWwb-info"/>
+						</div>
+					</hbox>
+					<listbox id="gridRequerimientosCliente" emptyMessage="No hay solicitudes"
+						onAfterRender="@command('updatePaging', paging=pagRequerimientosCliente, label=lblRequerimientosCliente)"
+						model="@load(vm.listaRequerimientos)">
+						
+						<auxhead>
+							<auxheader>
+								<hbox hflex="1">
+									<intbox
+										instant="true" hflex="1"
+										value="@bind(vm.requerimientoFiltro.idRequerimiento)"
+										constraint="no negative, no zero"
+										onChange="@command('aplicarFiltro')" />
+									<div sclass="z-icon-filter bigger-200" />
+								</hbox>
+							</auxheader>
+							<auxheader>
+								<datebox instant="true" hflex="1"
+									value="@bind(vm.fechaCreacion)"
+									format="@bind(vm.formatDate)" 
+									onChange="@command('aplicarFiltro')"  />
+								<div sclass="z-icon-filter bigger-200" />
+							</auxheader>
+							<auxheader>
+								<textbox instant="true" hflex="1"
+									value="@bind(vm.requerimientoFiltro.modeloV)" 
+									onChange="@command('aplicarFiltro')"/>
+								<div sclass="z-icon-filter bigger-200" />
+							</auxheader>
+							<auxheader>
+								<textbox instant="true" hflex="1"
+									value="@bind(vm.requerimientoFiltro.serialCarroceriaV)"
+									onChange="@command('aplicarFiltro')" />
+								<div sclass="z-icon-filter bigger-200" />
+							</auxheader>
+						</auxhead>
+							
+						<listhead>
+
+							<listheader label="N° Solicitud" width="70px"
+								value="idRequerimiento" sort="auto(idRequerimiento)" />
+							
+							<listheader label="Fecha Creación" width="100px"
+								value="fechaCreacion" sort="auto(fechaCreacion)"/>
+
+							<listheader value="modeloV" label="Modelo Carro"
+								sort="auto(modeloV)" width="120px"/>
+
+							<listheader label="N° Serial" width="100px"
+								value="serialCarroceriaV" sort="auto(serialCarroceriaV)" />
+								 
+							<listheader width="11%" label="Estatus" />
+							<listheader width="11%" label="Operaciones" />
+
+						</listhead>
+						<template name="model">
+							<listitem>
+								<listcell label="@bind(each.idRequerimiento)" />
+								<listcell label="@bind(each.fechaCreacion)
+													@converter('formatedDate', format=vm.formatDate)"/>
+								<listcell label="@bind(each.modeloV)" />
+								<listcell label="@bind(each.serialCarroceriaV)" />
+								<listcell label="@bind(each.determinarEstatus())"/>
+								<listcell>
+									<hbox spacing="20px">
+										<div class="btn-group btn-group-sm">
+
+											<button
+												iconSclass="z-icon-eye blue bigger-160" tooltiptext="Ver"
+												onClick="@command('verDetalleRequerimiento',requerimiento = each)" />
+									
+											<button
+												iconSclass="z-icon-file blue bigger-160" tooltiptext="Ver Oferta" if="${ each.verOfertas() }"
+												onClick="@global-command('verOferta',requerimiento = each)" />
+
+										</div>
+									</hbox>
+								</listcell>
+							</listitem>
+						</template>
+					</listbox>
+					
+				</panelchildren>
+			</panel>
+		</div>
+	</vlayout>
+</zk>
+

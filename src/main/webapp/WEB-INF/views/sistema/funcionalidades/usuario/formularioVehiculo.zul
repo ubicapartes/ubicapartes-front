@@ -1,0 +1,187 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winFormularioVehiculo" closable="true" width="0px"
+		height="0px" border="none" apply="org.zkoss.bind.BindComposer"
+		sclass="btn-primary"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.cliente.vehiculo.RegistrarVehiculoViewModel')">
+
+		<n:div aria-hidden="false" class="modal fade in" role="dialog"
+			tabindex="-1" style="display: block;">
+			<div class="modal-dialog modal-full" width="700"
+				height="auto"><!-- modal-xs -->
+				<div sclass="modal-content">
+					<include
+						src="/WEB-INF/views/template/modal/titleModal.zul"
+						titulo="Registrar Vehiculo" />
+					<n:div class="modal-inner">
+
+						<div>
+							<!-- DATOS DEL VEHICULO -->
+
+							<grid>
+								<columns>
+									<column width="5%" align="right" />
+									<column width="15%" />
+									<column width="10%" align="right" />
+									<column width="15%" />
+								</columns>
+
+								<rows>
+									<row>
+										<!-- MARCA -->
+										<include
+											src="/WEB-INF/views/template/fieldMandatory.zul"
+											field="Marca:" />
+										<vbox hflex="1">
+											<combobox
+												placeholder="Seleccione..." readonly="true" hflex="1"
+												disabled="@bind(vm.makeAsReadOnly)"
+												value="@bind(vm.vehiculo.marcaVehiculo.nombre)"
+												selectedItem="@bind(vm.vehiculo.marcaVehiculo)"
+												constraint="@bind(vm.notEmptyValidator)"
+												model="@load(vm.listaMarcasVehiculo)">
+												<template
+													name="model">
+													<comboitem
+														label="@bind(each.nombre)" />
+												</template>
+											</combobox>
+										</vbox>
+
+										<!-- MODELO -->
+										<include
+											src="/WEB-INF/views/template/fieldMandatory.zul"
+											field="Modelo:" />
+										<vbox>
+											<textbox id="modelo"
+												sclass="form-control" mold="rounded" placeholder="Ej Hilux"
+												value="@bind(vm.vehiculo.modelo)"
+												readonly="@bind(vm.makeAsReadOnly)" 
+												constraint="@bind(vm.notEmptyValidator)" />
+										</vbox>
+									</row>
+									<row>
+										<!-- AÑO -->
+										<include
+											src="/WEB-INF/views/template/fieldMandatory.zul"
+											field="Año:" />
+										<vbox hflex="1">
+											<intbox
+												placeholder="Ej: 2015" sclass="form-control"
+												readonly="@bind(vm.makeAsReadOnly)" 
+												constraint="@bind(vm.getValidatorAnno(null, vm.yearDay))"
+												value="@bind(vm.vehiculo.anno)" />
+										</vbox>
+
+										<!-- SERIAL DE CARROCERIA -->
+										<hbox>
+											<label
+												value="Serial de Carroceria: " sclass="form-label" />
+										</hbox>
+										<vbox>
+											<textbox
+												id="serialCarroceria" sclass="form-control" mold="rounded"
+												readonly="@bind(vm.makeAsReadOnly)" 
+												maxlength="25" placeholder="Ej: xA245D25623"
+												value="@bind(vm.vehiculo.serialCarroceria)" />
+										</vbox>
+									</row>
+									<row>
+										<!-- MOTOR -->
+										<hbox>
+											<label value="Motor: "
+												sclass="form-label" />
+										</hbox>
+										<bandbox id="bdMotor"
+											mold="rounded" autodrop="true" disabled="@bind(vm.makeAsReadOnly)"
+											placeholder="Seleccione..." hflex="1"
+											value="@bind(vm.vehiculo.motor.nombre)">
+											<bandpopup>
+												<listbox
+													id="gridMotores" width="200px" mold="paging"
+													model="@load(vm.listaMotores)"
+													selectedItem="@bind(vm.vehiculo.motor)"
+													onSelect="bdMotor.close();">
+													<listhead>
+														<listheader
+															value="nombre" label="Nombre" sort="auto(nombre)">
+															<textbox
+																instant="true" placeholder=""
+																value="@bind(vm.motor.nombre)"
+																onChange="@command('aplicarFiltroMotor')" width="100px" />
+															<div
+																sclass="z-icon-filter bigger-200" />
+														</listheader>
+													</listhead>
+													<template
+														name="model">
+														<listitem
+															label="@bind(each.nombre)" />
+													</template>
+												</listbox>
+												<paging id="pagMotores"
+													onPaging="@command('paginarListaMotores')" autohide="true" />
+											</bandpopup>
+										</bandbox>
+
+										<!-- TRANSMISION -->
+										<hbox>
+											<label value="Transmision: "
+												sclass="form-label" />
+										</hbox>
+										<combobox
+											placeholder="Seleccione..." readonly="true" hflex="1"
+											disabled="@bind(vm.makeAsReadOnly)"
+											selectedItem="@bind(vm.transmision)"
+											value="@bind(vm.transmision.nombre)"
+											model="@load(vm.listaTransmision)">
+											<template name="model">
+												<comboitem
+													label="@bind(each.nombre)" />
+											</template>
+										</combobox>
+									</row>
+
+									<row>
+										<!-- TRACCION -->
+										<hbox>
+											<label value="Tracción: "
+												sclass="form-label" />
+										</hbox>
+										<combobox
+											placeholder="Seleccione..." readonly="true" hflex="1"
+											disabled="@bind(vm.makeAsReadOnly)"
+											selectedItem="@bind(vm.traccion)"
+											value="@bind(vm.traccion.nombre)"
+											model="@load(vm.listaTraccion)">
+											<template name="model">
+												<comboitem
+													label="@bind(each.nombre)" />
+											</template>
+										</combobox>
+									</row>
+
+								</rows>
+							</grid>
+						</div>
+					</n:div>
+					<n:div class="modal-footer">
+						<hbox width="100%"
+							visible="@bind(!vm.makeAsReadOnly)" hflex="1">
+							<include
+								src="/WEB-INF/views/template/textFieldsMandatory.zul" hflex="1" />
+							<div align="right">
+								<button id="btnLimpiar" label="Limpiar"
+									type="submit" onClick="@command('limpiar')"
+									sclass="btn-sm btn-info" />
+								<button id="btnEnviar" label="Registrar"
+									type="submit"
+									onClick="@command('registrar', btnEnviar=self, btnLimpiar=btnLimpiar)"
+									sclass="btn-sm btn-primary" />
+							</div>
+						</hbox>
+					</n:div>
+				</div>
+			</div>
+		</n:div>
+	</window>
+</zk>
