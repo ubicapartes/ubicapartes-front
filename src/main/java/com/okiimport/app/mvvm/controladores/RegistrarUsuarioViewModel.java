@@ -22,6 +22,7 @@ import com.okiimport.app.model.factory.persona.EstatusCliente;
 import com.okiimport.app.mvvm.AbstractRequerimientoViewModel;
 import com.okiimport.app.mvvm.constraint.ClienteCedulaRifConstraint;
 import com.okiimport.app.mvvm.constraint.CustomConstraint;
+import com.okiimport.app.mvvm.constraint.EmailConstraint;
 import com.okiimport.app.mvvm.model.ModeloCombo;
 import com.okiimport.app.mvvm.resource.BeanInjector;
 import com.okiimport.app.service.configuracion.SControlUsuario;
@@ -83,23 +84,6 @@ public class RegistrarUsuarioViewModel extends AbstractRequerimientoViewModel {
 		tipoPersona = listaTipoPersona.get(1);
 		//tipoPersona=consultarTipoPersona(this.cliente.getCedula(),listaTipoPersona);
 	}
-	
-	@Command
-	public void verificarCorreo(){
-		/*Boolean respuesta=false;
-		this.lblMsgCorreo.setValue("El correo ya existe");
-		respuesta=this.sMaestros.consultarCorreoCliente(cliente.getCorreo());
-		//llamada al metodo del validar 
-		if(respuesta){
-			System.out.println("el correo "+cliente.getCorreo()+" ya existe.");
-			this.lblMsgCorreo.setVisible(true);
-			//return new GeneralConstraint(EConstraint.EMAIL_INVALID);
-		}else{
-			System.out.println("el correo es valido. No existe en la BD.");
-			this.lblMsgCorreo.setVisible(false);
-			//return new GeneralConstraint(EConstraint.NO_EMPTY);
-		}*/
-	}
 
 	/**
 	 * Descripcion: Permite limpiar los campos del formulario registrar Proveedor
@@ -128,6 +112,17 @@ public class RegistrarUsuarioViewModel extends AbstractRequerimientoViewModel {
 			@Override
 			public String getTypeClient() {
 				return (tipoPersona.getValor()) ? "J" : "V";
+			}
+		});
+	}
+	
+	@Override
+	public CustomConstraint getEmailValidator() {
+		return new EmailConstraint(super.getEmailValidator(), new EmailConstraint.EmailConstraintComunicator() {
+			
+			@Override
+			public Boolean searchClient(String email) {
+				return sMaestros.consultarCorreoCliente(email);
 			}
 		});
 	}

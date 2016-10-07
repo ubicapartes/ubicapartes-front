@@ -107,8 +107,7 @@
 												sclass="form-control" mold="rounded"
 												placeholder="Ej. correo@gmail.com"
 												value="@bind(vm.cliente.correo)"
-												constraint="@bind(vm.emailValidator)"
-												onChange="@command('verificarCorreo')" />
+												constraint="@bind(vm.emailValidator)"/>
 										</vbox>
 											<!-- TELEFONO -->
 										<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Teléfono:" />
