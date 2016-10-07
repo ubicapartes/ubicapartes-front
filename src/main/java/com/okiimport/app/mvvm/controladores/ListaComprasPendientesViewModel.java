@@ -25,6 +25,7 @@ import org.zkoss.zul.Paging;
 
 import com.okiimport.app.model.Cliente;
 import com.okiimport.app.model.Compra;
+import com.okiimport.app.model.Requerimiento;
 import com.okiimport.app.mvvm.AbstractRequerimientoViewModel;
 import com.okiimport.app.mvvm.model.ModeloCombo;
 import com.okiimport.app.mvvm.resource.BeanInjector;
@@ -46,6 +47,8 @@ public class ListaComprasPendientesViewModel extends AbstractRequerimientoViewMo
 		private Date fechaCreacion;
 		private Cliente cliente;
 		private Compra compraFiltro;
+		private Requerimiento requerimientoFiltro;
+		private Cliente clienteFiltro;
 		private List <ModeloCombo<Boolean>> listaTipoPersona;
 		private ModeloCombo<Boolean> tipoPersona;
 		private List <Compra> listaCompras;
@@ -62,10 +65,14 @@ public class ListaComprasPendientesViewModel extends AbstractRequerimientoViewMo
 			super.doAfterCompose(view);
 			cliente = new Cliente();
 			compraFiltro = new Compra();
+			requerimientoFiltro = new Requerimiento();
+			requerimientoFiltro.setCliente(clienteFiltro);
+			compraFiltro.setRequerimiento(requerimientoFiltro);
 			pagComprasCliente.setPageSize(pageSize);
 			agregarGridSort(gridComprasCliente);
 			listaTipoPersona = llenarListaTipoPersona();
 			tipoPersona = listaTipoPersona.get(1);
+			cambiarCompras(0,null,true);
 		}
 
 		/**Interface: EventListener<SortEvent>*/
@@ -87,17 +94,18 @@ public class ListaComprasPendientesViewModel extends AbstractRequerimientoViewMo
 		public void cambiarCompras(@Default("0") @BindingParam("page") int page,
 				@BindingParam("fieldSort") String fieldSort, 
 				@BindingParam("sortDirection") Boolean sortDirection){
-			String cedula = obtenerCedulaConTipoPersona();
+			//String cedula = obtenerCedulaConTipoPersona();
 			//System.out.println("*******************");
 			//System.out.println("CEDULA -> "+cedula);
-			Map<String, Object> parametros = sTransaccion.consultarComprasDelCliente( cedula, fieldSort, sortDirection, page, pageSize);
+			//Map<String, Object> parametros = sTransaccion.consultarComprasDelCliente( cedula, fieldSort, sortDirection, page, pageSize);
+			Map<String, Object> parametros = sTransaccion.consultarComprasGeneral(fieldSort, sortDirection, page, pageSize);
 			Integer total = (Integer) parametros.get("total");
 			listaCompras = (List<Compra>) parametros.get("compras");
 			gridComprasCliente.setMultiple(true);
 			pagComprasCliente.setActivePage(page);
 			pagComprasCliente.setTotalSize(total);
-			if(listaCompras.size()==0)
-				mostrarMensaje("Cliente", "Disculpe, no se encontraron compras pendientes asociadas al ID/RIF : "+cedula, Messagebox.EXCLAMATION, null, null, null);
+			//if(listaCompras.size()==0)
+			//	mostrarMensaje("Cliente", "Disculpe, no se encontraron compras pendientes asociadas al ID/RIF : "+cedula, Messagebox.EXCLAMATION, null, null, null);
 		}
 		
 		
@@ -106,10 +114,10 @@ public class ListaComprasPendientesViewModel extends AbstractRequerimientoViewMo
 		public void refrescarListadoCompras(@Default("0") @BindingParam("page") int page,
 				@BindingParam("fieldSort") String fieldSort, 
 				@BindingParam("sortDirection") Boolean sortDirection){
-			String cedula = obtenerCedulaConTipoPersona();
+			//String cedula = obtenerCedulaConTipoPersona();
 			//System.out.println("*******************");
 			//System.out.println("CEDULA -> "+cedula);
-			Map<String, Object> parametros = sTransaccion.consultarComprasDelCliente( cedula, fieldSort, sortDirection, page, pageSize);
+			Map<String, Object> parametros = sTransaccion.consultarComprasGeneral(fieldSort, sortDirection, page, pageSize);
 			Integer total = (Integer) parametros.get("total");
 			listaCompras = (List<Compra>) parametros.get("compras");
 			gridComprasCliente.setMultiple(true);

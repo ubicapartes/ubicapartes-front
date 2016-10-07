@@ -1,84 +1,128 @@
 <zk xmlns:w="client" xmlns:n="native">
-	<vlayout sclass="card-inner" apply="org.zkoss.bind.BindComposer" width="100%"
-		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.ListaComprasPendientesViewModel')"><!--  -->
-		<vlayout sclass="search"  width="30%">
+	<vlayout sclass="card-inner" apply="org.zkoss.bind.BindComposer"
+		width="100%"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.ListaComprasPendientesViewModel')"><!-- -->
+		<vlayout sclass="search" width="30%">
 			<hbox>
 				<!-- CEDULA -->
-				<include src="/WEB-INF/views/template/fieldMandatory.zul" field="ID / RIF:"/>
+				<include src="/WEB-INF/views/template/fieldMandatory.zul"
+					field="ID / RIF:" />
 
-				<combobox width="30%" readonly="true"
-					selectedItem="@bind(vm.tipoPersona)"
+				<combobox width="30%" readonly="true" selectedItem="@bind(vm.tipoPersona)"
 					model="@load(vm.listaTipoPersona)">
 					<template name="model">
-						<comboitem label="@bind(each.nombre)"/>
+						<comboitem label="@bind(each.nombre)" />
 					</template>
 				</combobox>
 				<vbox>
-					<intbox placeholder="Ej: 402405375" mold="rounded" 
-						maxlength="9" hflex="1"
-						value="@bind(vm.cliente.cedula)"
-						constraint="@bind(vm.validatorClienteCedulaRif2)" 
-						onOK="@global-command('cambiarCompras')"
+					<intbox placeholder="Ej: 402405375" mold="rounded"
+						maxlength="9" hflex="1" value="@bind(vm.cliente.cedula)"
+						constraint="@bind(vm.validatorClienteCedulaRif2)" onOK="@global-command('cambiarCompras')"
 						onBlur="@global-command('cambiarCompras')" />
 				</vbox>
-				<button label="Buscar" onClick="@global-command('cambiarCompras')" sclass="btn-primary" />
+				<button label="Buscar" onClick="@global-command('cambiarCompras')"
+					sclass="btn-primary" />
 			</hbox>
 		</vlayout>
-		
-		<!-- LISTA DE COMPRAS PENDIENTES (POR PAGAR)-->
+
+		<!-- LISTA DE COMPRAS PENDIENTES (POR PAGAR) -->
 		<div width="95%">
-			<include src="/WEB-INF/views/template/subTitle.zul" subtitulo="Compras Pendientes" />
+			<include src="/WEB-INF/views/template/subTitle.zul"
+				subtitulo="Compras Pendientes" />
 			<panel sclass="borderGrid">
 				<panelchildren>
 					<hbox width="100%" align="center">
 						<paging id="pagComprasCliente" autohide="true" hflex="1"
 							onPaging="@command('paginarLista')" />
 						<div sclass="z-paging z-paging-info" height="28px">
-							<label id="lblComprasCliente" sclass="rRmWwb-info"/>
+							<label id="lblComprasCliente" sclass="rRmWwb-info" />
 						</div>
 					</hbox>
 					<listbox id="gridComprasCliente" emptyMessage="No hay compras pendientes"
 						onAfterRender="@command('updatePaging', paging=pagComprasCliente, label=lblComprasCliente)"
 						model="@load(vm.listaCompras)">
+
+						<auxhead>
+							<auxheader>
+								<div sclass="z-icon-filter bigger-200" />
+								<spinner instant="true" hflex="1"
+									value="@bind(vm.compraFiltro.requerimiento.cliente.nombre)" onChange="@command('aplicarFiltro')" />
+							</auxheader>
+							<auxheader>
+								<div sclass="z-icon-filter bigger-200" />
+								<spinner instant="true" hflex="1"
+									value="@bind(vm.compraFiltro.idCompra)" onChange="@command('aplicarFiltro')" />
+							</auxheader>
+							<auxheader>
+								<div sclass="z-icon-filter bigger-200" />
+								<spinner instant="true" hflex="1"
+									value="@bind(vm.compraFiltro.requerimiento.idRequerimiento)" onChange="@command('aplicarFiltro')" />
+							</auxheader>
+							<auxheader>
+								<div sclass="z-icon-filter bigger-200" />
+								<datebox instant="true" hflex="1" format="@bind(vm.formatDate)"
+									value="@bind(vm.compraFiltro.fechaCreacion)" onChange="@command('aplicarFiltro')" />
+							</auxheader>
+							<auxheader>
+								<div sclass="z-icon-filter bigger-200" />
+								<textbox instant="true" hflex="1"
+									value="@bind(vm.compraFiltro.precioVenta)" onChange="@command('aplicarFiltro')" />
+							</auxheader>
+							<auxheader>
+								<div sclass="z-icon-filter bigger-200" />
+								<textbox instant="true" hflex="1"
+									value="@bind(vm.compraFiltro.precioFlete)" onChange="@command('aplicarFiltro')" />
+							</auxheader>
+							<auxheader>
+								<div sclass="z-icon-filter bigger-200" />
+								<combobox instant="true" readonly="true" hflex="1"
+									selectedItem="@bind(vm.estatusFiltro)" model="@load(vm.listaEstatus)"
+									onChange="@command('aplicarFiltro')" value="@bind(vm.estatusFiltro.nombre)">
+									<template name="model">
+										<comboitem label="@bind(each.nombre)" />
+									</template>
+								</combobox>
+							</auxheader>
+						</auxhead>
+
 						<listhead>
-							<listheader label="Cliente" width="70px"
-								value="idCliente"  />
-								
-							<listheader label="N° Compra" width="70px"
-								value="idCompra"  />
-								
+							<listheader label="Cliente" width="70px" value="idCliente" />
+
+							<listheader label="N° Compra" width="70px" value="idCompra" />
+
 							<listheader label="N° Solicitud" width="70px"
-								value="requerimiento.idRequerimiento"  />
-							
+								value="requerimiento.idRequerimiento" />
+
 							<listheader label="Fecha Creación" width="100px"
 								value="fechaCreacion" />
 
 							<listheader value="precioVenta" label="Precio de venta"
-								 width="120px"/>
+								width="120px" />
 
 							<listheader label="Precio de flete" width="100px"
-								value="precioFlete"  />
-								 
+								value="precioFlete" />
+
 							<listheader width="11%" label="Estatus" />
 							<listheader width="11%" label="Operaciones" />
 
 						</listhead>
 						<template name="model">
 							<listitem>
-								<listcell label="@bind((each.requerimiento.cliente.nombre).concat(' ').concat(each.requerimiento.cliente.apellido))" />
+								<listcell
+									label="@bind((each.requerimiento.cliente.nombre).concat(' ').concat(each.requerimiento.cliente.apellido))" />
 								<listcell label="@bind(each.idCompra)" />
 								<listcell label="@bind(each.requerimiento.idRequerimiento)" />
-								<listcell label="@bind(each.fechaCreacion)
-								@converter('formatedDate', format=vm.formatDate)"/>
+								<listcell
+									label="@bind(each.fechaCreacion)
+								@converter('formatedDate', format=vm.formatDate)" />
 								<listcell label="@bind(each.precioVenta)" />
 								<listcell label="@bind(each.precioFlete)" />
-								<listcell label="@bind(each.determinarEstatus())"/>
+								<listcell label="@bind(each.determinarEstatus())" />
 								<listcell>
 									<hbox spacing="20px">
 										<div class="btn-group btn-group-sm">
-											<button
-												iconSclass="z-icon-file blue bigger-160" tooltiptext="Procesar pago"
-												onClick="@command('pagar',compra = each)" />
+											<button iconSclass="z-icon-file blue bigger-160"
+												tooltiptext="Procesar pago" onClick="@command('pagar',compra = each)" />
 										</div>
 									</hbox>
 								</listcell>
