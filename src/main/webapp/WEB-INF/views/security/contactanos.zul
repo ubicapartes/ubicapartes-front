@@ -1,0 +1,105 @@
+<zk xmlns:w="client" xmlns:n="native">
+	
+	<div align="center">
+		<n:form id="formContact" class="form">
+			<div hflex="1" align="center">
+			<n:div class="inicio">
+	</n:div>
+				
+				<grid>
+					<columns>
+						<column label="" />
+					</columns>
+					<rows >
+						<row align="center" sclass="formulario" style="background:#fff">
+						
+							<vlayout spacing="15px" apply="org.zkoss.bind.BindComposer"
+							 viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.ContactarViewModel')" >
+								
+								<n:h4>Estamos dispuestos a responder cualquier duda que tengas sobre UbicaPartes.</n:h4>
+<!-- 								<image src="/resources/img/user1.png" -->
+<!-- 									sclass="img-rounded" width="50px"/> -->
+
+								<div id="errorLogin" sclass="alert alert-danger" if="${not empty param.auth}">
+									¡Credenciales Invalidas!
+								</div>
+
+								
+								<!-- NOMBRE -->
+										
+										<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Nombre:" />
+										<vbox hflex="1">
+										
+											<textbox
+												id="nombre" sclass="form-control" mold="rounded"
+												value="@bind(vm.nombre)"
+												placeholder="Ingresa tu nombre."
+												constraint="@bind(vm.notEmptyValidator)" />
+										</vbox>
+										
+										
+								<!-- EMAIL -->
+										<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Correo:" />
+										
+										<vbox hflex="1">
+											<textbox
+												id="email" sclass="form-control" mold="rounded"
+												value="@bind(vm.correo)"
+												placeholder="Ingresa tu correo electrónico."
+												constraint="@bind(vm.emailValidator)" />
+										</vbox>
+								
+										<!-- TLF -->
+										<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Teléfono:" />
+										<vbox hflex="1">
+											<textbox
+												id="telefono" sclass="form-control" mold="rounded"
+												value="@bind(vm.telefono)"
+												placeholder="Ingresa tu número telefónico."
+												 maxlength="11"
+												constraint="@bind(vm.telefonoValidator)" />
+										</vbox>
+								
+									<!-- MENSAJE -->
+										<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Mensaje:" />
+										<vbox hflex="1">
+											<textbox
+												id="mensaje" sclass="form-control" mold="rounded"
+												value="@bind(vm.mensaje)"
+												placeholder="Ingresa tu mensaje."
+												width="100%" rows="3" cols="50"
+												constraint="@bind(vm.notEmptyValidator)" />
+										</vbox>
+								
+								
+								<div class="form-group">
+									<div class="row">
+										<div class="col-md-10 col-md-push-1">
+													
+													<button label="Enviar Mensaje" width="100%" height="40px"
+												type="submit"
+												onClick="@command('enviarMensaje')"
+												 sclass="btn btn-primary" />
+											
+										
+										</div>
+									</div>
+								</div>
+								
+								
+<!-- 								<hlayout spacing="15px">	 -->
+<!-- 									<checkbox id="remember_me" name="remember-me" /> -->
+<!--  									<label value="Recordarme"/>  -->
+<!--  								</hlayout> -->
+
+							</vlayout>
+						</row>
+					</rows>
+				</grid>
+			</div>
+		</n:form>
+	</div>
+	<div>
+	</div>
+
+</zk>
