@@ -147,13 +147,22 @@ public class ListaComprasPendientesViewModel extends AbstractRequerimientoViewMo
 		@NotifyChange("*")
 		public void aplicarFiltro()
 		{
-			if(fechaCreacion!=null)
-				this.compraFiltro.setFechaCreacion(new Timestamp(fechaCreacion.getTime()));
-			else
-				this.compraFiltro.setFechaCreacion(null);
-			cambiarCompras(0, null, null);
+		
+			if(this.compraFiltro != null) {
+				this.listaComprasFiltro.clear();
+				
+				
+				for (Compra c : listaCompras) {
+					if(c.contains(compraFiltro)) {
+						listaComprasFiltro.add(c);
+					}
+				}
+			} else {
+				listaComprasFiltro.clear();
+				listaComprasFiltro.addAll(listaCompras);
+			}
 		}
-
+		
 		/**
 		 * Descripcion: Permitira obtener la cedula con tipo de persona
 		 * Parametros: @param view: formularioVerificarRequerimiento.zul    
@@ -246,6 +255,17 @@ public class ListaComprasPendientesViewModel extends AbstractRequerimientoViewMo
 		public void setFechaCreacion(Date fechaCreacion) {
 			this.fechaCreacion = fechaCreacion;
 		}
+		
+		public List<Compra> getListaComprasFiltro() {
+			return listaComprasFiltro;
+		}
+
+		public void setListaComprasFiltro(List<Compra> listaComprasFiltro) {
+			this.listaComprasFiltro = listaComprasFiltro;
+		}
+
+		private List <Compra> listaComprasFiltro;
+
 
 
 }
