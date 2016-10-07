@@ -8,6 +8,7 @@ import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Intbox;
@@ -22,6 +23,7 @@ import com.okiimport.app.model.factory.persona.EstatusCliente;
 import com.okiimport.app.mvvm.AbstractRequerimientoViewModel;
 import com.okiimport.app.mvvm.constraint.ClienteCedulaRifConstraint;
 import com.okiimport.app.mvvm.constraint.CustomConstraint;
+import com.okiimport.app.mvvm.constraint.CustomConstraint.EConstraint;
 import com.okiimport.app.mvvm.constraint.EmailConstraint;
 import com.okiimport.app.mvvm.constraint.PasswordConstraint;
 import com.okiimport.app.mvvm.model.ModeloCombo;
@@ -148,6 +150,23 @@ public class RegistrarUsuarioViewModel extends AbstractRequerimientoViewModel {
 				return PasswordGenerator.MAYUSCULAS;
 			}
 		});
+	}
+	
+	public CustomConstraint getRepeatPasswordValidator(){
+		return new CustomConstraint(EConstraint.NO_EMPTY, EConstraint.CUSTOM){
+
+			@Override
+			protected void validateCustom(Component comp, Object value) throws WrongValueException {
+				String password = usuario.getPasword();
+				String repeatPassword = String.valueOf(value);
+				
+				if(!repeatPassword.equalsIgnoreCase(password)){
+					String mensaje = "No coinciden las contrase\u00f1as!";
+					throw new WrongValueException(comp, mensaje);
+				}
+			}
+			
+		};
 	}
 	
 	/**

@@ -138,7 +138,7 @@
 												id="repetirClave" sclass="form-control" mold="rounded"
 												value="@bind(vm.usuario.paswordRepeat)" type="password"
 												placeholder="entre 6 a 20 caracteres" hflex="1"
-												constraint="@bind(vm.notEmptyValidator)" />
+												constraint="@bind(vm.repeatPasswordValidator)" />
 										</vbox>		
 								</row>
 									
