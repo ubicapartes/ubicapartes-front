@@ -4,7 +4,7 @@
 		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.EditarRequerimientoViewModel')">
 		
 		<n:div aria-hidden="false" class="modal fade in" role="dialog" tabindex="-1" style="display: block;">
-			<div class="modal-dialog modal-full"  height="auto"><!-- modal-xs -->
+			<div class="modal-dialog modal-full"  height="auto">
 				<div sclass="modal-content">
 					<include src="/WEB-INF/views/template/modal/titleModal.zul" titulo="Requerimiento" />
 					<n:div class="modal-inner">
