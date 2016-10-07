@@ -6,7 +6,6 @@ import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
-import org.zkoss.bind.annotation.ExecutionArgParam;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.select.annotation.Wire;
@@ -21,6 +20,7 @@ import com.okiimport.app.model.Persona;
 import com.okiimport.app.model.Usuario;
 import com.okiimport.app.model.factory.persona.EstatusCliente;
 import com.okiimport.app.mvvm.AbstractRequerimientoViewModel;
+import com.okiimport.app.mvvm.constraint.ClienteCedulaRifConstraint;
 import com.okiimport.app.mvvm.constraint.CustomConstraint;
 import com.okiimport.app.mvvm.model.ModeloCombo;
 import com.okiimport.app.mvvm.resource.BeanInjector;
@@ -84,33 +84,6 @@ public class RegistrarUsuarioViewModel extends AbstractRequerimientoViewModel {
 		//tipoPersona=consultarTipoPersona(this.cliente.getCedula(),listaTipoPersona);
 	}
 	
-	/**
-	 * Descripcion: Permite consultar si el cliente ya existe en la Base de datos
-	 * Parametros: @param view: formularioRequerimiento.zul  
-	 * Retorno: Ninguno
-	 * Nota: Ninguna
-	 * */
-	@Command
-	@NotifyChange({ "*" })
-	public void buscarCliente() {
-		String tipo = (this.tipoPersona.getValor()) ? "J" : "V";
-		String cedula = cliente.getCedula();
-		String cedulaBuscar = tipo + cedula;
-		if (cedula != null && !cedula.equalsIgnoreCase("")) {
-			Cliente cliente = sMaestros.consultarCliente(new Cliente(
-					cedulaBuscar));
-			if (cliente != null) {
-				this.cliente = cliente;
-				this.cliente.setCedula(cedulaBuscar.substring(1,
-						cedulaBuscar.length()));
-				this.comboTipoPersona.setValue(cedulaBuscar.substring(0, 1));
-			}
-		} else {
-			this.cliente.setCedula(null);
-			cedulaRif.getValue();
-		}
-	}
-	
 	@Command
 	public void verificarCorreo(){
 		/*Boolean respuesta=false;
@@ -141,23 +114,25 @@ public class RegistrarUsuarioViewModel extends AbstractRequerimientoViewModel {
 		this.usuario = new Usuario(this.cliente, true);
 		limpiarEstadoYCiudad();
 	}
-
-	/**
-	 * Descripcion: Permite Consultar el tipo de persona
-	 * Parametros: @param view: formularioProveedor.zul 
-	 * Retorno: Ninguno
-	 * Nota: Ninguna
-	 * */
-	private ModeloCombo<Boolean> consultarTipoPersona(String cedula, List <ModeloCombo<Boolean>> listaTipoPersona){
-		if (cedula!=null){
-			String tipoPersona = cedula.substring(0, 1);
-			for(ModeloCombo<Boolean> tipoPersonal: listaTipoPersona )
-				if (tipoPersonal.getNombre().equalsIgnoreCase(tipoPersona))
-					return tipoPersonal;
-		}
-		return this.tipoPersona;
+	
+	/**METODOS OVERRIDE*/
+	@Override
+	public CustomConstraint getValidatorClienteCedulaRif() {
+		return new ClienteCedulaRifConstraint(new ClienteCedulaRifConstraint.ClienteCedulaRifComunicator() {
+			
+			@Override
+			public Cliente searchClient(String cedulaORif) {
+				return sMaestros.consultarCliente(new Cliente(cedulaORif));
+			}
+			
+			@Override
+			public String getTypeClient() {
+				return (tipoPersona.getValor()) ? "J" : "V";
+			}
+		});
 	}
 
+	/**METODOS PROPIOS DE LA CLASE*/
 	/**
 	 * Descripcion: Permite limpiar las variables que se encargan de las variables de ciudad y estado
 	 * Parametros: Ninguno
@@ -204,6 +179,7 @@ public class RegistrarUsuarioViewModel extends AbstractRequerimientoViewModel {
 	}
 
 
+	/**GETTERS Y SETTERS*/
 	public List<Estado> getListaEstados() {
 		return listaEstados;
 	}

@@ -73,9 +73,7 @@
 													sclass="form-control" mold="rounded"
 													placeholder="Ej: 401402375" maxlength="9"
 													value="@bind(vm.cliente.cedula)"
-													constraint="@bind(vm.validatorClienteCedulaRif)"
-													  onBlur="@command('buscarCliente')"
-													onOK="@command('buscarCliente')"/>
+													constraint="@bind(vm.validatorClienteCedulaRif)"/>
 											</vbox>
 										</hbox>
 									</row>
