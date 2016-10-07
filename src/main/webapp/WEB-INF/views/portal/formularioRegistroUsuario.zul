@@ -128,7 +128,7 @@
 												id="crearClave" sclass="form-control" mold="rounded"
 												value="@bind(vm.usuario.pasword)" type="password"
 												placeholder="entre 6 a 20 caracteres" hflex="1"
-												constraint="@bind(vm.notEmptyValidator)" />
+												constraint="@bind(vm.passwordValidator)" />
 										</vbox>	
 							
 								<!-- REPETIR CLAVE -->

@@ -23,8 +23,10 @@ import com.okiimport.app.mvvm.AbstractRequerimientoViewModel;
 import com.okiimport.app.mvvm.constraint.ClienteCedulaRifConstraint;
 import com.okiimport.app.mvvm.constraint.CustomConstraint;
 import com.okiimport.app.mvvm.constraint.EmailConstraint;
+import com.okiimport.app.mvvm.constraint.PasswordConstraint;
 import com.okiimport.app.mvvm.model.ModeloCombo;
 import com.okiimport.app.mvvm.resource.BeanInjector;
+import com.okiimport.app.resource.service.PasswordGenerator;
 import com.okiimport.app.service.configuracion.SControlUsuario;
 import com.okiimport.app.service.mail.MailUsuario;
 
@@ -128,6 +130,26 @@ public class RegistrarUsuarioViewModel extends AbstractRequerimientoViewModel {
 	}
 
 	/**METODOS PROPIOS DE LA CLASE*/
+	public CustomConstraint getPasswordValidator(){
+		return new PasswordConstraint(cliente, super.getNotEmptyValidator(), new PasswordConstraint.PasswordConstraintComunicator() {
+			
+			@Override
+			public String getNumeros() {
+				return PasswordGenerator.NUMEROS;
+			}
+			
+			@Override
+			public String getMinusculas() {
+				return PasswordGenerator.MINUSCULAS;
+			}
+			
+			@Override
+			public String getMayusculas() {
+				return PasswordGenerator.MAYUSCULAS;
+			}
+		});
+	}
+	
 	/**
 	 * Descripcion: Permite limpiar las variables que se encargan de las variables de ciudad y estado
 	 * Parametros: Ninguno
