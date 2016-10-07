@@ -63,6 +63,12 @@ public class HomeController {
 		return "security/index.zul";
 	}
 	
+	
+	@RequestMapping(value= "/plantilla", method = RequestMethod.GET)
+	public String contactar(){
+		return "security/plantilla.zul";
+	}
+	
 	@RequestMapping(value= "/admin/home", method = RequestMethod.GET)
 	public String iniciarAdministrador(){
 		return "sistema/index.zul";
