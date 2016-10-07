@@ -13,17 +13,19 @@ import org.zkoss.zul.Label;
 import org.zkoss.zul.Menuitem;
 import org.zkoss.zul.Span;
 
+import com.okiimport.app.model.Cliente;
 import com.okiimport.app.model.Usuario;
 import com.okiimport.app.mvvm.AbstractRequerimientoViewModel;
 import com.okiimport.app.mvvm.resource.BeanInjector;
 import com.okiimport.app.service.transaccion.STransaccion;
-
+import com.okiimport.app.service.maestros.SMaestros;
 
 public class PerfilViewModel extends AbstractRequerimientoViewModel {
 	
 	//Servicios
 	@BeanInjector("sTransaccion")
 	private STransaccion sTransaccion;
+	
 	
 	//GUI
 	@Wire("#menInfoUsuario")
@@ -41,8 +43,13 @@ public class PerfilViewModel extends AbstractRequerimientoViewModel {
 		super.doAfterCompose(view);
 		
 		UserDetails user = super.getUser();
+		
 		if(user!=null){
 			Usuario usuario = sControlUsuario.consultarUsuario(user.getUsername(), user.getPassword(), null);
+			Cliente objCliente = sMaestros.consultarClienteByPersonaId(usuario.getPersona().getId());
+			if(objCliente==null){
+				menCarrito.setVisible(false);
+			}
 			menInfoUsuario.setTooltiptext(usuario.getUsername()+" Avatar");
 			menInfoUsuario.setLabel(usuario.getUsername().toUpperCase());
 			setIdCliente(usuario.getPersona().getId());
