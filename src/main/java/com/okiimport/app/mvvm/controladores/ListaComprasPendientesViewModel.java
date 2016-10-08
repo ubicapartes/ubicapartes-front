@@ -199,12 +199,24 @@ public class ListaComprasPendientesViewModel extends AbstractRequerimientoViewMo
 		 * Nota: Ninguna
 		 * */
 		@Command
-		public void pagar(@BindingParam("compra") Compra compra){
+		public void pagarEfectivo(@BindingParam("compra") Compra compra){
 			Map<String, Object> parametros = new HashMap<String, Object>();
 			parametros.put("compra", compra);
-			llamarFormulario("/pago/formasPago.zul", parametros);
+			llamarFormulario("/pago/formularioPagoEfectivo.zul", parametros);
 		}
-
+		
+		/**
+		 * Descripcion: Permite cargar la vista para procesar el pago de transferencia o deposito
+		 * Parametros: Requerimiento: requerimiento @param view: formularioPagoTransferenciaDeposito.zul 
+		 * Retorno: Ninguno
+		 * Nota: Ninguna
+		 * */
+		@Command
+		public void pagarTransferenciaDeposito(@BindingParam("compra") Compra compra){
+			Map<String, Object> parametros = new HashMap<String, Object>();
+			parametros.put("compra", compra);
+			llamarFormulario("/pago/formularioPagoTransferenciaDeposito.zul", parametros);
+		}
 		
 		private void llamarFormulario(String ruta, Map<String, Object> parametros){
 			crearModal(BasePackageSistemaFunc+ruta, parametros);

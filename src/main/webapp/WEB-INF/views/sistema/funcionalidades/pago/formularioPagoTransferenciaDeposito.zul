@@ -1,0 +1,102 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winPagoFacturaTD" border="none" height="0px" 
+		apply="org.zkoss.bind.BindComposer" closable="true"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.RegistrarPagoFacturaEfectivoViewModel')">
+		<n:div aria-hidden="false" class="modal fade in" role="dialog" tabindex="-1" style="display: block;">
+			<div class="modal-dialog modal-full" height="auto"><!-- modal-xs -->
+				<div sclass="modal-content">
+					<include src="/WEB-INF/views/template/modal/titleModal.zul" titulo="Pago de Factura (Transferencia)" />
+					<n:div class="modal-inner" >
+						<groupbox id="cmpPayment" closable="false" >
+							<!-- DATOS DEL PAGO -->
+							<grid>
+								<columns>
+									<column width="15%"/>
+									<column width="20%"/>
+									<column width="25%"/>
+									<column width="20%"/>
+									<column />
+								</columns>
+							</grid>
+							
+							<tabbox maximalHeight="true" sclass="tab-nav tab-nav-blue">
+								<tabs>
+									<tab sclass="waves-color-blue waves-effect">
+										<label value="Información" />
+									</tab>
+								</tabs>
+								<tabpanels>
+									<tabpanel>
+										<grid>
+											<columns>
+												<column width="20%" />
+												<column  width="25%"/>
+												<column  width="25%"/>
+												<column  width="20%"/>
+											</columns>
+										<rows>
+										<row>	
+											<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Nombre y Apellido:" />
+											<vbox>
+												<textbox id="txtTitular" maxlength="255" width="115%" placeholder="Ej.: José Perez"
+												constraint="@bind(vm.notEmptyValidator)"/>
+											</vbox>
+											<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Monto total a pagar:" />	
+											<vbox>
+												<decimalbox
+													format="@bind(vm.formatNumber)"
+													locale="@bind(vm.localeNumber)"
+													tooltiptext="Monto total a pagar"
+													value="@bind(vm.montoPagar)" width="153.5%"
+													constraint="@bind(vm.getValidatorCantPositiva())"
+													disabled="true"/>
+											</vbox>	
+										</row>
+										<row>
+											<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Tipo Operacion:" />	
+											<vbox>
+												<textbox id="txtTipoOperacion" width ="92.7%" tabindex="13"  maxlength="255"  />
+											</vbox>	
+											<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Nro Referencia:" />	
+											<vbox>
+												<textbox id="txtNroReferencia" width ="92.7%" tabindex="13"  maxlength="255"  />
+											</vbox>	
+										</row>	
+										<row>
+											<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Banco:" />	
+											<vbox>
+												<textbox id="txtBanco" width ="92.7%" tabindex="13"  maxlength="255"  />
+											</vbox>	
+											<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Fecha de pago:" />	
+											<vbox>
+												<datebox  id="dateFechaPago" sclass="label-not-mandatory" format="dd/MM/yyyy" disabled="true" width="149.5%"></datebox>
+											</vbox>	
+										</row>
+										<row>
+											<label value="Observaciones: "	style="margin-left:4%" sclass="form-label" />	
+											<vbox>
+												<textbox id="txtObservaciones" width ="92.7%" tabindex="13" multiline="true" maxlength="255" style="resize:vertical;max-height:100px; min-height:50px;" />
+											</vbox>	
+										</row>
+										</rows>
+										</grid>
+									</tabpanel>
+								</tabpanels>
+							</tabbox>
+						</groupbox>
+					</n:div>
+					<n:div class="modal-footer">
+						<button id="btnLimpiar" label="Limpiar" sclass="btn-sm btn-info"
+							onClick="@command('limpiar')"/>
+						<button label="Registrar Pago" sclass="btn-sm btn-primary"
+							onClick="@command('registrarPago', btnEnviar=self, btnLimpiar=btnLimpiar)"/>
+						<button label="Cancelar" sclass="btn-sm btn-danger"
+							onClick="@command('closeModal')"/>
+					</n:div>
+				</div>
+			</div>
+		</n:div>
+	</window>
+</zk>
+
+

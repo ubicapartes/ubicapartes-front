@@ -2,33 +2,9 @@
 	<vlayout sclass="card-inner" apply="org.zkoss.bind.BindComposer"
 		width="100%"
 		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.ListaComprasPendientesViewModel')"><!-- -->
-		<vlayout sclass="search" width="30%">
-			<hbox>
-				<!-- CEDULA -->
-				<include src="/WEB-INF/views/template/fieldMandatory.zul"
-					field="ID / RIF:" />
-
-				<combobox width="30%" readonly="true" selectedItem="@bind(vm.tipoPersona)"
-					model="@load(vm.listaTipoPersona)">
-					<template name="model">
-						<comboitem label="@bind(each.nombre)" />
-					</template>
-				</combobox>
-				<vbox>
-					<intbox placeholder="Ej: 402405375" mold="rounded"
-						maxlength="9" hflex="1" value="@bind(vm.cliente.cedula)"
-						constraint="@bind(vm.validatorClienteCedulaRif2)" onOK="@global-command('cambiarCompras')"
-						onBlur="@global-command('cambiarCompras')" />
-				</vbox>
-				<button label="Buscar" onClick="@global-command('cambiarCompras')"
-					sclass="btn-primary" />
-			</hbox>
-		</vlayout>
 
 		<!-- LISTA DE COMPRAS PENDIENTES (POR PAGAR) -->
 		<div width="95%">
-			<include src="/WEB-INF/views/template/subTitle.zul"
-				subtitulo="Compras Pendientes" />
 			<panel sclass="borderGrid">
 				<panelchildren>
 					<hbox width="100%" align="center">
@@ -108,11 +84,11 @@
 									<hbox spacing="20px">
 										<div class="btn-group btn-group-sm">
 											<button iconSclass="z-icon-money blue"
-												tooltiptext="Procesar pago efectivo" onClick="@command('pagar',compra = each)" visible="@load(vm.mostrarIcono('En Espera', each.determinarEstatus()))" />
+												tooltiptext="Procesar pago efectivo" onClick="@command('pagarEfectivo',compra = each)" visible="@load(vm.mostrarIcono('En Espera', each.determinarEstatus()))" />
 											<button iconSclass="z-icon-desktop blue"
-												tooltiptext="Detalle transferencia" onClick="@command('pagar',compra = each)" visible="@load(vm.mostrarIcono('En Espera Transferencia', each.determinarEstatus()))"/>
+												tooltiptext="Detalle transferencia" onClick="@command('pagarTransferenciaDeposito',compra = each)" visible="@load(vm.mostrarIcono('En Espera Transferencia', each.determinarEstatus()))"/>
 											<button iconSclass="z-icon-file blue"
-												tooltiptext="Detalle déposito" onClick="@command('pagar',compra = each)" visible="@load(vm.mostrarIcono('En Espera Déposito', each.determinarEstatus()))"/>
+												tooltiptext="Detalle déposito" onClick="@command('pagarTransferenciaDeposito',compra = each)" visible="@load(vm.mostrarIcono('En Espera Déposito', each.determinarEstatus()))"/>
 										</div>
 									</hbox>
 								</listcell>
