@@ -1,6 +1,7 @@
 package com.okiimport.app.mvvm.controladores;
 
-import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -20,12 +21,10 @@ import org.zkoss.zk.ui.event.SortEvent;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listheader;
-import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Paging;
 
 import com.okiimport.app.model.Cliente;
 import com.okiimport.app.model.Compra;
-import com.okiimport.app.model.Requerimiento;
 import com.okiimport.app.mvvm.AbstractRequerimientoViewModel;
 import com.okiimport.app.mvvm.model.ModeloCombo;
 import com.okiimport.app.mvvm.resource.BeanInjector;
@@ -47,11 +46,22 @@ public class ListaComprasPendientesViewModel extends AbstractRequerimientoViewMo
 		private Date fechaCreacion;
 		private Cliente cliente;
 		private Compra compraFiltro;
-		private Requerimiento requerimientoFiltro;
-		private Cliente clienteFiltro;
+		
+		private String requerimientoIdFiltro;
+		private String clienteNombreFiltro;
+		private String clienteCedulaFiltro;
+		private String fechaCreacionFiltro;
+		private String estatusFiltro;
+		
+
+		
+
 		private List <ModeloCombo<Boolean>> listaTipoPersona;
 		private ModeloCombo<Boolean> tipoPersona;
 		private List <Compra> listaCompras;
+		private List <Compra> listaComprasFiltro;
+		private SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
 		
 		/**
 		 * Descripcion: Llama a inicializar la clase 
@@ -63,11 +73,7 @@ public class ListaComprasPendientesViewModel extends AbstractRequerimientoViewMo
 		public void doAfterCompose(@ContextParam(ContextType.VIEW) Component view)
 		{
 			super.doAfterCompose(view);
-			cliente = new Cliente();
 			compraFiltro = new Compra();
-			requerimientoFiltro = new Requerimiento();
-			requerimientoFiltro.setCliente(clienteFiltro);
-			compraFiltro.setRequerimiento(requerimientoFiltro);
 			pagComprasCliente.setPageSize(pageSize);
 			agregarGridSort(gridComprasCliente);
 			listaTipoPersona = llenarListaTipoPersona();
@@ -147,16 +153,24 @@ public class ListaComprasPendientesViewModel extends AbstractRequerimientoViewMo
 		@NotifyChange("*")
 		public void aplicarFiltro()
 		{
-		
+			cambiarCompras(0,null,null);
+	
 			if(this.compraFiltro != null) {
-				this.listaComprasFiltro.clear();
-				
-				
+				this.listaComprasFiltro = new ArrayList<Compra>();
 				for (Compra c : listaCompras) {
-					if(c.contains(compraFiltro)) {
+					if( (( getClienteNombreFiltro()==null || getClienteNombreFiltro().isEmpty() || c.getRequerimiento().getCliente().getApellido().toLowerCase().contains(getClienteNombreFiltro().toLowerCase())) || ( getClienteNombreFiltro()==null || getClienteNombreFiltro().isEmpty() || c.getRequerimiento().getCliente().getNombre().toLowerCase().contains(getClienteNombreFiltro().toLowerCase())) ) &&
+						( getClienteCedulaFiltro()==null || getClienteCedulaFiltro().isEmpty() || c.getRequerimiento().getCliente().getCedula().contains(getClienteCedulaFiltro())) &&
+						( compraFiltro.getIdCompra()==null || compraFiltro.getIdCompra().toString().isEmpty() || c.getIdCompra().toString().contains(compraFiltro.getIdCompra().toString())) &&
+					    ( getRequerimientoIdFiltro()==null || getRequerimientoIdFiltro().toString().isEmpty() || c.getRequerimiento().getIdRequerimiento().toString().contains(getRequerimientoIdFiltro())) &&
+					    ( getFechaCreacionFiltro()==null || getFechaCreacionFiltro().toString().isEmpty() ||formatter.format(c.getFechaCreacion()).contains(getFechaCreacionFiltro())) &&
+					    ( compraFiltro.getPrecioVenta()==null || compraFiltro.getPrecioVenta().toString().isEmpty() || c.getPrecioVenta().toString().contains(compraFiltro.getPrecioVenta().toString())) &&
+					    ( getEstatusFiltro()==null || getEstatusFiltro().isEmpty() || c.determinarEstatus().contains(getEstatusFiltro()))
+					  ) {
 						listaComprasFiltro.add(c);
 					}
 				}
+				
+				this.listaCompras = listaComprasFiltro;
 			} else {
 				listaComprasFiltro.clear();
 				listaComprasFiltro.addAll(listaCompras);
@@ -194,6 +208,10 @@ public class ListaComprasPendientesViewModel extends AbstractRequerimientoViewMo
 		
 		private void llamarFormulario(String ruta, Map<String, Object> parametros){
 			crearModal(BasePackageSistemaFunc+ruta, parametros);
+		}
+		
+		public Boolean mostrarIcono(String estatus, String estatus2 ){
+			return estatus.equalsIgnoreCase(estatus2);
 		}
 
 
@@ -263,9 +281,44 @@ public class ListaComprasPendientesViewModel extends AbstractRequerimientoViewMo
 		public void setListaComprasFiltro(List<Compra> listaComprasFiltro) {
 			this.listaComprasFiltro = listaComprasFiltro;
 		}
+		
+		public String getRequerimientoIdFiltro() {
+			return requerimientoIdFiltro;
+		}
 
-		private List <Compra> listaComprasFiltro;
+		public void setRequerimientoIdFiltro(String requerimientoIdFiltro) {
+			this.requerimientoIdFiltro = requerimientoIdFiltro;
+		}
 
+		public String getClienteNombreFiltro() {
+			return clienteNombreFiltro;
+		}
 
+		public void setClienteNombreFiltro(String clienteNombreFiltro) {
+			this.clienteNombreFiltro = clienteNombreFiltro;
+		}
+		public String getFechaCreacionFiltro() {
+			return fechaCreacionFiltro;
+		}
+
+		public void setFechaCreacionFiltro(String fechaCreacionFiltro) {
+			this.fechaCreacionFiltro = fechaCreacionFiltro;
+		}
+		
+		public String getClienteCedulaFiltro() {
+			return clienteCedulaFiltro;
+		}
+
+		public void setClienteCedulaFiltro(String clienteCedulaFiltro) {
+			this.clienteCedulaFiltro = clienteCedulaFiltro;
+		}
+		
+		public String getEstatusFiltro() {
+			return estatusFiltro;
+		}
+
+		public void setEstatusFiltro(String estatusFiltro) {
+			this.estatusFiltro = estatusFiltro;
+		}
 
 }
