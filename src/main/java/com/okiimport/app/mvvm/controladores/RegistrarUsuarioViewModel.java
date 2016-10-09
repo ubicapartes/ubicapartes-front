@@ -109,8 +109,8 @@ public class RegistrarUsuarioViewModel extends AbstractRequerimientoViewModel {
 		return new ClienteCedulaRifConstraint(new ClienteCedulaRifConstraint.ClienteCedulaRifComunicator() {
 			
 			@Override
-			public Cliente searchClient(String cedulaORif) {
-				return sMaestros.consultarCliente(new Cliente(cedulaORif));
+			public Boolean searchClient(String cedulaORif) {
+				return sMaestros.consultarCedulaCliente(cedulaORif);
 			}
 			
 			@Override
