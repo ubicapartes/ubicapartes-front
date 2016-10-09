@@ -10,6 +10,7 @@ import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Vlayout;
@@ -92,9 +93,18 @@ public class ContactarViewModel extends AbstractRequerimientoViewModel {
 				//limpiar();
 				mostrarMensaje("Informaci\u00F3n", "Mensaje enviado Exitosamente"
 						+ " (Message sent successfully)",
-						null, null, null, null);
+						null, null, new org.zkoss.zk.ui.event.EventListener(){
+					@Override
+					public void onEvent(Event e) throws Exception {
+						// TODO Auto-generated method stub
+						 if("onOK".equals(e.getName())){
+							  redireccionar("/contacto");
+			                }else if("onCancel".equals(e.getName())){
+			                    
+			                }}
+					}, null);
 				//wait(6000);
-				redireccionar("/contacto");
+				//redireccionar("/contacto");
 				
 				}
 		} catch (Exception e) {
