@@ -1,7 +1,11 @@
 package com.okiimport.app.mvvm.controladores;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
@@ -12,14 +16,19 @@ import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Button;
+import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Datebox;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
+import com.okiimport.app.model.Cliente;
+import com.okiimport.app.model.Banco;
 import com.okiimport.app.model.Compra;
+import com.okiimport.app.model.FormaPago;
 import com.okiimport.app.model.Pago;
 import com.okiimport.app.model.PagoCliente;
+import com.okiimport.app.model.Usuario;
 import com.okiimport.app.model.enumerados.EEstatusCompra;
 import com.okiimport.app.model.enumerados.EEstatusGeneral;
 import com.okiimport.app.mvvm.AbstractRequerimientoViewModel;
@@ -47,6 +56,14 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 	@Wire
 	private Textbox txtTitular;
 	@Wire
+	private Combobox cmbFormaDePago;
+	@Wire
+	private Textbox txtNroReferencia;
+	@Wire
+	private Combobox cmbBanco;
+	@Wire
+	private Combobox cmbEstatusPago;
+	@Wire
 	private Datebox dateFechaPago;
 	@Wire
 	private Textbox txtObservaciones;
@@ -57,7 +74,16 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 	private Float montoPagar;
 	private boolean cerrar = false;
 	private CustomConstraint constraintMensaje;
-	
+	private List<Banco> listaBancos;
+	private List<FormaPago> listaFormaPagos;
+	private List<String> listaEstatusPago;
+	private Banco bancoSeleccionado;
+	private FormaPago formaPagoSeleccionado;
+    private Cliente objCliente;
+    private PagoCliente pagoCliente;
+    private String estatusPago;
+
+
 
 	/**
 	 * Descripcion: Llama a inicializar la clase 
@@ -65,27 +91,51 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 	 * Retorno: Ninguno
 	 * Nota: Ninguna
 	 * */
+	@SuppressWarnings("unchecked")
 	@NotifyChange({"totalFactura"})
 	@AfterCompose
 	public void doAfterCompose(@ContextParam(ContextType.VIEW) Component view,
 			@ExecutionArgParam("pago")  Pago pago,
 			@ExecutionArgParam("compra") Compra compra){
 		super.doAfterCompose(view);
+		this.listaEstatusPago = new ArrayList<String>();
+		this.listaEstatusPago.add("EN ESPERA");
+		this.listaEstatusPago.add("APROBADO");
+		this.listaEstatusPago.add("RECHAZADO");
+		estatusPago="EN ESPERA";
+		Map<String, Object> parametros = sMaestros.consultarBancos(0, pageSize);
+		this.listaBancos = (List<Banco>) parametros.get("bancos");
+		parametros = sMaestros.consultarFormasPago(0, pageSize);
+		this.listaFormaPagos = (List<FormaPago>) parametros.get("formasPago");
+		setBancoSeleccionado(this.listaBancos.get(0));
+		setFormaPagoSeleccionado(this.listaFormaPagos.get(0));
 		this.pago = pago;
 		this.compra = compra;
 		setMontoPagar(this.compra.getPrecioVenta());
+		UserDetails user = super.getUser();
+		if(user!=null){
+			Usuario usuario = sControlUsuario.consultarUsuario(user.getUsername(), user.getPassword(), null);
+			objCliente = sMaestros.consultarClienteByPersonaId(usuario.getPersona().getId());
+			if(objCliente!=null){
+				habDesCampos(1);
+			} else {
+				habDesCampos(2);
+			}
+		}
 		String cliente = this.compra.getRequerimiento().getCliente().getNombre().concat(" ".concat(this.compra.getRequerimiento().getCliente().getApellido()));
 		txtTitular.setValue(cliente);
 		txtTitular.setDisabled(true);
-		dateFechaPago.setValue(new Date());
+		dateFechaPago.setValue(tienePagoAsignado()?pagoCliente.getFechaPago():new Date());
 	}
+	
+	
 
 	/**COMMAND*/
 	@Command
 	public void registrarPago(@BindingParam("btnEnviar") Button button){
 		if(checkIsFormValid()){
 			if(validacionesParaGuardar() == true){
-				Boolean exito = sPago.registrarPagoEfectivo(llenarPago());
+				Boolean exito = sPago.registrarPago(llenarPago());
 				if(exito){
 					actualizarCompra();
 					mostrarMensaje("Informaci\u00F3n", "Operacion registrada exitosamente", Messagebox.INFORMATION, null, null, null);
@@ -99,7 +149,6 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 	
 	@NotifyChange("*")
 	private void actualizarCompra(){
-		this.compra.setEstatus(EEstatusCompra.PAGADA);
 		sTransaccion.registrarOActualizarCompra(this.compra);
 		ejecutarGlobalCommand("refrescarListadoCompras", null);
 		ejecutarGlobalCommand("cerrarModalFormasPago", null);
@@ -107,27 +156,101 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 	}
 	
 	private PagoCliente llenarPago() {
-		PagoCliente pago = new PagoCliente();
-		pago.setFechaPago(new Date());
-		pago.setMonto(this.montoPagar);
-		pago.setEstatus(EEstatusGeneral.ACTIVO.name());
-		pago.setDescripcion(txtObservaciones.getValue());
-		pago.setCompra(this.compra);
-		//pago.setFormaPago(formaPago); CORREGIR
-		return pago;
+		if(objCliente!=null && !tienePagoAsignado()){
+			System.out.println("Cliente sin pago");
+			pagoCliente = new PagoCliente();
+			pagoCliente.setFechaPago(new Date());
+			pagoCliente.setMonto(this.montoPagar);
+			pagoCliente.setCompra(this.compra);
+			pagoCliente.setTransactionId(txtNroReferencia.getValue());
+			pagoCliente.setFormaPago(formaPagoSeleccionado);
+			pagoCliente.setBanco(bancoSeleccionado);		
+		} else if(objCliente!=null && tienePagoAsignado()){
+			System.out.println("Cliente con pago");
+			pagoCliente.setTransactionId(txtNroReferencia.getValue());
+			pagoCliente.setFormaPago(formaPagoSeleccionado);
+			pagoCliente.setBanco(bancoSeleccionado);
+		} else{
+			System.out.println("Analista");
+			Map<String, Object> parametros = sPago.consultarPagoByCompra(this.compra);
+			pagoCliente = (PagoCliente) parametros.get("pago");
+			if(estatusPago=="APROBADO"){
+				this.compra.setEstatus(EEstatusCompra.PAGADA);
+			} else if(estatusPago=="RECHAZADO"){
+				this.compra.setEstatus(EEstatusCompra.RECHAZADA);
+			} 
+		}
+		
+		pagoCliente.setEstatus(EEstatusGeneral.ACTIVO.name());
+		pagoCliente.setDescripcion(txtObservaciones.getValue());
+		return pagoCliente;
+	}
+	
+	private boolean tienePagoAsignado(){
+		Map<String, Object> parametros = sPago.consultarPagoByCompra(this.compra);
+		pagoCliente = (PagoCliente) parametros.get("pago");
+		if(pagoCliente!=null){
+			bancoSeleccionado = pagoCliente.getBanco();
+			formaPagoSeleccionado =  pagoCliente.getFormaPago();
+			txtNroReferencia.setValue(pagoCliente.getTransactionId());
+		}
+		if(this.compra.getEstatus().equals(EEstatusCompra.RECHAZADA) || this.compra.getEstatus().equals(EEstatusCompra.PAGADA)){
+			estatusPago = (this.compra.getEstatus().equals(EEstatusCompra.RECHAZADA)? "RECHAZADO":"APROBADO");
+		}
+		return (pagoCliente==null?false:true);
 	}
 
 	public boolean validacionesParaGuardar(){
 		boolean guardar = false;
-		if(this.montoPagar != 0 && txtTitular.getValue() != ""){
-			if(this.montoPagar > 0)
-				guardar = true;
-			else
-				mostrarMensaje("Error", "El monto total a pagar debe ser mayor a cero", null, null, null, null);
+		boolean continuar = true;
+		
+		if(continuar && this.montoPagar>0){
+			guardar = true;
+			continuar = true;
 		}else{
-			mostrarMensaje("Error", "Debe ingresar todos los campos", null, null, null, null);
+			mostrarMensaje("Error", "El monto total a pagar debe ser mayor a cero", null, null, null, null);
+			guardar = false;
+			continuar = false;
+			return false;
 		}
+		
+		if(continuar && (txtTitular.getValue() == ""|| txtTitular.getValue()==null)){
+			mostrarMensaje("Error", "Debe ingresar todos los campos", null, null, null, null);
+			guardar = false;
+			continuar = false;
+			return false;
+		}
+		
+		if(continuar && (formaPagoSeleccionado.getNombre() != "Efectivo" && (txtNroReferencia.getValue()=="" || txtNroReferencia.getValue()==null || bancoSeleccionado.getNombre() == "" || bancoSeleccionado.getNombre() == null))){
+			guardar = false;
+			continuar = false;
+			mostrarMensaje("Error", "Debe ingresar todos los campos", null, null, null, null);
+			return false;
+		}
+		
 		return guardar;
+	}
+	
+	public void habDesCampos(int tipo){
+		//tipo = 1 cliente, 2 admin, 3 analista, 4 proveedor
+		if(tipo==1){
+			txtTitular.setDisabled(true);
+			cmbFormaDePago.setDisabled(false);
+			txtNroReferencia.setDisabled(false);
+			cmbBanco.setDisabled(false);
+			dateFechaPago.setDisabled(true);
+			txtObservaciones.setDisabled(false);
+			cmbEstatusPago.setDisabled(true);
+		} else {
+			txtTitular.setDisabled(true);
+			cmbFormaDePago.setDisabled(true);
+			txtNroReferencia.setDisabled(true);
+			cmbBanco.setDisabled(true);
+			dateFechaPago.setDisabled(true);
+			txtObservaciones.setDisabled(false);
+			cmbEstatusPago.setDisabled(false);
+		}
+		
 	}
 	
 	@Command
@@ -210,6 +333,57 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 
 	public void setsTransaccion(STransaccion sTransaccion) {
 		this.sTransaccion = sTransaccion;
+	}
+	
+	public List<Banco> getListaBancos() {
+		return listaBancos;
+	}
+
+	public void setListaBancos(List<Banco> listaBancos) {
+		this.listaBancos = listaBancos;
+	}
+	
+	public List<FormaPago> getListaFormaPagos() {
+		return listaFormaPagos;
+	}
+
+	public void setListaFormaPagos(List<FormaPago> listaFormaPagos) {
+		this.listaFormaPagos = listaFormaPagos;
+	}
+	
+	public Banco getBancoSeleccionado() {
+		return bancoSeleccionado;
+	}
+
+
+	public void setBancoSeleccionado(Banco bancoSeleccionado) {
+		this.bancoSeleccionado = bancoSeleccionado;
+	}
+
+
+	public FormaPago getFormaPagoSeleccionado() {
+		return formaPagoSeleccionado;
+	}
+
+
+	public void setFormaPagoSeleccionado(FormaPago formaPagoSeleccionado) {
+		this.formaPagoSeleccionado = formaPagoSeleccionado;
+	}
+	
+	public List<String> getListaEstatusPago() {
+		return listaEstatusPago;
+	}
+
+	public void setListaEstatusPago(List<String> listaEstatusPago) {
+		this.listaEstatusPago = listaEstatusPago;
+	}
+	
+	public String getEstatusPago() {
+		return estatusPago;
+	}
+
+	public void setEstatusPago(String estatusPago) {
+		this.estatusPago = estatusPago;
 	}
 	
 }
