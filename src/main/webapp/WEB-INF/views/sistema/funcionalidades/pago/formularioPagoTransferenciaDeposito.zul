@@ -7,7 +7,7 @@
 			<div class="modal-dialog modal-full" height="auto"><!-- modal-xs -->
 				<div sclass="modal-content" width="70%">
 					<include src="/WEB-INF/views/template/modal/titleModal.zul"
-						titulo="Pago de Factura (Transferencia)" />
+						titulo="Pago de Factura" />
 					<n:div class="modal-inner">
 						<groupbox id="cmpPayment" closable="false">
 							<!-- DATOS DEL PAGO -->
@@ -58,24 +58,7 @@
 													<include src="/WEB-INF/views/template/fieldMandatory.zul"
 														field="Tipo Operacion:" />
 													<vbox>
-														<combobox id="cmbFormaDePago" width="100%" tabindex="13" model="@load(vm.listaFormaPagos)" selectedItem="@bind(vm.formaPagoSeleccionado)">
-										                    <template name="model">
-										                        <comboitem label="@load(each.nombre)" />
-										                    </template>
-										                </combobox>
-													</vbox>
-													<include src="/WEB-INF/views/template/fieldMandatory.zul"
-														field="Nro Referencia:" />
-													<vbox>
-														<textbox id="txtNroReferencia" width="100%"
-															tabindex="14" maxlength="255" />
-													</vbox>
-												</row>
-												<row>
-													<include src="/WEB-INF/views/template/fieldMandatory.zul"
-														field="Banco:" />
-													<vbox>
-														<combobox id="cmbBanco" width="100%" tabindex="15" model="@load(vm.listaBancos)" selectedItem="@bind(vm.bancoSeleccionado)">
+														<combobox id="cmbFormaDePago" width="100%" tabindex="13" model="@load(vm.listaFormaPagos)" selectedItem="@bind(vm.formaPagoSeleccionado)" value="@bind(vm.formaPagoSeleccionado.nombre)" onSelect="@command('changeFormaPago')">
 										                    <template name="model">
 										                        <comboitem label="@load(each.nombre)" />
 										                    </template>
@@ -86,6 +69,23 @@
 													<vbox>
 														<datebox id="dateFechaPago" sclass="label-not-mandatory"
 															format="dd/MM/yyyy" disabled="true" width="100%"></datebox>
+													</vbox>
+												</row>
+												<row>
+													<include id="lblBanco" src="/WEB-INF/views/template/fieldMandatory.zul"
+														field="Banco:" />
+													<vbox>
+														<combobox id="cmbBanco" width="100%" tabindex="15" model="@load(vm.listaBancos)" selectedItem="@bind(vm.bancoSeleccionado)" value="@bind(vm.bancoSeleccionado.nombre)">
+										                    <template name="model">
+										                        <comboitem label="@load(each.nombre)" />
+										                    </template>
+										                </combobox>
+													</vbox>
+													<include id="lblNroReferencia" src="/WEB-INF/views/template/fieldMandatory.zul"
+														field="Nro Referencia:" />
+													<vbox>
+														<textbox id="txtNroReferencia" width="100%"
+															tabindex="14" maxlength="255" />
 													</vbox>
 												</row>
 												<row>
@@ -112,7 +112,7 @@
 						</groupbox>
 					</n:div>
 					<n:div class="modal-footer">
-						<button label="Guardar Pago" sclass="btn-sm btn-primary"
+						<button id="btnRegistrarPago" label="Guardar Pago" sclass="btn-sm btn-primary"
 							onClick="@command('registrarPago', btnEnviar=self, btnLimpiar=btnLimpiar)" />
 						<button label="Cancelar" sclass="btn-sm btn-danger"
 							onClick="@command('closeModal')" />

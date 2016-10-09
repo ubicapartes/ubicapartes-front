@@ -60,13 +60,19 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 	@Wire
 	private Textbox txtNroReferencia;
 	@Wire
+	private Component lblNroReferencia;
+	@Wire
 	private Combobox cmbBanco;
+	@Wire
+	private Component lblBanco;
 	@Wire
 	private Combobox cmbEstatusPago;
 	@Wire
 	private Datebox dateFechaPago;
 	@Wire
 	private Textbox txtObservaciones;
+	@Wire
+	private Button btnRegistrarPago;
 		
 	private CustomConstraint constraintCampoObligatorio;
 	private Pago pago;
@@ -91,24 +97,13 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 	 * Retorno: Ninguno
 	 * Nota: Ninguna
 	 * */
-	@SuppressWarnings("unchecked")
 	@NotifyChange({"totalFactura"})
 	@AfterCompose
 	public void doAfterCompose(@ContextParam(ContextType.VIEW) Component view,
 			@ExecutionArgParam("pago")  Pago pago,
 			@ExecutionArgParam("compra") Compra compra){
 		super.doAfterCompose(view);
-		this.listaEstatusPago = new ArrayList<String>();
-		this.listaEstatusPago.add("EN ESPERA");
-		this.listaEstatusPago.add("APROBADO");
-		this.listaEstatusPago.add("RECHAZADO");
-		estatusPago="EN ESPERA";
-		Map<String, Object> parametros = sMaestros.consultarBancos(0, pageSize);
-		this.listaBancos = (List<Banco>) parametros.get("bancos");
-		parametros = sMaestros.consultarFormasPago(0, pageSize);
-		this.listaFormaPagos = (List<FormaPago>) parametros.get("formasPago");
-		setBancoSeleccionado(this.listaBancos.get(0));
-		setFormaPagoSeleccionado(this.listaFormaPagos.get(0));
+		llenarCombos();
 		this.pago = pago;
 		this.compra = compra;
 		setMontoPagar(this.compra.getPrecioVenta());
@@ -129,6 +124,18 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 	}
 	
 	
+	@SuppressWarnings("unchecked")
+	public void llenarCombos(){
+		this.listaEstatusPago = new ArrayList<String>();
+		this.listaEstatusPago.add("EN ESPERA");
+		this.listaEstatusPago.add("APROBADO");
+		this.listaEstatusPago.add("RECHAZADO");
+		estatusPago="EN ESPERA";
+		Map<String, Object> parametros = sMaestros.consultarBancos(0, pageSize);
+		this.listaBancos = (List<Banco>) parametros.get("bancos");
+		parametros = sMaestros.consultarFormasPago(0, pageSize);
+		this.listaFormaPagos = (List<FormaPago>) parametros.get("formasPago");
+	}
 
 	/**COMMAND*/
 	@Command
@@ -147,8 +154,25 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 		}
 	}
 	
+	@Command
+	public void changeFormaPago(){
+		if(objCliente!=null){
+			habDesCampos(1);
+		} else {
+			habDesCampos(2);
+		}
+	}
+	
 	@NotifyChange("*")
 	private void actualizarCompra(){
+		if(listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()).getNombre().equalsIgnoreCase("Transferencia") && objCliente!=null){
+			this.compra.setEstatus(EEstatusCompra.EN_ESPERA_TRANSFERENCIA);
+		} else if(listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()).getNombre().equalsIgnoreCase("Deposito") && objCliente!=null){
+			this.compra.setEstatus(EEstatusCompra.EN_ESPERA_DEPOSITO);
+		}
+		else if(listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()).getNombre().equalsIgnoreCase("Efectivo") && objCliente!=null){
+			this.compra.setEstatus(EEstatusCompra.EN_ESPERA);
+		}
 		sTransaccion.registrarOActualizarCompra(this.compra);
 		ejecutarGlobalCommand("refrescarListadoCompras", null);
 		ejecutarGlobalCommand("cerrarModalFormasPago", null);
@@ -157,21 +181,14 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 	
 	private PagoCliente llenarPago() {
 		if(objCliente!=null && !tienePagoAsignado()){
-			System.out.println("Cliente sin pago");
 			pagoCliente = new PagoCliente();
 			pagoCliente.setFechaPago(new Date());
 			pagoCliente.setMonto(this.montoPagar);
 			pagoCliente.setCompra(this.compra);
-			pagoCliente.setTransactionId(txtNroReferencia.getValue());
-			pagoCliente.setFormaPago(formaPagoSeleccionado);
-			pagoCliente.setBanco(bancoSeleccionado);		
+			pagoCliente.setTransactionId(listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()).getNombre().equalsIgnoreCase("Efectivo")?null:txtNroReferencia.getValue());
 		} else if(objCliente!=null && tienePagoAsignado()){
-			System.out.println("Cliente con pago");
-			pagoCliente.setTransactionId(txtNroReferencia.getValue());
-			pagoCliente.setFormaPago(formaPagoSeleccionado);
-			pagoCliente.setBanco(bancoSeleccionado);
+			pagoCliente.setTransactionId(listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()).getNombre().equalsIgnoreCase("Efectivo")?null:txtNroReferencia.getValue());
 		} else{
-			System.out.println("Analista");
 			Map<String, Object> parametros = sPago.consultarPagoByCompra(this.compra);
 			pagoCliente = (PagoCliente) parametros.get("pago");
 			if(estatusPago=="APROBADO"){
@@ -180,7 +197,8 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 				this.compra.setEstatus(EEstatusCompra.RECHAZADA);
 			} 
 		}
-		
+		pagoCliente.setFormaPago(listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()));
+		pagoCliente.setBanco(listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()).getNombre().equalsIgnoreCase("Efectivo")?null:listaBancos.get(cmbBanco.getSelectedIndex()));
 		pagoCliente.setEstatus(EEstatusGeneral.ACTIVO.name());
 		pagoCliente.setDescripcion(txtObservaciones.getValue());
 		return pagoCliente;
@@ -191,11 +209,56 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 		pagoCliente = (PagoCliente) parametros.get("pago");
 		if(pagoCliente!=null){
 			bancoSeleccionado = pagoCliente.getBanco();
+			cmbBanco.setSelectedIndex(this.listaBancos.indexOf(pagoCliente.getBanco()));
 			formaPagoSeleccionado =  pagoCliente.getFormaPago();
+			cmbFormaDePago.setSelectedIndex(this.listaFormaPagos.indexOf(pagoCliente.getFormaPago()));
 			txtNroReferencia.setValue(pagoCliente.getTransactionId());
+		} else {
+			if(this.compra.getEstatus().equals(EEstatusCompra.EN_ESPERA)){
+				int i =0;
+				for(FormaPago fp: this.listaFormaPagos){
+					if(fp.getNombre().equalsIgnoreCase("Efectivo")){
+						setFormaPagoSeleccionado(this.listaFormaPagos.get(i));
+						break;
+					}
+					i++;
+				}
+				
+			} else if(this.compra.getEstatus().equals(EEstatusCompra.EN_ESPERA_DEPOSITO)){
+				int i =0;
+				for(FormaPago fp: this.listaFormaPagos){
+					if(fp.getNombre().equalsIgnoreCase("Deposito")){
+						setFormaPagoSeleccionado(this.listaFormaPagos.get(i));
+						setBancoSeleccionado(this.listaBancos.get(0));
+						break;
+					}
+					i++;
+				}
+				
+			} else if(this.compra.getEstatus().equals(EEstatusCompra.EN_ESPERA_TRANSFERENCIA)) {
+				int i =0;
+				for(FormaPago fp: this.listaFormaPagos){
+					if(fp.getNombre().equalsIgnoreCase("Transferencia")){
+						setFormaPagoSeleccionado(this.listaFormaPagos.get(i));
+						setBancoSeleccionado(this.listaBancos.get(0));
+						break;
+					}
+					i++;
+				}
+			} else {
+				setBancoSeleccionado(this.listaBancos.get(0));
+				formaPagoSeleccionado = this.listaFormaPagos.get(0);
+				setFormaPagoSeleccionado(this.listaFormaPagos.get(0));
+			}
+		
 		}
 		if(this.compra.getEstatus().equals(EEstatusCompra.RECHAZADA) || this.compra.getEstatus().equals(EEstatusCompra.PAGADA)){
 			estatusPago = (this.compra.getEstatus().equals(EEstatusCompra.RECHAZADA)? "RECHAZADO":"APROBADO");
+		}
+		if(objCliente!=null){
+			habDesCampos(1);
+		} else {
+			habDesCampos(2);
 		}
 		return (pagoCliente==null?false:true);
 	}
@@ -214,14 +277,14 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 			return false;
 		}
 		
-		if(continuar && (txtTitular.getValue() == ""|| txtTitular.getValue()==null)){
+		if(continuar && (txtTitular.getValue().equalsIgnoreCase("") || txtTitular.getValue()==null)){
 			mostrarMensaje("Error", "Debe ingresar todos los campos", null, null, null, null);
 			guardar = false;
 			continuar = false;
 			return false;
 		}
 		
-		if(continuar && (formaPagoSeleccionado.getNombre() != "Efectivo" && (txtNroReferencia.getValue()=="" || txtNroReferencia.getValue()==null || bancoSeleccionado.getNombre() == "" || bancoSeleccionado.getNombre() == null))){
+		if(continuar && (!listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()).getNombre().equalsIgnoreCase("Efectivo") && (txtNroReferencia.getValue().equalsIgnoreCase("") || txtNroReferencia.getValue()==null || listaBancos.get(cmbBanco.getSelectedIndex()).getNombre().equalsIgnoreCase("") || listaBancos.get(cmbBanco.getSelectedIndex()).getNombre() == null))){
 			guardar = false;
 			continuar = false;
 			mostrarMensaje("Error", "Debe ingresar todos los campos", null, null, null, null);
@@ -251,15 +314,27 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 			cmbEstatusPago.setDisabled(false);
 		}
 		
+		if(cmbFormaDePago.getSelectedIndex()!=-1 && listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()).getNombre().equalsIgnoreCase("Efectivo") || (formaPagoSeleccionado!=null && formaPagoSeleccionado.getNombre().equalsIgnoreCase("Efectivo"))){
+			txtNroReferencia.setVisible(false);
+			cmbBanco.setVisible(false);
+			lblBanco.setVisible(false);
+			lblNroReferencia.setVisible(false);
+		} else if(cmbFormaDePago.getSelectedIndex()!=-1 && !listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()).getNombre().equalsIgnoreCase("Efectivo")){
+			txtNroReferencia.setVisible(true);
+			cmbBanco.setVisible(true);
+			lblBanco.setVisible(true);
+			lblNroReferencia.setVisible(true);
+		}
+		
+		if(this.compra.getEstatus().equals(EEstatusCompra.PAGADA)){
+			btnRegistrarPago.setVisible(false);
+		} else {
+			btnRegistrarPago.setVisible(true);
+		}
+		
 	}
 	
-	@Command
-	public void limpiar(){
-		this.txtTitular.setValue("");
-		this.txtObservaciones.setValue("");
-		this.montoPagar=(float) 0;
-		super.cleanConstraintForm();
-	}
+	
 	
 	/**GETTERS Y SETTERS*/
 
