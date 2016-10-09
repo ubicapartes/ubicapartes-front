@@ -32,7 +32,6 @@ import org.zkoss.zul.Messagebox.ClickEvent;
 import org.zkoss.zul.Paging;
 import org.zkoss.zul.Tabpanel;
 import org.zkoss.zul.Window;
-import org.zkoss.zul.impl.InputElement;
 
 import com.okiimport.app.model.Ciudad;
 import com.okiimport.app.model.ClasificacionRepuesto;
@@ -258,12 +257,11 @@ public class EditarRequerimientoViewModel extends AbstractRequerimientoViewModel
 			}
 		} catch(WrongValueException e){
 			Component comp = e.getComponent();
-			List<Tabpanel> tabpanels = ComponentUtil.find(Tabpanel.class, comp, null);
+			List<Tabpanel> tabpanels = ComponentUtil.findParents(Tabpanel.class, comp, null);
 			for (Iterator<Tabpanel> iterator = tabpanels.iterator(); iterator.hasNext(); ) {
 				Tabpanel tabpanel = iterator.next();
 				tabpanel.getTabbox().setSelectedPanel(tabpanel);
 			}
-			System.out.println(e.getMessage()+""+(comp instanceof InputElement)+" "+tabpanels.size());
 			throw e;
 		}
 	}
