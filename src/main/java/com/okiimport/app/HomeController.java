@@ -64,9 +64,9 @@ public class HomeController {
 	}
 	
 	
-	@RequestMapping(value= "/plantilla", method = RequestMethod.GET)
+	@RequestMapping(value= "/contacto", method = RequestMethod.GET)
 	public String contactar(){
-		return "security/plantilla.zul";
+		return "security/contactanos.zul";
 	}
 	
 	@RequestMapping(value= "/admin/home", method = RequestMethod.GET)

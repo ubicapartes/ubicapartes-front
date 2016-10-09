@@ -8,10 +8,16 @@ import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
+import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Button;
+import org.zkoss.zul.Vlayout;
+import org.zkoss.zul.Window;
 
 import com.okiimport.app.model.Analista;
+import com.okiimport.app.model.Ciudad;
+import com.okiimport.app.model.Estado;
 import com.okiimport.app.model.Persona;
 import com.okiimport.app.mvvm.AbstractRequerimientoViewModel;
 import com.okiimport.app.mvvm.resource.BeanInjector;
@@ -32,14 +38,20 @@ public class ContactarViewModel extends AbstractRequerimientoViewModel {
 		
 		@BeanInjector("mailProveedor")
 		private MailProveedor mailProveedor;
+		
+		@Wire("#datosContact")
+		private Vlayout vFormulario;
 	
 	private String nombre;
 	private String correo;
 	private String telefono;
 	private String mensaje;
+	private boolean valor;
 	
 	
 	
+
+
 	/**
 	 * Descripcion: Llama a inicializar la clase 
 	 * Parametros: @param view: contactanos.zul 
@@ -49,6 +61,8 @@ public class ContactarViewModel extends AbstractRequerimientoViewModel {
 	@AfterCompose
 	public void doAfterCompose(@ContextParam(ContextType.VIEW) Component view){
 		super.doAfterCompose(view);
+		this.valor=true;
+		this.limpiar();
 		
 	}
 
@@ -61,27 +75,63 @@ public class ContactarViewModel extends AbstractRequerimientoViewModel {
 	 * */
 	@Command
 	public void enviarMensaje() {
-		
-		System.out.println("enviando msj...."+this.correo+" "+this.nombre+" "+this.telefono+" "+this.mensaje);
-		
-		List<Analista> admins = this.sMaestros.consultarAdministradores();
-		
-		Iterator<Analista> iter=admins.iterator();
-		Analista p=new Analista();
-		while (iter.hasNext() ) {
-            p = iter.next();
-            System.out.println("correo del admin es "+p.getCorreo());
-            this.mailProveedor.enviarInformacionContacto(p.getCorreo(), this.nombre, this.telefono, this.correo, this.mensaje, mailService);
-            
-        }
-		
-		mostrarMensaje("Informaci\u00F3n", "Mensaje enviado Exitosamente"
-				+ " (Message sent successfully)",
-				null, null, null, null);
-		
+		try {
+			if (checkIsFormValid()){
+				System.out.println("enviando msj...."+this.correo+" "+this.nombre+" "+this.telefono+" "+this.mensaje);
+				
+				List<Analista> admins = this.sMaestros.consultarAdministradores();
+				
+				Iterator<Analista> iter=admins.iterator();
+				Analista p=new Analista();
+				while (iter.hasNext() ) {
+		            p = iter.next();
+		            System.out.println("correo del admin es "+p.getCorreo());
+		            this.mailProveedor.enviarInformacionContacto(p.getCorreo(), this.nombre, this.telefono, this.correo, this.mensaje, mailService);
+		            
+		        }
+				//limpiar();
+				mostrarMensaje("Informaci\u00F3n", "Mensaje enviado Exitosamente"
+						+ " (Message sent successfully)",
+						null, null, null, null);
+				//wait(6000);
+				redireccionar("/contacto");
+				
+				}
+		} catch (Exception e) {
+			mostrarMensaje("Informaci\u00F3n", "Verifique que todos los campos esten llenos con la informacion correcta", null, null, null, null);
+		}
 		
 	}
 	
+	
+	@Command
+	@NotifyChange({ "valor"})
+	public void validarCampos() {
+		if(this.correo!=null && this.telefono!=null && this.nombre!=null && this.mensaje!=null){
+			if(!this.correo.isEmpty() && !this.telefono.isEmpty() && !this.nombre.isEmpty() && !this.mensaje.isEmpty() ){
+				if (checkIsFormValid()) this.valor=false;
+				else this.valor=true;
+			}
+			else this.valor=true;
+		}
+		else this.valor=true;
+	}
+	
+	/**COMMAND*/
+	/**
+	 * Descripcion: Permite limpiar los campos del formulario
+	 * Parametros: @param view: contactanos.zul 
+	 * Retorno: Ninguno
+	 * Nota: Ninguna
+	 * */
+	@Command
+	@NotifyChange({ "*" })
+	public void limpiar() {
+		this.correo=new String();
+		this.telefono=new String();
+		this.mensaje=new String();
+		this.nombre=new String();
+	}
 	
 
 	public MailAdmin getMailAdmin() {
@@ -157,6 +207,14 @@ public class ContactarViewModel extends AbstractRequerimientoViewModel {
 	}
 
 
+	public boolean getValor() {
+		return valor;
+	}
+
+
+	public void setValor(boolean valor) {
+		this.valor = valor;
+	}
 
 	
 }
