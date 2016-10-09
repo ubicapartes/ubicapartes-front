@@ -73,6 +73,8 @@
 												tooltiptext="Detalle transferencia" onClick="@command('pagarTransferenciaDeposito',compra = each)" visible="@load(vm.mostrarIcono('En Espera Transferencia', each.determinarEstatus()))"/>
 											<button iconSclass="z-icon-file blue"
 												tooltiptext="Detalle déposito" onClick="@command('pagarTransferenciaDeposito',compra = each)" visible="@load(vm.mostrarIcono('En Espera Depósito', each.determinarEstatus()))"/>
+											<button iconSclass="z-icon-dollar blue"
+												tooltiptext="Detalle déposito" onClick="@command('pagarTransferenciaDeposito',compra = each)" visible="@load(vm.mostrarIcono('Pagada', each.determinarEstatus()))"/>
 										</div>
 									</hbox>
 								</listcell>

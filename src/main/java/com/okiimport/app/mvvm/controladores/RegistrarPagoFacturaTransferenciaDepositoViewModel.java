@@ -296,6 +296,16 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 	
 	public void habDesCampos(int tipo){
 		//tipo = 1 cliente, 2 admin, 3 analista, 4 proveedor
+		
+		if(this.compra.getEstatus().equals(EEstatusCompra.PAGADA)){
+			btnRegistrarPago.setVisible(false);
+			txtNroReferencia.setDisabled(true);
+			cmbBanco.setDisabled(true);
+			txtObservaciones.setDisabled(true);
+		} else {
+			btnRegistrarPago.setVisible(true);
+		}
+		
 		if(tipo==1){
 			txtTitular.setDisabled(true);
 			cmbFormaDePago.setDisabled(false);
@@ -328,6 +338,9 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 		
 		if(this.compra.getEstatus().equals(EEstatusCompra.PAGADA)){
 			btnRegistrarPago.setVisible(false);
+			txtNroReferencia.setDisabled(true);
+			cmbBanco.setDisabled(true);
+			txtObservaciones.setDisabled(true);
 		} else {
 			btnRegistrarPago.setVisible(true);
 		}
