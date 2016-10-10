@@ -26,6 +26,9 @@
 									<tab sclass="waves-color-blue waves-effect">
 										<label value="Información" />
 									</tab>
+									<tab sclass="waves-color-blue waves-effect">
+										<label value="Compra" />
+									</tab>
 								</tabs>
 								<tabpanels>
 									<tabpanel>
@@ -89,7 +92,7 @@
 													</vbox>
 												</row>
 												<row>
-													<label value="Estatus Operacion: " style="margin-left:4%" sclass="form-label" />
+													<label id="lblEstatus" value="Estatus Operacion: " style="margin-left:4%" sclass="form-label" />
 													<vbox>
 														<combobox id="cmbEstatusPago" width="100%" tabindex="15" model="@load(vm.listaEstatusPago)" selectedItem="@bind(vm.estatusPago)">
 										                    <template name="model">
@@ -106,6 +109,34 @@
 												</row>
 											</rows>
 										</grid>
+									</tabpanel>
+									<tabpanel>
+										<panel sclass="borderGrid">
+											<panelchildren>
+												<listbox
+													id="gridDetallesCompra" style="margin-top:10px"
+													emptyMessage="No hay detalles de compra"
+													model="@load(vm.listaDetallesCompra)" >
+
+													<listhead>
+														<listheader	label="Descripción" sort="none" />
+														<listheader	label="Marca" sort="none" />
+														<listheader	label="Cantidad" sort="none" />
+														<listheader	label="Precio" sort="none" />
+													</listhead>
+
+													<template name="model">
+														<listitem>
+															<listcell label="@bind(each.detalleCotizacion.detalleRequerimiento.descripcion)" />
+															<listcell label="@bind(each.detalleCotizacion.marcaRepuesto)" />
+															<listcell label="@bind(each.detalleCotizacion.cantidad)" />
+															<listcell label="@bind(each.calcularPrecioVenta()) @converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+									 						converterMoneda=each.detalleCotizacion.cotizacion.historicoMoneda, monedaBase=vm.monedaBase) " />
+														</listitem>
+													</template>
+												</listbox>
+											</panelchildren>
+										</panel>
 									</tabpanel>
 								</tabpanels>
 							</tabbox>

@@ -84,7 +84,7 @@
 									<hbox spacing="20px">
 										<div class="btn-group btn-group-sm">
 											<button iconSclass="z-icon-money blue"
-												tooltiptext="Procesar pago efectivo" onClick="@command('pagarEfectivo',compra = each)" visible="@load(vm.mostrarIcono('En Espera', each.determinarEstatus()))" />
+												tooltiptext="Procesar pago efectivo" onClick="@command('pagarTransferenciaDeposito',compra = each)" visible="@load(vm.mostrarIcono('En Espera', each.determinarEstatus()))" />
 											<button iconSclass="z-icon-desktop blue"
 												tooltiptext="Detalle transferencia" onClick="@command('pagarTransferenciaDeposito',compra = each)" visible="@load(vm.mostrarIcono('En Espera Transferencia', each.determinarEstatus()))"/>
 											<button iconSclass="z-icon-file blue"

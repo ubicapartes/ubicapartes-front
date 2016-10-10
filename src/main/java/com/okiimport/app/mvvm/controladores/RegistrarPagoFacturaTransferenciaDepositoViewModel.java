@@ -11,7 +11,9 @@ import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
+import org.zkoss.bind.annotation.Default;
 import org.zkoss.bind.annotation.ExecutionArgParam;
+import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.select.annotation.Wire;
@@ -25,6 +27,7 @@ import org.zkoss.zul.Window;
 import com.okiimport.app.model.Cliente;
 import com.okiimport.app.model.Banco;
 import com.okiimport.app.model.Compra;
+import com.okiimport.app.model.DetalleOferta;
 import com.okiimport.app.model.FormaPago;
 import com.okiimport.app.model.Pago;
 import com.okiimport.app.model.PagoCliente;
@@ -68,6 +71,8 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 	@Wire
 	private Combobox cmbEstatusPago;
 	@Wire
+	private Component lblEstatus;
+	@Wire
 	private Datebox dateFechaPago;
 	@Wire
 	private Textbox txtObservaciones;
@@ -88,7 +93,7 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
     private Cliente objCliente;
     private PagoCliente pagoCliente;
     private String estatusPago;
-
+    private List<DetalleOferta> listaDetallesCompra;
 
 
 	/**
@@ -106,6 +111,7 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 		llenarCombos();
 		this.pago = pago;
 		this.compra = compra;
+		cambiarDetallesCompra(0);
 		setMontoPagar(this.compra.getPrecioVenta());
 		UserDetails user = super.getUser();
 		if(user!=null){
@@ -136,7 +142,13 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 		parametros = sMaestros.consultarFormasPago(0, pageSize);
 		this.listaFormaPagos = (List<FormaPago>) parametros.get("formasPago");
 	}
-
+	
+	@GlobalCommand
+	@NotifyChange("listaDetallesCompra")
+	public void cambiarDetallesCompra(@Default("0") @BindingParam("page") int page){
+		listaDetallesCompra = this.compra.getDetalleOfertas();
+	}
+	
 	/**COMMAND*/
 	@Command
 	public void registrarPago(@BindingParam("btnEnviar") Button button){
@@ -172,6 +184,8 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 		}
 		else if(listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()).getNombre().equalsIgnoreCase("Efectivo") && objCliente!=null){
 			this.compra.setEstatus(EEstatusCompra.EN_ESPERA);
+		} else if(listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()).getNombre().equalsIgnoreCase("Efectivo") && objCliente==null){
+			this.compra.setEstatus(EEstatusCompra.PAGADA);
 		}
 		sTransaccion.registrarOActualizarCompra(this.compra);
 		ejecutarGlobalCommand("refrescarListadoCompras", null);
@@ -329,17 +343,22 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 			cmbBanco.setVisible(false);
 			lblBanco.setVisible(false);
 			lblNroReferencia.setVisible(false);
+			cmbEstatusPago.setVisible(false);
+			lblEstatus.setVisible(false);
 		} else if(cmbFormaDePago.getSelectedIndex()!=-1 && !listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()).getNombre().equalsIgnoreCase("Efectivo")){
 			txtNroReferencia.setVisible(true);
 			cmbBanco.setVisible(true);
 			lblBanco.setVisible(true);
 			lblNroReferencia.setVisible(true);
+			cmbEstatusPago.setVisible(true);
+			lblEstatus.setVisible(true);
 		}
 		
 		if(this.compra.getEstatus().equals(EEstatusCompra.PAGADA)){
 			btnRegistrarPago.setVisible(false);
 			txtNroReferencia.setDisabled(true);
 			cmbBanco.setDisabled(true);
+			cmbFormaDePago.setDisabled(true);
 			txtObservaciones.setDisabled(true);
 		} else {
 			btnRegistrarPago.setVisible(true);
@@ -472,6 +491,15 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 
 	public void setEstatusPago(String estatusPago) {
 		this.estatusPago = estatusPago;
+	}
+	
+	public List<DetalleOferta> getListaDetallesCompra() {
+		return listaDetallesCompra;
+	}
+
+
+	public void setListaDetallesCompra(List<DetalleOferta> listaDetallesCompra) {
+		this.listaDetallesCompra = listaDetallesCompra;
 	}
 	
 }
