@@ -1,0 +1,5 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<div hflex="1" align="left">
+		<label value="* Campos Obligatorios" hflex="1" sclass="requerido margen" />
+	</div>
+</zk>

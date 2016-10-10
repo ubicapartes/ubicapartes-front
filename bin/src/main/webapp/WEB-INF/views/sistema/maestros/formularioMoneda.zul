@@ -1,0 +1,128 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winMoneda" closable="true" 
+		 width="0px" height="0px" border="none" apply="org.zkoss.bind.BindComposer"
+		sclass="winMyList"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.maestros.RegistrarMonedaViewModel')">
+		
+
+			<n:div aria-hidden="false" class="modal fade in" role="dialog"
+			tabindex="-1" style="display: block;">
+			
+			<div class="modal-dialog modal-full" height="50" width="80%"><!-- modal-xs -->
+				<div sclass="modal-content">
+					<include src="/WEB-INF/views/template/modal/titleModal.zul"
+					titulo="Registrar Moneda" />
+					<n:div class="modal-inner">
+					<borderlayout height="400px">
+							<east id="eastCotizacionNacional" width="100%" title="Moneda">
+								<div>
+									<groupbox closable="false">
+											<grid>
+												<columns>
+													<column width="15%"
+														align="right" />
+													<column width="20%" />
+													<column width="20%"
+													align="right" />
+													
+												</columns>
+												<rows>
+																				
+													<row>
+
+														<!-- Nombre -->
+														<include
+															src="/WEB-INF/views/template/fieldMandatory.zul"
+															field="NAME / NOMBRE:" />
+														
+															<vbox>
+																<textbox
+																	id="idNombre" width="102%" mold="rounded" maxlength="15"
+																	placeholder="Ej: Bolivar " sclass="form-control"
+																	readonly="@bind(vm.makeAsReadOnly)"
+																	value="@bind(vm.moneda.nombre)"
+																	constraint="@bind(vm.notEmptyValidator)" />
+															</vbox>
+									
+														
+														<!-- simbolo -->
+														<include
+															src="/WEB-INF/views/template/fieldMandatory.zul"
+															field="SYMBOL / SIMBOLO: " />
+														<vbox>
+															<textbox
+																id="idSimbolo" mold="rounded" width="130%" sclass="form-control"
+																placeholder="Ej: BsF."
+																value="@bind(vm.moneda.simbolo)"
+																readonly="@bind(vm.makeAsReadOnly)"
+																constraint="@bind(vm.notEmptyValidator)" />
+														</vbox>
+													</row>
+													<row>
+
+														<!-- Nombre -->
+														<include
+															src="/WEB-INF/views/template/fieldMandatory.zul"
+															field="CONVESION AMOUNT / MONTO CONVERSION:" />
+														
+															<vbox>
+																<textbox 
+																	id="idMontoConversion" width="102%" mold="rounded" maxlength="15"
+																	placeholder="Ej: 1.5 " sclass="form-control"
+																	readonly="@bind(vm.makeAsReadOnly)"
+																	value="@bind(vm.historico.montoConversion)"
+																	constraint="@bind(vm.notEmptyValidator)" />
+															</vbox>
+															<include
+															src="/WEB-INF/views/template/fieldMandatory.zul"
+															field="NATIONAL OR INTERNATIONAL / NACIONAL O INTERNACIONAL:" />
+													<vbox>
+													<combobox
+														id="cmbFlete" width="100%" 
+														buttonVisible="@bind(!vm.makeAsReadOnly)"
+														readonly="@bind(vm.makeAsReadOnly)"
+														model="@load(vm.tiposPais)"
+														selectedItem="@bind(vm.tipoPais)"
+														
+														constraint="@bind(vm.notEmptyValidator)">
+														<template
+															name="model">
+															<comboitem
+																label="@bind(each.nombre)" />
+														</template>
+													</combobox>
+												</vbox>
+													</row>
+												
+												 	
+												</rows>
+											</grid>
+									</groupbox>
+									</div>
+							</east>
+						</borderlayout>
+						</n:div>
+	
+					<n:div class="modal-footer">
+						<hbox width="100%"
+							visible="@bind(!vm.makeAsReadOnly)" hflex="1">
+							<include
+								src="/WEB-INF/views/template/textFieldsMandatory.zul" hflex="1" />
+							<div align="right">
+
+								<button id="btnLimpiar" label="Limpiar"
+									type="submit" onClick="@command('limpiar')"
+									sclass="btn-sm btn-info" />
+
+								<button label="Registrar" type="submit"
+									onClick="@command('registrar', btnEnviar=self, btnLimpiar=btnLimpiar)"
+									sclass="btn-sm btn-primary" />
+							</div>
+							
+				</hbox>	
+				</n:div>
+				</div>
+				</div>
+		</n:div>	
+	</window>
+</zk>

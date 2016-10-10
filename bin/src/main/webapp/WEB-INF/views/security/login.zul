@@ -1,0 +1,71 @@
+<zk xmlns:w="client" xmlns:n="native">
+	
+	<div align="center">
+		<n:form id="formLogin" class="form" action="login" method="POST">
+			<div hflex="1" align="center">
+			<n:div class="inicio">
+	</n:div>
+				<grid>
+					<columns>
+						<column label="" />
+					</columns>
+					<rows >
+						<row align="center" sclass="formulario" style="background:#fff">
+						
+							<vlayout spacing="15px" >
+							<n:h3>Accede a tú cuenta</n:h3>
+<!-- 								<image src="/resources/img/user1.png" -->
+<!-- 									sclass="img-rounded" width="50px"/> -->
+
+								<div id="errorLogin" sclass="alert alert-danger" if="${not empty param.auth}">
+									¡Credenciales Invalidas!
+								</div>
+
+								<div class="input-group">
+									<span class="input-group-addon"><n:i class="fa fa-user"/></span>
+									<textbox sclass="form-control" hflex="1"
+										placeholder="Usuario" id="username" name="j_username" />
+								</div>
+								
+								<div class="input-group">
+									<span class="input-group-addon"><n:i class="fa fa-key"/></span>
+									<textbox id="password" name="j_password" sclass="form-control"  hflex="1"
+										type="password" class="form-control" placeholder="Contraseña"/>
+								</div>
+							
+
+								<div class="form-group">
+									<div class="row">
+										<div class="col-md-10 col-md-push-1">
+													
+											<button label="Iniciar Sesión" width="100%" height="40px"
+												type="submit" sclass="btn btn-primary" />
+										
+										</div>
+									</div>
+								</div>
+								<n:div class="checkbox-group"> 
+    								<n:input type="checkbox" id="remember_me" name="remember-me"/> 
+    								<n:label for="remember_me">
+        								<n:span class="check"/>
+        								<n:span class="box"/>
+        								Recordarme
+     								</n:label>
+								</n:div>
+								
+<!-- 								<hlayout spacing="15px">	 -->
+<!-- 									<checkbox id="remember_me" name="remember-me" /> -->
+<!--  									<label value="Recordarme"/>  -->
+<!--  								</hlayout> -->
+
+							</vlayout>
+						</row>
+					</rows>
+				</grid>
+			</div>
+		</n:form>
+	</div>
+	<div>
+	</div>
+
+</zk>

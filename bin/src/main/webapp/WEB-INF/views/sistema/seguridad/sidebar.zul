@@ -1,0 +1,19 @@
+<zk>
+	<div id="sidebar" sclass="sidebar" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vms') @init('com.okiimport.app.mvvm.controladores.seguridad.SidebarViewModel')">
+		
+		<navbar id="navbar" sclass="nav-list" orient="vertical">
+			<!-- 
+				<navitem label="Paso 1" iconSclass="z-icon-home" />
+				<nav label="Paso 2" iconSclass="z-icon-pencil">
+				<navitem label="Paso 2.1" />
+				</nav>
+			
+			<nav label="Next Actions" iconSclass="z-icon-th-list">
+				<navitem label="Rescue the Baby" />
+				<navitem label="Play Darts" />
+			</nav>
+			-->
+		</navbar>
+	</div>
+</zk>

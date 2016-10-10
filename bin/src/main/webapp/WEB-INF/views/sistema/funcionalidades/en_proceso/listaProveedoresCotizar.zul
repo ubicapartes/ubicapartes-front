@@ -1,0 +1,82 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window border="none" height="0px"
+		apply="org.zkoss.bind.BindComposer" 
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.ListaProveedoresCotizarViewModel')">
+
+		<n:div aria-hidden="false" class="modal fade in" role="dialog" tabindex="-1" style="display: block;">
+			<div class="modal-dialog modal-full"  height="auto"><!-- modal-xs -->
+				<div sclass="modal-content">
+					<include src="/WEB-INF/views/template/modal/titleModal.zul" titulo="Proveedores con Cotizaciones Pendientes A Registrar" />
+					<n:div class="modal-inner">
+					
+						<!-- LISTA DE PROVEEDORES A COTIZAR-->
+						<panel sclass="borderGrid">
+							<panelchildren>
+								<hbox width="100%" align="center">
+									<paging id="pagProveedores" hflex="1" sclass="custom-paging"
+										onPaging="@command('paginarLista')" autohide="true" />
+									<div sclass="z-paging z-paging-info" height="28px">
+										<label id="lblProveedores" sclass="rRmWwb-info" />
+									</div>
+								</hbox>
+								<listbox id="gridProveedores" sclass="mylist"
+									emptyMessage="No hay solicitudes" 
+									model="@load(vm.proveedores)"
+									onAfterRender="@command('updatePaging', paging = pagProveedores, label=lblProveedores)">
+									<auxhead>
+										<auxheader />
+										<auxheader>
+											<div sclass="z-icon-filter bigger-200" />
+											<spinner instant="true" hflex="1"
+												value="@bind(vm.proveedorFiltro.cedula)"
+												onChange="@command('aplicarFiltro')" />
+										</auxheader>
+										<auxheader>
+											<div sclass="z-icon-filter bigger-200" />
+											<textbox instant="true" hflex="1"
+												value="@bind(vm.proveedorFiltro.nombre)"
+												onChange="@command('aplicarFiltro')" />
+										</auxheader>
+										<auxheader colspan="1" />
+										<auxheader colspan="1" />
+										<auxheader width="20%" />
+									</auxhead>
+									<listhead>
+										<listheader width="2%" />
+										<listheader id="id" label="RIF"
+											sort="auto(cedula)" width="18%" />
+										<listheader id="nombre" label="Nombre"
+											sort="auto(nombre)" width="18%" />
+										<listheader label="Ubicación" sort="none" width="18%" />
+										<listheader label="Estado" sort="none" width="31%" />
+										<listheader label="Operaciones" width="15%" sort="none" />
+									</listhead>
+
+									<template name="model">
+										<listitem>
+											<listcell label="${forEachStatus.index+1}"
+												sclass="boxed-grey" />
+											<listcell label="@bind(each.cedula)" />
+											<listcell label="@bind(each.nombre)" />
+											<listcell label="@bind(each.ubicacion(' - '))" />
+											<listcell label="@bind(each.estatus)" />
+											<listcell>
+												<div class="btn-group btn-group-sm">
+													<button
+														iconSclass="z-icon-fa fa-file purple bigger-110"
+														tooltiptext="Cotizar"
+														onClick="@command('cotizar', proveedor = each)" />
+												</div>
+											</listcell>
+										</listitem>
+									</template>
+								</listbox>
+							</panelchildren>
+						</panel>
+					</n:div>
+					<n:div class="modal-footer"/>
+				</div>
+			</div>
+		</n:div>
+	</window>
+</zk>

@@ -85,7 +85,7 @@
 							<listcell label="@bind(each.id)" />
 							<listcell label="@bind(each.compra.idCompra)" />
 							<listcell label="@bind(each.compra.requerimiento.cliente.nombre)" />
-							<listcell label="@bind(each.formaPago)" />
+							<listcell label="@bind(each.formaPago.nombre)" />
 							<listcell label="@bind(each.fechaCreacion)
 												@converter('formatedDate', format=vm.formatDate)"/>
 							<listcell label="@bind(each.monto)" />

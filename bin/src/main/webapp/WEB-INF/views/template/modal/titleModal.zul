@@ -1,0 +1,9 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<!--  mode="instant" mode="defer" -->
+	<n:div class="modal-heading">
+		<a sclass="modal-close" onClick="@command('closeModal')">x</a>
+		<hbox>
+			<n:h2 class="modal-title">${requestScope.titulo}</n:h2>
+		</hbox>
+	</n:div>
+</zk>

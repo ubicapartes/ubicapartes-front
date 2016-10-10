@@ -1,0 +1,103 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<vbox
+		apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.resource.decorator.ofertas.DecoratorTabOferta')">
+		<style>
+			.listitem-red, .listitem-red.z-listitem.z-listbox-odd {
+				background-color: rgba(255, 0, 0, 0.1);
+			}
+		
+			.listitem-red.z-listitem.z-listbox-odd:hover, .listitem-green.z-listitem.z-listbox-odd:hover {
+		    	background-color: transparent;
+    			background-image: none;
+    		}
+		
+			.listitem-green, .listitem-green.z-listitem.z-listbox-odd {
+				background-color: rgba(76,175,80,0.1);
+			}
+		</style>
+		<hbox hflex="1">
+			<grid>
+				<columns>
+					<column width="15%" />
+				</columns>
+				<rows>
+					<row>
+						<div>
+							<label value="Estado de la Oferta:" sclass="label-not-mandatory" />
+							<label sclass="z-letra-grande" value="@bind(vm.oferta.estatus.nombre)"/>
+						</div>
+					</row>
+				</rows>
+			</grid>	
+			<div hflex="1" tooltiptext="Acciones sobre la Oferta">
+				<hbox width="100%" sclass="header-button">
+					<button iconSclass="fa fa-history" label="Re-Cotizar" type="submit"
+						sclass="btn-success" onClick="@command('recotizar', actions = self.parent)" visible="@bind(vm.oferta.isParaReCotizacion())"/>
+					<button iconSclass="fa fa-check" label="Oferta" type="submit" visible="@bind((vm.visibleBtnOfertas eq null) or (!vm.visibleBtnOfertas))"
+						sclass="btn-primary" onClick="@command('updateOferta', acept=true)"/>
+					<button iconSclass="fa fa-times" label="Oferta" type="submit" visible="@bind((vm.visibleBtnOfertas eq null) or (vm.visibleBtnOfertas))"
+						sclass="btn-danger" onClick="@command('updateOferta', acept=false)"/>
+				</hbox>
+			</div>		
+		</hbox>
+		<panel sclass="borderGrid">
+			<panelchildren>
+				<listbox mold="paging" pagingPosition="top" pageSize="5"
+					emptyMessage="No Existen Repuestos Validos para esta Oferta"
+					model="@load(vm.oferta.detalleOfertas)">
+					<listhead>
+						<listheader label="Proveedor" />
+						<listheader label="Ubicación" tooltiptext="Pais/Estado-Ciudad" />
+						<listheader label="Repuesto" />
+						<listheader label="Marca" />
+						<listheader label="Cant. Solict." width="7%" />
+						<listheader label="Cant. Ofert." width="7%"/>
+						<listheader label="Prec. Venta" />
+						<listheader label="Prec. Flete" />
+						<listheader label="Costo" />
+						<listheader width="13%" align="center"/>
+					</listhead>
+					<template name="model">
+						<listitem sclass="@bind(vm.updateRow(each))">
+							<listcell
+								label="@bind(each.detalleCotizacion.cotizacion.proveedor.nombre)" />
+							<listcell
+								label="@bind(each.detalleCotizacion.cotizacion.proveedor.ubicacion(' - '))" />
+							<listcell
+								label="@bind(each.detalleCotizacion.detalleRequerimiento.descripcion)" />
+							<listcell
+								label="@bind(each.detalleCotizacion.marcaRepuesto)" />
+							<listcell
+								label="@bind(each.detalleCotizacion.detalleRequerimiento.cantidad)" />
+							<listcell
+								label="@bind(each.detalleCotizacion.cantidad)" />
+							<listcell
+								label="@bind(each.detalleCotizacion.precioVenta) 
+  										@converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+  											converterMoneda=each.detalleCotizacion.cotizacion.historicoMoneda, monedaBase=vm.monedaBase)" /> 
+							<listcell
+								label="@bind(each.detalleCotizacion.precioFlete)
+  										@converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+  											converterMoneda=each.detalleCotizacion.cotizacion.historicoMoneda, monedaBase=vm.monedaBase)" />
+							<listcell
+								label="@bind(each.detalleCotizacion.calcularTotal())
+  										@converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+  											converterMoneda=each.detalleCotizacion.cotizacion.historicoMoneda, monedaBase=vm.monedaBase)" />
+							<listcell>
+								<div class="btn-group btn-group-sm">
+									<button iconSclass="z-icon-check green bigger-160" tooltiptext="Aprobar"
+										visible="@bind(vm.isAprobado(each, true))"
+										onClick="@command('aprobar', detalleOferta = each, acept=true)"/>
+									<button iconSclass="z-icon-times red bigger-160" tooltiptext="Invalidar" 
+										visible="@bind(vm.isAprobado(each, false))"
+										onClick="@command('aprobar', detalleOferta = each, acept=false)"/>
+								</div>
+							</listcell>
+						</listitem>
+					</template>
+				</listbox>
+			</panelchildren>
+		</panel>
+	</vbox>
+</zk>

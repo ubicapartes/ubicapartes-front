@@ -1,0 +1,230 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winCompras" border="none" width="80%" title="Compra"
+		apply="org.zkoss.bind.BindComposer" closable="true"
+		sclass="btn-primary"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.RegistrarCompraViewModel')"
+		onClose="@command('onCloseWindow')">
+		<groupbox closable="false">
+			<div>
+				<space></space>
+				<space></space>
+				<space></space>
+				<space></space>
+				<label value="N° Solicitud:" />
+				<label value="@bind(vm.compra.idCompra)"  />
+				<space></space>
+				<space></space>
+				<space></space>
+				<space></space>
+				<space></space>
+				<space></space>
+				<space></space>
+				<label value="Fecha: " />
+				<datebox id="fecha" width="150px" format="dd/MM/yyyy" 
+					value="@bind(vm.compra.fechaCreacion)" instant="true"
+					readonly="true" />
+				<space></space>
+				<space></space>
+				<space></space>
+				<space></space>
+				<space></space>
+				<label value="Observación:" />
+				<textbox sclass="no_rezise notas" readonly="true"
+					value="@bind(vm.compra.observacion)" 
+					width="250px" rows="2"/>
+				<space></space>
+				<space></space>
+			</div>
+
+			<groupbox closable="false">
+				<caption sclass="custom_caption"
+					label="Datos Del Requerimiento" />
+				<div>
+					<grid>
+						<columns>
+							<column width="35%" align="right" />
+							<column width="65%" />
+							<column width="35%" align="right" />
+							<column width="65%" />
+						</columns>
+
+						<rows>
+							<row>
+								<label value="Número: " />
+								<vbox>
+								<textbox
+									value="@bind(vm.requerimiento.idRequerimiento)" width="100%"
+									readonly="true"/>
+								</vbox>
+
+
+								<label value="Fecha Creación: " />
+								<label value="@bind(vm.requerimiento.fechaCreacion)
+		    									@converter('formatedDate', format=vm.formatDate)" />
+							</row>
+
+						</rows>
+					</grid>
+				</div>
+			</groupbox>
+
+
+			<groupbox closable="false">
+				<caption sclass="custom_caption"
+					label="Datos Del Cliente" />
+				<div>
+					<grid>
+						<columns>
+							<column width="35%" align="right" />
+							<column width="65%" />
+							<column width="35%" align="right" />
+							<column width="65%" />
+						</columns>
+
+						<rows>
+							<row>
+								<label value="Cédula: " />
+								<vbox>
+								<textbox
+									value="@bind(vm.requerimiento.cliente.cedula)" width="100%"
+									readonly="true" />
+                                </vbox>
+
+								<label value="Nombre: " />
+								<vbox>
+								<textbox width="100%" readonly="true"
+									mold="rounded" value="@bind(vm.requerimiento.cliente.nombre)"/>
+								</vbox>
+
+							</row>
+
+						</rows>
+					</grid>
+				</div>
+			</groupbox>
+
+
+
+			<groupbox closable="false">
+				<caption sclass="custom_caption"
+					label="Datos Del Vehiculo" />
+				<div>
+					<grid>
+						<columns>
+							<column width="35%" align="right" />
+							<column width="65%" />
+							<column width="35%" align="right" />
+							<column width="65%" />
+						</columns>
+
+						<rows>
+							<row>
+								<label value="Marca: " />
+								<vbox>
+								<textbox
+									value="@bind(vm.requerimiento.marcaVehiculo.nombre)"
+									width="100%" readonly="true"/>
+								</vbox>
+
+
+								<label value="Modelo: " />
+								<vbox>
+								<textbox id="modelo" width="100%"
+									readonly="true" mold="rounded"
+									value="@bind(vm.requerimiento.modeloV)"/>
+								</vbox>
+
+								<label value="Tipo Repuesto: " />
+								<vbox>
+								<textbox
+									value="@bind(vm.requerimiento.determinarTipoRepuesto())"
+									width="80%" readonly="true" />
+								</vbox>
+							</row>
+
+						</rows>
+					</grid>
+				</div>
+			</groupbox>
+
+			<groupbox closable="false">
+				<caption sclass="custom_caption" label="Repuestos" />
+			
+		<!-- LISTA DE DETALLES COMPRA-->
+			<panel sclass="borderGrid">
+				<panelchildren>
+					<hbox width="100%" align="center">
+						<paging id="pagDetallesCompra" hflex="1"
+							onPaging="@command('paginarLista')" autohide="true" />
+						<div sclass="z-paging z-paging-info" height="28px">
+							<label id="lblDetallesCompra" sclass="rRmWwb-info"/>
+						</div>
+					</hbox>
+						<listbox id="gridDetallesCompra" style="margin-top:10px" emptyMessage="No hay solicitudes"
+							model="@load(vm.listaDetallesCompra)" pagingPosition="top"
+							onAfterRender="@command('updatePaging', paging = pagDetallesCompra, label=lblDetallesCompra)">
+							
+							<listhead>
+								<listheader label="Descripción" sort="none" />
+								<listheader label="Marca" sort="none" />
+								<listheader label="Cant. Encontrada" sort="none" />
+								<listheader label="Precio Venta" sort="none" />
+							</listhead>
+
+							<template name="model">
+								<listitem>
+									<listcell label="@bind(each.detalleCotizacion.detalleRequerimiento.descripcion)" />
+									<listcell label="@bind(each.detalleCotizacion.marcaRepuesto)" />
+									<listcell label="@bind(each.detalleCotizacion.cantidad)" />
+									<listcell label="@bind(each.calcularPrecioVenta()) 
+									 					@converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+									 						converterMoneda=each.detalleCotizacion.cotizacion.historicoMoneda, monedaBase=vm.monedaBase) " />
+								</listitem>
+							</template>
+
+							<listfoot sclass="footerTotal">
+								<listfooter />
+								<listfooter />
+								<listfooter />
+								<listfooter>
+									<vbox>
+									<hbox>
+										<label value="Total Compra" />
+										<label value="@bind(vm.totalCompra)
+														@converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+									 						converterMoneda=vm.monedaBase, monedaBase=vm.monedaBase)" />
+									</hbox>
+									<hbox>
+										<label value="Flete: "></label>
+										<vbox>
+											<decimalbox format="@bind(vm.formatNumber)" locale="@bind(vm.localeNumber)" 
+												value="@bind(vm.compra.precioFlete)" 
+												constraint="@bind(vm.validatorPrecio)"
+												onChange="@command('calcularTotal')"/>
+										</vbox>
+									</hbox>
+									<hbox>
+										<label value="Total Neto:" />
+										<label value="@bind(vm.totalCompraNeto)
+														@converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+									 						converterMoneda=vm.monedaBase, monedaBase=vm.monedaBase)" />
+									</hbox>
+									</vbox>
+								</listfooter>
+							</listfoot>
+						</listbox>
+					</panelchildren>
+				</panel>
+			</groupbox>
+		</groupbox>
+		<div sclass="panel-footer" align="right">
+
+			<button id="btnLimpiar" label="Limpiar" type="submit"
+				onClick="@command('limpiar')" sclass="btn-primary" />
+
+			<button label="Enviar" type="submit"
+				onClick="@command('registrar', btnEnviar=self, btnLimpiar=btnLimpiar)"
+				sclass="btn-primary" />
+		</div>
+	</window>
+</zk>

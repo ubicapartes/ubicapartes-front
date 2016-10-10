@@ -1,0 +1,332 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winERequerimiento" border="none" height="0px"
+		apply="org.zkoss.bind.BindComposer" 
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.EditarRequerimientoViewModel')">
+		
+		<n:div aria-hidden="false" class="modal fade in" role="dialog" tabindex="-1" style="display: block;">
+			<div class="modal-dialog modal-full"  height="auto"><!-- modal-xs -->
+				<div sclass="modal-content">
+					<include src="/WEB-INF/views/template/modal/titleModal.zul" titulo="Requerimiento" />
+					<n:div class="modal-inner">
+						<groupbox closable="false">
+							<div> 
+		    					<space/>
+		    					<space/> 
+		    					<label value="Nro. Solicitud:" sclass="label-not-mandatory"/>
+		    					<label value="@bind(vm.requerimiento.idRequerimiento)"/>
+		    					<space/>
+		    					<space/> 
+		    					<label value="Fecha de Creación:" sclass="label-not-mandatory"/>
+		    					<label value="@bind(vm.requerimiento.fechaCreacion)
+		    									@converter('formatedDate', format=vm.formatDate)"/>
+		    					<space/>
+		    					<space/>
+		   						<label value="Estado:" sclass="label-not-mandatory"/>
+		    					<label value="@bind(vm.requerimiento.determinarEstatus())" sclass="z-letra-grande" /> 
+		    
+							</div>
+							<tabbox maximalHeight="true" sclass="tab-nav tab-nav-blue">
+								<tabs>
+									<tab sclass="waves-color-blue waves-effect">
+										<label value="Datos Generales" />
+									</tab>
+									<tab sclass="waves-color-blue waves-effect">
+										<label value="Repuestos" />
+									</tab>
+								</tabs>
+								<tabpanels>
+									<!-- DATOS GENERALES -->
+									<tabpanel>
+										<!-- DATOS DEL CLIENTE -->
+										<include src="/WEB-INF/views/template/modal/subTitleModal.zul" subtitulo="Datos del Cliente"/>
+										<div sclass="card card-main card-inner">
+											<grid>
+												<columns>
+													<column width="10%" />
+													<column  width="25%"/>
+													<column  width="18%"/>
+													<column  />
+												</columns>
+												<rows>
+													<row>
+													
+														<!-- CEDULA -->
+														<label value="Cédula/RIF: " sclass="label-not-mandatory"/>
+														<label value="@bind(vm.requerimiento.cliente.cedula)"/>
+														
+														<!-- NOMBRE O RAZON SOCIAL -->
+														
+														<label value="Nombre/Razón Social: " sclass="label-not-mandatory"/>
+														<label value="@bind((vm.requerimiento.cliente.nombre).concat(' ').concat(vm.requerimiento.cliente.apellido))"/>
+															
+													</row>
+												
+													<row>
+														<!-- TELEFONO -->
+														<label value="Teléfono: " sclass="label-not-mandatory"/>
+														<label value="@bind(vm.requerimiento.cliente.telefono)"/>
+													
+														<!-- E-Mail -->
+														<label value="Correo: " sclass="label-not-mandatory"/>
+														<label value="@bind(vm.requerimiento.cliente.correo)"/>
+													</row>
+							
+													<row>
+														<!-- ESTADO -->
+							    						<label value="Estado: " sclass="label-not-mandatory"/>
+							    						<label value="@bind(vm.requerimiento.cliente.ciudad.estado.nombre)"/>
+									
+														<!-- CIUDAD -->
+														<label value="Ciudad: " sclass="label-not-mandatory"/>
+														<label value="@bind(vm.requerimiento.cliente.ciudad.nombre)" />
+													</row>
+												</rows>
+											</grid>
+										</div>
+										
+										<!-- DATOS DEL VEHICULO -->
+										<include src="/WEB-INF/views/template/modal/subTitleModal.zul" subtitulo="Datos del Vehiculo"/>
+										<tabbox sclass="tab-nav tab-nav-blue">
+											<tabs>
+												<tab sclass="waves-color-blue waves-effect">
+													<label value="Datos Básicos" />
+												</tab>
+												<tab sclass="waves-color-blue waves-effect">
+													<label value="Datos Adicionales" />
+												</tab>
+											</tabs>
+											<tabpanels>
+												<!-- DATOS BASICOS -->
+												<tabpanel>
+													<grid>
+														<columns>
+															<column width="10%" />
+															<column  width="20%"/>
+															<column  width="20%"/>
+															<column  />
+														</columns>
+														<rows>
+															<row>
+																<!-- MARCA -->
+																<label value="Marca: " sclass="label-not-mandatory"/>
+																<label value="@bind(vm.requerimiento.marcaVehiculo.nombre)"/>
+																
+																<!-- MODELO -->
+																<label value="Modelo: " sclass="label-not-mandatory"/>
+																<label value="@bind(vm.requerimiento.modeloV)"/>
+															</row>
+															
+															<row>
+																<!-- AÑO -->								
+																<label value="Año:" sclass="label-not-mandatory"/>
+																<label value="@bind(vm.requerimiento.annoV)"/>
+													
+																<!-- SERIAL DE CARROCERIA -->
+																<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Serial Carrocería:" />
+																<vbox>
+																	<textbox id="serialCarroceria" sclass="form-control" mold="rounded"
+																		maxlength="25" placeholder="Ej: xA245D25623" readonly="@bind(!vm.editar)"
+																		value="@bind(vm.requerimiento.serialCarroceriaV)" 
+																		constraint="@bind(vm.notEmptyValidator)"/>
+																</vbox>
+															</row>
+														</rows>
+													</grid>
+												</tabpanel>
+												
+												<!-- DATOS ADICIONALES -->
+												<tabpanel>
+													<grid>
+														<columns>
+															<column width="10%" />
+															<column  width="20%"/>
+															<column  width="20%"/>
+															<column  />
+														</columns>
+														<rows>
+															<row>
+																<!-- MOTOR -->
+																<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Motor:" />
+																<vbox>
+																	<bandbox id="bdMotor" mold="rounded"
+																		autodrop="true" readonly="true" placeholder="Seleccione..."
+																		width="80%" buttonVisible="@bind(vm.editar)"
+																		value="@bind(vm.requerimiento.motor.nombre)" 
+																		constraint="@bind(vm.notEmptyValidator)">
+																		<bandpopup>
+																			<listbox id="gridMotores" width="200px" mold="paging" 
+																				model="@load(vm.listaMotor)"
+																				selectedItem="@bind(vm.requerimiento.motor)"
+																				onSelect="bdMotor.close();">
+																				<listhead>
+																					<listheader value="nombre" label="Nombre" sort="auto(nombre)">
+																						<textbox
+																							instant="true" placeholder=""
+																							value="@bind(vm.motor.nombre)"
+																							onChange="@command('aplicarFiltroMotor')" width="100px" />
+																						<div sclass="z-icon-filter bigger-200" />
+																					</listheader>
+																				</listhead>
+																				<template name="model">
+																					<listitem label="@bind(each.nombre)" />
+																				</template>
+																			</listbox>
+																			<paging id="pagMotores" onPaging="@command('paginarListaMotores')" autohide="true" />
+																		</bandpopup>
+																	</bandbox>
+																</vbox>
+															
+																<!-- TRANSMISION -->
+																<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Transmisión:" />
+																<vbox>
+																	<combobox id="cmbTransmision" placeholder="Seleccione..." width="80%" 
+																		readonly="true" buttonVisible="@bind(vm.editar)"
+																		selectedItem="@bind(vm.transmision)"
+																		model="@load(vm.listaTransmision)"
+																		
+																		 constraint="@bind(vm.notEmptyValidator)">
+																		<template name="model">
+																			<comboitem label="@bind(each.nombre)"/>
+																		</template>
+																	</combobox>
+																</vbox>
+															</row>
+															<row>
+																<!-- TRACCION -->
+																<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Tracción:" />
+																<vbox>
+																	<combobox id="cmbTraccion" placeholder="Seleccione..." width="80%"
+																		readonly="true" buttonVisible="@bind(vm.editar)"
+																		selectedItem="@bind(vm.traccion)"
+																		model="@load(vm.listaTraccion)"
+																		
+																		 constraint="@bind(vm.notEmptyValidator)">
+																		<template name="model">
+																			<comboitem label="@bind(each.nombre)"/>
+																		</template>
+																	</combobox>
+																</vbox>
+															
+																<!-- TIPO REPUESTO -->
+																<label value="Tipo Repuesto: " sclass="label-not-mandatory"/>
+																<label value="@bind(vm.requerimiento.determinarTipoRepuesto())" />
+															</row>
+														</rows>
+													</grid>
+												</tabpanel>
+											</tabpanels>
+										</tabbox>
+									</tabpanel>
+									
+									<!-- REPUESTOS -->
+									<tabpanel>
+										<panel sclass="borderGrid">
+											<panelchildren>
+												<listbox mold="paging" pageSize="5" pagingPosition="top"
+													model="@load(vm.requerimiento.detalleRequerimientos)">
+													<listhead>
+							    						<listheader width="3%"/>
+														<listheader sort="none" width="15%">
+															<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Código OEM" />
+														</listheader>
+														<listheader sort="none" width="300px">
+															<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Descripción" />
+														</listheader>
+														<listheader sort="none" width="15%">
+															<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Cantidad" />
+														</listheader>
+														<listheader sort="none" width="15%">
+															<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Peso (Kg.)" />
+														</listheader>
+														<listheader sort="none" width="15%">
+															<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Clasificación" />
+														</listheader>
+														<listheader sort="auto" width="15%" label="Foto"/>
+													</listhead>
+													<template name="model">
+														<listitem>
+								  							<listcell label="${forEachStatus.index+1}" />
+															<listcell>
+																<vbox hflex="1">
+																	<textbox hflex="1" readonly="@bind(!vm.editar)"
+																		value="@bind(each.codigoOem)"
+																		constraint="@bind(vm.notEmptyValidator)"/>
+																</vbox>
+															</listcell>
+															<listcell>
+																<vbox hflex="1">
+																	<textbox hflex="1" rows="2" multiline="true" 
+																		sclass="no_rezise" readonly="@bind(!vm.editar)"
+																		value="@bind(each.descripcion)"
+																		constraint="@bind(vm.notEmptyValidator)" />
+																</vbox>
+															</listcell>
+															<listcell>
+																<vbox hflex="1">
+																	<spinner hflex="1"
+																		readonly="@bind(!vm.editar)" buttonVisible="@bind(vm.editar)" 
+																		value="@bind(each.cantidad)"
+																		constraint="@bind(vm.cantValidator)"/>
+																</vbox>
+															</listcell>
+															<listcell>
+																<vbox hflex="1">
+																	<decimalbox hflex="1"
+																		format="@bind(vm.formatNumber)"
+																		locale="@bind(vm.localeNumber)"
+																		readonly="@bind(!vm.editar)"
+																		value="@bind(each.peso)"
+																		constraint="@bind(vm.validatorPrecio)" />
+																</vbox>
+															</listcell>
+															<listcell>
+																<combobox hflex="1" readonly="true" buttonVisible="@bind(vm.editar)"
+																	value="@bind(each.clasificacionRepuesto.descripcion)"
+																	model="@bind(vm.listaClasificacionRepuesto)"
+																	selectedItem="@bind(each.clasificacionRepuesto)">
+																	<template name="model">
+																		<comboitem label="@bind(each.descripcion)" />
+																	</template>
+																</combobox>
+															</listcell>
+															<listcell>
+																<div>
+																	<image width="50px" sclass="imagen-default"
+																	height="50px" src="@bind(each.getFoto64())"
+																	tooltiptext="Ampliar"
+																	onClick="@command('ampliarImagen', titulo='Repuesto', imagen=each.getFoto64())" />
+
+																	<button label="+"
+																	visible="@bind(vm.editar)"
+																	sclass="btn-info" style="margin-bottom:0px"
+																	tooltiptext="Subir Foto"
+																	onClick="@command('uploadFoto', detalle = each)" />
+																</div>
+															</listcell>
+														</listitem>
+													</template>
+												</listbox>
+											</panelchildren>
+										</panel>
+									</tabpanel>
+								</tabpanels>
+							</tabbox>
+						</groupbox>
+					</n:div>
+					<n:div class="modal-footer">
+						<hbox width="100%" visible="@bind(vm.editar)">
+							<include src="/WEB-INF/views/template/textFieldsMandatory.zul" hflex="1" />
+							<div align="right" hflex="1">
+								<button id="btnLimpiar" label="Limpiar" type="submit"
+									onClick="@command('limpiar')" sclass="btn-sm btn-info" />
+								<button label="Editar" type="submit" sclass="btn-sm btn-primary"
+									onClick="@command('actualizar', btnEnviar=self, btnLimpiar=btnLimpiar)"  />
+							</div>
+						</hbox>
+					</n:div>
+				</div>
+			</div>
+		</n:div>
+		
+	</window>
+</zk>
