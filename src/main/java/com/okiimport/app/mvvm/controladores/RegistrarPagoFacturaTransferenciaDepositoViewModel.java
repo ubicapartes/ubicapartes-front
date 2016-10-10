@@ -88,10 +88,8 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 	private List<Banco> listaBancos;
 	private List<FormaPago> listaFormaPagos;
 	private List<String> listaEstatusPago;
-	private Banco bancoSeleccionado;
-	private FormaPago formaPagoSeleccionado;
     private Cliente objCliente;
-    private PagoCliente pagoCliente;
+   	private PagoCliente pagoCliente;
     private String estatusPago;
     private List<DetalleOferta> listaDetallesCompra;
 
@@ -111,6 +109,7 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 		llenarCombos();
 		this.pago = pago;
 		this.compra = compra;
+		tienePagoAsignado();
 		cambiarDetallesCompra(0);
 		setMontoPagar(this.compra.getPrecioVenta());
 		UserDetails user = super.getUser();
@@ -126,7 +125,7 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 		String cliente = this.compra.getRequerimiento().getCliente().getNombre().concat(" ".concat(this.compra.getRequerimiento().getCliente().getApellido()));
 		txtTitular.setValue(cliente);
 		txtTitular.setDisabled(true);
-		dateFechaPago.setValue(tienePagoAsignado()?pagoCliente.getFechaPago():new Date());
+		dateFechaPago.setValue(pagoCliente.getFechaPago());
 	}
 	
 	
@@ -177,16 +176,17 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 	
 	@NotifyChange("*")
 	private void actualizarCompra(){
-		if(listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()).getNombre().equalsIgnoreCase("Transferencia") && objCliente!=null){
+		if(pagoCliente !=null && pagoCliente.getFormaPago().getNombre().equalsIgnoreCase("Transferencia")  && objCliente!=null){
 			this.compra.setEstatus(EEstatusCompra.EN_ESPERA_TRANSFERENCIA);
-		} else if(listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()).getNombre().equalsIgnoreCase("Deposito") && objCliente!=null){
+		} else if(pagoCliente !=null && pagoCliente.getFormaPago().getNombre().equalsIgnoreCase("Deposito") && objCliente!=null){
 			this.compra.setEstatus(EEstatusCompra.EN_ESPERA_DEPOSITO);
 		}
-		else if(listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()).getNombre().equalsIgnoreCase("Efectivo") && objCliente!=null){
+		else if(pagoCliente !=null && pagoCliente.getFormaPago().getNombre().equalsIgnoreCase("Efectivo") && objCliente!=null){
 			this.compra.setEstatus(EEstatusCompra.EN_ESPERA);
-		} else if(listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()).getNombre().equalsIgnoreCase("Efectivo") && objCliente==null){
+		} else if(pagoCliente !=null && pagoCliente.getFormaPago().getNombre().equalsIgnoreCase("Efectivo") && objCliente==null){
 			this.compra.setEstatus(EEstatusCompra.PAGADA);
 		}
+		
 		sTransaccion.registrarOActualizarCompra(this.compra);
 		ejecutarGlobalCommand("refrescarListadoCompras", null);
 		ejecutarGlobalCommand("cerrarModalFormasPago", null);
@@ -194,77 +194,66 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 	}
 	
 	private PagoCliente llenarPago() {
-		if(objCliente!=null && !tienePagoAsignado()){
-			pagoCliente = new PagoCliente();
-			pagoCliente.setFechaPago(new Date());
+		if(objCliente!=null){
 			pagoCliente.setMonto(this.montoPagar);
 			pagoCliente.setCompra(this.compra);
-			pagoCliente.setTransactionId(listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()).getNombre().equalsIgnoreCase("Efectivo")?null:txtNroReferencia.getValue());
-		} else if(objCliente!=null && tienePagoAsignado()){
-			pagoCliente.setTransactionId(listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()).getNombre().equalsIgnoreCase("Efectivo")?null:txtNroReferencia.getValue());
 		} else{
-			Map<String, Object> parametros = sPago.consultarPagoByCompra(this.compra);
-			pagoCliente = (PagoCliente) parametros.get("pago");
 			if(estatusPago=="APROBADO"){
 				this.compra.setEstatus(EEstatusCompra.PAGADA);
 			} else if(estatusPago=="RECHAZADO"){
 				this.compra.setEstatus(EEstatusCompra.RECHAZADA);
 			} 
 		}
-		pagoCliente.setFormaPago(listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()));
-		pagoCliente.setBanco(listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()).getNombre().equalsIgnoreCase("Efectivo")?null:listaBancos.get(cmbBanco.getSelectedIndex()));
 		pagoCliente.setEstatus(EEstatusGeneral.ACTIVO.name());
 		pagoCliente.setDescripcion(txtObservaciones.getValue());
 		return pagoCliente;
 	}
 	
 	private boolean tienePagoAsignado(){
-		Map<String, Object> parametros = sPago.consultarPagoByCompra(this.compra);
-		pagoCliente = (PagoCliente) parametros.get("pago");
-		if(pagoCliente!=null){
-			bancoSeleccionado = pagoCliente.getBanco();
-			cmbBanco.setSelectedIndex(this.listaBancos.indexOf(pagoCliente.getBanco()));
-			formaPagoSeleccionado =  pagoCliente.getFormaPago();
-			cmbFormaDePago.setSelectedIndex(this.listaFormaPagos.indexOf(pagoCliente.getFormaPago()));
-			txtNroReferencia.setValue(pagoCliente.getTransactionId());
-		} else {
-			if(this.compra.getEstatus().equals(EEstatusCompra.EN_ESPERA)){
-				int i =0;
-				for(FormaPago fp: this.listaFormaPagos){
-					if(fp.getNombre().equalsIgnoreCase("Efectivo")){
-						setFormaPagoSeleccionado(this.listaFormaPagos.get(i));
-						break;
-					}
-					i++;
-				}
-				
-			} else if(this.compra.getEstatus().equals(EEstatusCompra.EN_ESPERA_DEPOSITO)){
-				int i =0;
-				for(FormaPago fp: this.listaFormaPagos){
-					if(fp.getNombre().equalsIgnoreCase("Deposito")){
-						setFormaPagoSeleccionado(this.listaFormaPagos.get(i));
-						setBancoSeleccionado(this.listaBancos.get(0));
-						break;
-					}
-					i++;
-				}
-				
-			} else if(this.compra.getEstatus().equals(EEstatusCompra.EN_ESPERA_TRANSFERENCIA)) {
-				int i =0;
-				for(FormaPago fp: this.listaFormaPagos){
-					if(fp.getNombre().equalsIgnoreCase("Transferencia")){
-						setFormaPagoSeleccionado(this.listaFormaPagos.get(i));
-						setBancoSeleccionado(this.listaBancos.get(0));
-						break;
-					}
-					i++;
-				}
-			} else {
-				setBancoSeleccionado(this.listaBancos.get(0));
-				formaPagoSeleccionado = this.listaFormaPagos.get(0);
-				setFormaPagoSeleccionado(this.listaFormaPagos.get(0));
-			}
 		
+		if(pagoCliente==null){
+			Map<String, Object> parametros = sPago.consultarPagoByCompra(this.compra);
+			pagoCliente = ((PagoCliente) parametros.get("pago")==null?new PagoCliente():(PagoCliente) parametros.get("pago"));		
+			pagoCliente.setFechaPago(new Date());
+			
+			if(pagoCliente.getFormaPago()==null) {
+				if(this.compra.getEstatus().equals(EEstatusCompra.EN_ESPERA)){
+					int i =0;
+					for(FormaPago fp: this.listaFormaPagos){
+						if(fp.getNombre().equalsIgnoreCase("Efectivo")){
+							pagoCliente.setFormaPago(this.listaFormaPagos.get(i));
+							break;
+						}
+						i++;
+					}
+					
+				} else if(this.compra.getEstatus().equals(EEstatusCompra.EN_ESPERA_DEPOSITO)){
+					int i =0;
+					for(FormaPago fp: this.listaFormaPagos){
+						if(fp.getNombre().equalsIgnoreCase("Deposito")){
+							pagoCliente.setFormaPago(this.listaFormaPagos.get(i));
+							pagoCliente.setBanco(this.listaBancos.get(0));
+							break;
+						}
+						i++;
+					}
+					
+				} else if(this.compra.getEstatus().equals(EEstatusCompra.EN_ESPERA_TRANSFERENCIA)) {
+					int i =0;
+					for(FormaPago fp: this.listaFormaPagos){
+						if(fp.getNombre().equalsIgnoreCase("Transferencia")){
+							pagoCliente.setFormaPago(this.listaFormaPagos.get(i));
+							pagoCliente.setBanco(this.listaBancos.get(0));
+							break;
+						}
+						i++;
+					}
+				} else {
+					pagoCliente.setFormaPago(this.listaFormaPagos.get(0));
+					pagoCliente.setBanco(this.listaBancos.get(0));
+				}
+			}
+			 
 		}
 		if(this.compra.getEstatus().equals(EEstatusCompra.RECHAZADA) || this.compra.getEstatus().equals(EEstatusCompra.PAGADA)){
 			estatusPago = (this.compra.getEstatus().equals(EEstatusCompra.RECHAZADA)? "RECHAZADO":"APROBADO");
@@ -298,12 +287,21 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 			return false;
 		}
 		
-		if(continuar && (!listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()).getNombre().equalsIgnoreCase("Efectivo") && (txtNroReferencia.getValue().equalsIgnoreCase("") || txtNroReferencia.getValue()==null || listaBancos.get(cmbBanco.getSelectedIndex()).getNombre().equalsIgnoreCase("") || listaBancos.get(cmbBanco.getSelectedIndex()).getNombre() == null))){
+		if(continuar && (!pagoCliente.getFormaPago().getNombre().equalsIgnoreCase("Efectivo") && (txtNroReferencia.getValue().equalsIgnoreCase("") || txtNroReferencia.getValue()==null ))){
 			guardar = false;
 			continuar = false;
 			mostrarMensaje("Error", "Debe ingresar todos los campos", null, null, null, null);
 			return false;
 		}
+		
+		if(continuar && (!pagoCliente.getFormaPago().getNombre().equalsIgnoreCase("Efectivo") && ( pagoCliente.getBanco() == null || pagoCliente.getBanco().getNombre().equalsIgnoreCase("")))){
+			guardar = false;
+			continuar = false;
+			mostrarMensaje("Error", "Debe ingresar todos los campos", null, null, null, null);
+			return false;
+		}
+		
+		
 		
 		return guardar;
 	}
@@ -338,14 +336,15 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 			cmbEstatusPago.setDisabled(false);
 		}
 		
-		if(cmbFormaDePago.getSelectedIndex()!=-1 && listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()).getNombre().equalsIgnoreCase("Efectivo") || (formaPagoSeleccionado!=null && formaPagoSeleccionado.getNombre().equalsIgnoreCase("Efectivo"))){
+		
+		if(pagoCliente !=null && pagoCliente.getFormaPago()!=null && pagoCliente.getFormaPago().getNombre().equalsIgnoreCase("Efectivo")){
 			txtNroReferencia.setVisible(false);
 			cmbBanco.setVisible(false);
 			lblBanco.setVisible(false);
 			lblNroReferencia.setVisible(false);
 			cmbEstatusPago.setVisible(false);
 			lblEstatus.setVisible(false);
-		} else if(cmbFormaDePago.getSelectedIndex()!=-1 && !listaFormaPagos.get(cmbFormaDePago.getSelectedIndex()).getNombre().equalsIgnoreCase("Efectivo")){
+		} else if(pagoCliente !=null && pagoCliente.getFormaPago()!=null && !pagoCliente.getFormaPago().getNombre().equalsIgnoreCase("Efectivo")){
 			txtNroReferencia.setVisible(true);
 			cmbBanco.setVisible(true);
 			lblBanco.setVisible(true);
@@ -458,25 +457,6 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 		this.listaFormaPagos = listaFormaPagos;
 	}
 	
-	public Banco getBancoSeleccionado() {
-		return bancoSeleccionado;
-	}
-
-
-	public void setBancoSeleccionado(Banco bancoSeleccionado) {
-		this.bancoSeleccionado = bancoSeleccionado;
-	}
-
-
-	public FormaPago getFormaPagoSeleccionado() {
-		return formaPagoSeleccionado;
-	}
-
-
-	public void setFormaPagoSeleccionado(FormaPago formaPagoSeleccionado) {
-		this.formaPagoSeleccionado = formaPagoSeleccionado;
-	}
-	
 	public List<String> getListaEstatusPago() {
 		return listaEstatusPago;
 	}
@@ -500,6 +480,15 @@ public class RegistrarPagoFacturaTransferenciaDepositoViewModel extends Abstract
 
 	public void setListaDetallesCompra(List<DetalleOferta> listaDetallesCompra) {
 		this.listaDetallesCompra = listaDetallesCompra;
+	}
+	
+	 public PagoCliente getPagoCliente() {
+		return pagoCliente;
+	}
+
+
+	public void setPagoCliente(PagoCliente pagoCliente) {
+		this.pagoCliente = pagoCliente;
 	}
 	
 }
