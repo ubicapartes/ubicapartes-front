@@ -17,20 +17,17 @@
 							<div>
 								<space></space>
 								<space></space>
-								<label value="Nro. Compra:"
-									sclass="label-not-mandatory" />
+								<label value="Nro. Compra:" />
 								<label
 									value="@bind(vm.compra.idCompra)" />
 								<space></space>
 								<space></space>
-								<label value="Nro. Requerimiento: "
-									sclass="label-not-mandatory" />
+								<label value="Nro. Requerimiento: "/>
 								<label
 									value="@bind(vm.requerimiento.idRequerimiento)" />
 								<space></space>
 								<space></space>
-								<label value="Fecha: "
-									sclass="label-not-mandatory" />
+								<label value="Fecha: "/>
 								<label
 									value="@bind(vm.compra.fechaCreacion)
 		    					@converter('formatedDate', format=vm.formatDate)" />
@@ -71,15 +68,14 @@
 													<row>
 														<!-- CEDULA/RIF -->
 														<label
-															value="Cédula / RIF: " sclass="label-not-mandatory" />
+															value="Cédula / RIF: " />
 														<vbox>
 															<label
 																value="@bind(vm.requerimiento.cliente.cedula)" />
 														</vbox>
 														<!-- NOMBRE/RAZON SOCIAL -->
 														<label
-															value="Nombre / Razón Social: "
-															sclass="label-not-mandatory" />
+															value="Nombre / Razón Social: "	 />
 														<vbox>
 															<label
 																value="@bind(vm.requerimiento.cliente.nombre)" />
@@ -128,7 +124,7 @@
 															<row>
 																<!-- MARCA -->
 																<label
-																	value="Marca: " sclass="label-not-mandatory" />
+																	value="Marca: " />
 																<vbox>
 																	<label
 																		value="@bind(vm.requerimiento.marcaVehiculo.nombre)"
@@ -137,11 +133,11 @@
 
 																<!-- MODELO -->
 																<label
-																	value="Modelo: " sclass="label-not-mandatory" />
+																	value="Modelo: "/>
 																<vbox>
 																	<label
 																		value="@bind(vm.requerimiento.modeloV)"
-																		sclass="label-not-mandatory" />
+																		 />
 																</vbox>
 
 															</row>
@@ -168,7 +164,7 @@
 															<row>
 																<!-- TIPO REPUESTO -->
 																<label
-																	value="Tipo Repuesto: " sclass="label-not-mandatory" />
+																	value="Tipo Repuesto: " />
 																<vbox>
 																	<label
 																		value="@bind(vm.requerimiento.determinarTipoRepuesto())"
@@ -231,7 +227,7 @@
 														</listitem>
 													</template>
 
-													<listfoot
+													<!-- <listfoot
 														sclass="footerTotal">
 														<listfooter />
 														<listfooter />
@@ -263,7 +259,7 @@
 																</hbox>
 															</vbox>
 														</listfooter>
-													</listfoot>
+													</listfoot>-->
 												</listbox>
 											</panelchildren>
 										</panel>

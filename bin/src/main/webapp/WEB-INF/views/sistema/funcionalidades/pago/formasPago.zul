@@ -1,0 +1,77 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winPagoFactura" border="none" height="0px" 
+		apply="org.zkoss.bind.BindComposer" closable="true"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.FormasPagoViewModel')">
+		<n:div aria-hidden="false" class="modal fade in" role="dialog" tabindex="-1" style="display: block;">
+			<div class="modal-dialog modal-full" height="auto">modal-xs
+				<div sclass="modal-content">
+					<include src="/WEB-INF/views/template/modal/titleModal.zul" titulo="Formas de pago" />
+					<n:div class="modal-inner" >
+						<groupbox closable="false" >
+							<!-- DATOS DEL PAGO -->
+							<grid>
+								<columns>
+									<column width="15%"/>
+									<column width="20%"/>
+									<column width="25%"/>
+									<column width="20%"/>
+									<column />
+								</columns>
+							</grid>
+							
+							<tabbox maximalHeight="true" sclass="tab-nav tab-nav-blue">
+								<tabs>
+									<tab sclass="waves-color-blue waves-effect">
+										<label value="Información general" />
+									</tab>
+								</tabs>
+								<tabpanels>
+									<tabpanel>
+										<grid>
+											<columns>
+												<column width="20%" />
+												<column  width="25%"/>
+												<column  width="25%"/>
+												<column  width="20%"/>
+											</columns>
+										<rows>
+										<row>
+											<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Forma de pago:" />
+											<hbox>
+												<!-- <combobox id="cmbFormaPago" readonly="true" constraint="@bind(vm.notEmptyValidator)" width="75%"
+													selectedItem="@bind(vm.formaPago)"
+													value="@bind(vm.formaPago.nombre)" 
+													model="@load(vm.listaFormaPago)" placeholder = "Seleccione">
+													<template name="model">
+														<comboitem label="@bind(each.nombre)" />
+													</template>
+												</combobox> -->
+												<combobox id="cmbFormaPago" readonly="true" constraint="@bind(vm.notEmptyValidator)" width="96%"
+													selectedItem="@bind(vm.formaPago)"
+													value="@bind(vm.formaPago.nombre)" 
+													model="@load(vm.listaFormaPagoAux)" placeholder = "Seleccione"
+													onSelect="@command('seleccionarFormaPago')">
+													<template name="model">
+														<comboitem label="@bind(each.nombre)" />
+													</template>
+												</combobox>
+											</hbox>
+										</row>	
+										</rows>
+										</grid>
+									</tabpanel>
+								</tabpanels>
+							</tabbox>
+						</groupbox>
+					</n:div>
+					<n:div class="modal-footer">
+						<button label="Cancelar" sclass="btn-sm btn-danger"
+							onClick="@command('closeModal')"/>
+					</n:div>
+				</div>
+			</div>
+		</n:div>
+	</window>
+</zk>
+
+

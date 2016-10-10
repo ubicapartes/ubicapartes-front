@@ -1,0 +1,252 @@
+body{
+	 
+	 font-family: 'Merriweather', 'Helvetica Neue', Arial, sans-serif;
+/* 	 background: url(http://cdn2.hubspot.net/hub/210573/hubfs/Dollarphotoclub_80538569.jpg?t=1467059982391&width=5619); */
+ 	 background-color: #f1f1f1;  
+/* 	 background: url(http://keystonerealestate.ca/wp-content/uploads/2013/03/background-greywhite-2.jpg);  */
+}
+header {
+  position: relative;
+  width: 100%;
+  min-height: auto;
+  background-color:#fbc92b;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+  text-align: center;
+  color: white;
+}
+
+.navbar-default .navbar-header .navbar-brand {
+  color: #E4B529;
+  font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.navbar-default .navbar-header .navbar-brand:hover,
+.navbar-default .navbar-header .navbar-brand:focus {
+  color: #E4B529;
+}
+.navbar-default .nav > li > a,
+.navbar-default .nav > li > a:focus {
+  font-weight: 700;
+  font-size: 13px;
+  color: #003366;
+}
+.navbar-default .nav > li > a:hover,
+.navbar-default .nav > li > a:focus:hover {
+  color: #0191d5;
+}
+.navbar-default .nav > li.active > a,
+.navbar-default .nav > li.active > a:focus {
+  color: #E4B529 !important;
+  background-color: transparent;
+}
+.navbar-default .nav > li.active > a:hover,
+.navbar-default .nav > li.active > a:focus:hover {
+  background-color: transparent;
+}
+
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+  color:rgba(0, 51, 102, 1);
+}
+
+.navbar-default {
+  background-color: #fbc92b;
+  border-color: rgba(34, 34, 34, 0.05);
+  font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+  -webkit-transition: all 0.35s;
+  -moz-transition: all 0.35s;
+  transition: all 0.35s;
+}
+.btn-default {
+  color: #222222;
+  background-color: #ffffff;
+  border-color: #ffffff;
+  -webkit-transition: all 0.35s;
+  -moz-transition: all 0.35s;
+  transition: all 0.35s;
+}
+.btn-default:hover,
+.btn-default:focus,
+.btn-default.focus,
+.btn-default:active,
+.btn-default.active,
+.open > .dropdown-toggle.btn-default {
+  color: #222222;
+  background-color: #f2f2f2;
+  border-color: #ededed;
+}
+.btn-default:active,
+.btn-default.active,
+.open > .dropdown-toggle.btn-default {
+  background-image: none;
+}
+.btn-default.disabled,
+.btn-default[disabled],
+fieldset[disabled] .btn-default,
+.btn-default.disabled:hover,
+.btn-default[disabled]:hover,
+fieldset[disabled] .btn-default:hover,
+.btn-default.disabled:focus,
+.btn-default[disabled]:focus,
+fieldset[disabled] .btn-default:focus,
+.btn-default.disabled.focus,
+.btn-default[disabled].focus,
+fieldset[disabled] .btn-default.focus,
+.btn-default.disabled:active,
+.btn-default[disabled]:active,
+fieldset[disabled] .btn-default:active,
+.btn-default.disabled.active,
+.btn-default[disabled].active,
+fieldset[disabled] .btn-default.active {
+  background-color: #ffffff;
+  border-color: #ffffff;
+}
+.btn-default .badge {
+  color: #ffffff;
+  background-color: #222222;
+}
+.btn-primary {
+  color: #ffffff;
+  background-color: #E4B529;
+  border-color: #E4B529;
+  -webkit-transition: all 0.35s;
+  -moz-transition: all 0.35s;
+  transition: all 0.35s;
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary.focus,
+.btn-primary:active,
+.btn-primary.active,
+.open > .dropdown-toggle.btn-primary {
+  color: #ffffff;
+  background-color: #ffcc33;
+  border-color: #ffcc33;
+}
+.btn-primary:active,
+.btn-primary.active,
+.open > .dropdown-toggle.btn-primary {
+  background-image: none;
+}
+.btn-primary.disabled,
+.btn-primary[disabled],
+fieldset[disabled] .btn-primary,
+.btn-primary.disabled:hover,
+.btn-primary[disabled]:hover,
+fieldset[disabled] .btn-primary:hover,
+.btn-primary.disabled:focus,
+.btn-primary[disabled]:focus,
+fieldset[disabled] .btn-primary:focus,
+.btn-primary.disabled.focus,
+.btn-primary[disabled].focus,
+fieldset[disabled] .btn-primary.focus,
+.btn-primary.disabled:active,
+.btn-primary[disabled]:active,
+fieldset[disabled] .btn-primary:active,
+.btn-primary.disabled.active,
+.btn-primary[disabled].active,
+fieldset[disabled] .btn-primary.active {
+  background-color: #E4B529;
+  border-color: #E4B529;
+}
+.btn-primary .badge {
+  color: #E4B529;
+  background-color: #ffffff;
+}
+.btn {
+  font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+  border: none;
+  border-radius: 300px;
+  font-weight: 700;
+  font-size:12px;
+  text-transform: uppercase;
+  
+}
+.btn-xl {
+  padding: 7px 15px;
+}
+::-moz-selection {
+  color: white;
+  text-shadow: none;
+  background: #222222;
+}
+::selection {
+  color: white;
+  text-shadow: none;
+  background: #222222;
+}
+.hole{
+ 	background-color: #f1f1f1; 
+/* 	background-image: url('./img/header.jpg'); */
+/*   background: url(http://keystonerealestate.ca/wp-content/uploads/2013/03/background-greywhite-2.jpg);  */
+  text-align: center;
+  border: none !important;
+}
+
+.labelstyle {
+			font-weight: bold;
+			color: white;
+		}
+		
+.inicio{
+	margin-top: 20%;
+	    height: 20%;
+    border-radius: 5px;
+        color: #ffffff;
+    background-color: #3276b1;
+    border-color: #285e8e;
+}
+.formulario{
+	background-color: #ffffff;
+	margin-top: 8%;
+}
+.botonera{
+	background-color: #ffffff;
+}
+.btn-limpiar{
+	color: #ffffff;
+ background-color: rgba(0, 51, 102, 1);
+  -webkit-transition: all 0.35s;
+  -moz-transition: all 0.35s;
+  transition: all 0.35s; 
+}
+
+.btn-limpiar:hover,
+.btn-limpiar:focus,
+.btn-limpiar.focus,
+.btn-limpiar:active,
+.btn-limpiar.active,
+.open > .dropdown-toggle.btn-primary {
+  color: #ffffff;
+  background-color: #ffcc33;
+  border-color: #ffcc33;
+}
+.btn-limpiar:active,
+.btn-limpiar.active,
+.open > .dropdown-toggle.btn-primary {
+  background-image: none;
+}
+
+.btn-limpiar .badge {
+  color: #E4B529;
+  background-color: #ffffff;
+}
+
+
+.z-button:hover{
+    background: #428bca !important;
+   
+}
+
+
+

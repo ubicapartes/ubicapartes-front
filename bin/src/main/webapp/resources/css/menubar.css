@@ -1,0 +1,47 @@
+.menubarCustom {
+	
+}
+
+.z-menubar li.menubarCustom {
+	padding-top: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom: 5px;
+}
+
+.z-menubar li.menubarCustom a {
+	padding: 7px;
+	padding-bottom: 5px;
+}
+
+.menubarCustom .z-menuitem-text {
+	font-family: "Lucida Console"; /*Lucida Console*/
+	font-size: 15px;
+	color: #ffffff;
+}
+.menubarCustom .z-menuitem-content {
+	/*color:red;*/
+	background-color: #96c0da;
+}
+
+.menuCarrito li{
+	height: 50px;
+	width: 70px;
+	padding: 10px;
+	color:white;
+}
+
+.menuCarrito a{
+	height: 50px;
+	width: 70px;
+	padding: 10px 10px 5px 5px !important;
+	color:white;
+}
+
+.menuCarrito a i{
+	font-size:26px !important;
+}
+
+.menuCarrito a span{
+	margin: 3px;
+}

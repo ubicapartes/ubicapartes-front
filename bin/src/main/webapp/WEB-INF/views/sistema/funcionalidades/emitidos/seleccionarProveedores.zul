@@ -1,0 +1,83 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winListProveedores" border="none" width="0%"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.SeleccionarProveedoresViewModel')"
+		apply="org.zkoss.bind.BindComposer">
+		
+		<n:div aria-hidden="false" class="modal fade in" role="dialog" tabindex="-1" style="display: block;">
+			<div class="modal-dialog modal-xs"  height="auto"><!-- modal-xs -->
+				<div sclass="modal-content">
+					<include src="/WEB-INF/views/template/modal/titleModal.zul" titulo="Lista de Proveedores" />
+					<n:div class="modal-inner">
+						<groupbox closable="false">
+							<vlayout>
+								
+								<!-- MENSAJE PARA EL CORREO DEL PROVEEDOR -->
+								<vbox visible="@bind(vm.enviar)" hflex="1">
+									<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Mensaje:" />
+									<vbox hflex="1">
+										<textbox hflex="1" rows="3" cols="35" mold="rounded"
+											value="@bind(vm.cotizacion.mensaje)"
+											constraint="@bind(vm.constraintMensaje)" />
+									</vbox>
+								</vbox>
+								
+								<!-- LISTA DE PROVEEDORES A SELECCIONAR-->
+								<include src="/WEB-INF/views/template/modal/subTitleModal.zul" subtitulo="Proveedores"/>								
+								<panel sclass="borderGrid">
+									<panelchildren>
+										<hbox width="100%" align="center">
+											<paging id="pagProveedores" hflex="1"
+												autohide="true" sclass="custom-paging"
+												onPaging="@command('paginarLista')" />
+											<div sclass="z-paging z-paging-info" height="25px">
+												<label id="lblProveedores" sclass="rRmWwb-info"/>
+											</div>
+										</hbox>
+										<listbox id="gridProveedores" checkmark="true" emptyMessage="No hay proveedores"
+											onAfterRender="@command('updatePaging', paging = pagProveedores, label=lblProveedores)"
+											onSelect="@command('seleccionarProveedor')"
+											onCheckSelectAll="@command('seleccionarProveedores')"
+											selectedItems="@bind(vm.proveedoresSeleccionados)"
+											multiple="true" model="@load(vm.proveedores)">
+									
+											<auxhead>
+												<auxheader>
+													<div sclass="z-icon-filter bigger-200" />
+													<textbox value="@bind(vm.proveedor.nombre)" hflex="1" 
+														instant="true" placeholder="Buscar por Nombre"
+														onChange="@command('aplicarFiltro')" />
+													<button
+														iconSclass="bigger-180 blue fa fa-user-plus"
+														tooltiptext="Registrar Nuevo Proveedor"
+														onClick="@command('registrarProveedor')" />
+												</auxheader>
+											</auxhead>
+									
+											<listhead menupopup="auto">
+												<listheader value="nombre" label="Nombre" sort="auto(nombre)"/>
+											</listhead>
+
+											<template name="model">
+												<listitem>
+													<listcell label="@bind(each.nombre)" />
+												</listitem>
+											</template>
+
+										</listbox>
+									</panelchildren>
+								</panel>
+								
+							</vlayout>
+						</groupbox>
+					</n:div>
+					<n:div class="modal-footer">
+						<div sclass="panel-footer" align="right" hflex="1">
+							<button label="Enviar" type="submit"
+								onClick="@command('enviar', btnEnviar=self, btnLimpiar=btnLimpiar)" sclass="btn-sm btn-primary" />
+						</div>
+					</n:div>
+				</div>
+			</div>
+		</n:div>
+	</window>
+</zk>

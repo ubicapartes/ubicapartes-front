@@ -1,0 +1,152 @@
+.grid {
+	background-color: white;
+}
+
+.scroll-grid .z-listbox-body {
+	overflow: none!important;
+	overflow-y: scroll!important;
+}
+
+.bigger-130 {
+	font-size: 130%
+}
+
+.bigger-130.black {
+	color: black;
+	font-size: 130%;
+}
+
+.bigger-130.cyan {
+	color: rgb(36, 168, 183);
+	font-size: 130%;
+}
+
+.bigger-150 {
+	font-size: 145%
+}
+
+.bigger-150.cyan {
+	color: rgb(36, 168, 183);
+	font-size: 145%;
+}
+
+.bigger-160 {
+	font-size: 140%
+}
+
+.bigger-160.black {
+	color: black;
+	font-size: 140%;
+}
+
+.bigger-160.red {
+	color: red;
+	font-size: 140%;
+}
+
+.bigger-160.cyan {
+	color: rgb(36, 168, 183);
+	font-size: 140%;
+}
+
+.bigger-180 {
+	font-size: 180%
+}
+
+.bigger-180.black {
+	color: black;
+	font-size: 180%;
+}
+
+.bigger-180.cyan {
+	color: rgb(36, 168, 183);
+	font-size: 180%;
+}
+
+.bigger-185 {
+	font-size: 185%
+}
+
+.bigger-185.black {
+	color: black;
+	font-size: 185%;
+}
+
+.bigger-185.cyan {
+	color: rgb(36, 168, 183);
+	font-size: 185%;
+}
+
+.bigger-190 {
+	font-size: 190%
+}
+
+.bigger-190.black {
+	color: black;
+	font-size: 190%;
+}
+
+.bigger-190.cyan {
+	color: rgb(36, 168, 183);
+	font-size: 190%;
+}
+
+.bigger-200 {
+	font-size: 200%
+}
+
+.bigger-200.black {
+	color: black;
+	font-size: 200%;
+}
+
+.bigger-200.cyan {
+	color: rgb(36, 168, 183);
+	font-size: 200%;
+}
+
+.pointer {
+	cursor: pointer;
+}
+
+.actionColumn {
+	margin: 70px 34px;
+	/*background-color:*/  
+}
+
+.footerTotal {
+	background-color:  white;
+}
+
+/**Contenedor de la grid*/
+.winMyList .z-window-content {
+	padding: 0px;
+}
+
+/**Borde de la grid*/
+.borderGrid {
+	border: 1px solid #C3C3C3;
+}
+
+.borderGrid.margin {
+	margin-top: 5px;
+}
+
+/**CAMPO DE BUSQUEDA*/
+.search {
+	border-radius: .4em;
+	border: 1px solid rgba(225, 225, 225, 1);
+	margin: .8em auto 0 auto;
+	padding: .5em;
+	width: 30em;
+}
+
+/**NUEVA PAGINACION*/
+.z-paging {
+	text-align: left;
+}
+
+.custom-paging {
+	padding-top: 0px;
+    height: auto;
+}
