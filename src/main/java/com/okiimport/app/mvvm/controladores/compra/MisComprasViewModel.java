@@ -1,4 +1,4 @@
-package com.okiimport.app.mvvm.controladores;
+package com.okiimport.app.mvvm.controladores.compra;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
@@ -25,12 +26,13 @@ import org.zkoss.zul.Paging;
 
 import com.okiimport.app.model.Cliente;
 import com.okiimport.app.model.Compra;
+import com.okiimport.app.model.Usuario;
 import com.okiimport.app.mvvm.AbstractRequerimientoViewModel;
 import com.okiimport.app.mvvm.model.ModeloCombo;
 import com.okiimport.app.mvvm.resource.BeanInjector;
 import com.okiimport.app.service.transaccion.STransaccion;
 
-public class ListaComprasPendientesViewModel extends AbstractRequerimientoViewModel implements EventListener<SortEvent> {
+public class MisComprasViewModel extends AbstractRequerimientoViewModel implements EventListener<SortEvent> {
 	
 		//Servicios
 		@BeanInjector("sTransaccion")
@@ -46,10 +48,9 @@ public class ListaComprasPendientesViewModel extends AbstractRequerimientoViewMo
 		private Date fechaCreacion;
 		private Cliente cliente;
 		private Compra compraFiltro;
+		private String cedula;
 		
 		private String requerimientoIdFiltro;
-		private String clienteNombreFiltro;
-		private String clienteCedulaFiltro;
 		private String fechaCreacionFiltro;
 		private String estatusFiltro;
 		
@@ -73,6 +74,11 @@ public class ListaComprasPendientesViewModel extends AbstractRequerimientoViewMo
 		public void doAfterCompose(@ContextParam(ContextType.VIEW) Component view)
 		{
 			super.doAfterCompose(view);
+			UserDetails user = super.getUser();
+			if(user!=null){
+				Usuario usuario = sControlUsuario.consultarUsuario(user.getUsername(), user.getPassword(), null);
+				cedula = usuario.getPersona().getCedula();
+			}
 			compraFiltro = new Compra();
 			pagComprasCliente.setPageSize(pageSize);
 			agregarGridSort(gridComprasCliente);
@@ -100,30 +106,22 @@ public class ListaComprasPendientesViewModel extends AbstractRequerimientoViewMo
 		public void cambiarCompras(@Default("0") @BindingParam("page") int page,
 				@BindingParam("fieldSort") String fieldSort, 
 				@BindingParam("sortDirection") Boolean sortDirection){
-			//String cedula = obtenerCedulaConTipoPersona();
-			//System.out.println("*******************");
-			//System.out.println("CEDULA -> "+cedula);
-			//Map<String, Object> parametros = sTransaccion.consultarComprasDelCliente( cedula, fieldSort, sortDirection, page, pageSize);
-			Map<String, Object> parametros = sTransaccion.consultarComprasGeneral(fieldSort, sortDirection, page, pageSize);
+			Map<String, Object> parametros = sTransaccion.consultarComprasDelClienteTodosEstatus(cedula, fieldSort, sortDirection, page, pageSize);
 			Integer total = (Integer) parametros.get("total");
 			listaCompras = (List<Compra>) parametros.get("compras");
 			gridComprasCliente.setMultiple(true);
 			pagComprasCliente.setActivePage(page);
 			pagComprasCliente.setTotalSize(total);
-			//if(listaCompras.size()==0)
-			//	mostrarMensaje("Cliente", "Disculpe, no se encontraron compras pendientes asociadas al ID/RIF : "+cedula, Messagebox.EXCLAMATION, null, null, null);
 		}
 		
 		
+		@SuppressWarnings("unchecked")
 		@GlobalCommand
 		@NotifyChange("listaCompras")
 		public void refrescarListadoCompras(@Default("0") @BindingParam("page") int page,
 				@BindingParam("fieldSort") String fieldSort, 
 				@BindingParam("sortDirection") Boolean sortDirection){
-			//String cedula = obtenerCedulaConTipoPersona();
-			//System.out.println("*******************");
-			//System.out.println("CEDULA -> "+cedula);
-			Map<String, Object> parametros = sTransaccion.consultarComprasGeneral(fieldSort, sortDirection, page, pageSize);
+			Map<String, Object> parametros = sTransaccion.consultarComprasDelClienteTodosEstatus(cedula, fieldSort, sortDirection, page, pageSize);
 			Integer total = (Integer) parametros.get("total");
 			listaCompras = (List<Compra>) parametros.get("compras");
 			gridComprasCliente.setMultiple(true);
@@ -158,9 +156,7 @@ public class ListaComprasPendientesViewModel extends AbstractRequerimientoViewMo
 			if(this.compraFiltro != null) {
 				this.listaComprasFiltro = new ArrayList<Compra>();
 				for (Compra c : listaCompras) {
-					if( (( getClienteNombreFiltro()==null || getClienteNombreFiltro().isEmpty() || c.getRequerimiento().getCliente().getApellido().toLowerCase().contains(getClienteNombreFiltro().toLowerCase())) || ( getClienteNombreFiltro()==null || getClienteNombreFiltro().isEmpty() || c.getRequerimiento().getCliente().getNombre().toLowerCase().contains(getClienteNombreFiltro().toLowerCase())) ) &&
-						( getClienteCedulaFiltro()==null || getClienteCedulaFiltro().isEmpty() || c.getRequerimiento().getCliente().getCedula().contains(getClienteCedulaFiltro())) &&
-						( compraFiltro.getIdCompra()==null || compraFiltro.getIdCompra().toString().isEmpty() || c.getIdCompra().toString().contains(compraFiltro.getIdCompra().toString())) &&
+					if( ( compraFiltro.getIdCompra()==null || compraFiltro.getIdCompra().toString().isEmpty() || c.getIdCompra().toString().contains(compraFiltro.getIdCompra().toString())) &&
 					    ( getRequerimientoIdFiltro()==null || getRequerimientoIdFiltro().toString().isEmpty() || c.getRequerimiento().getIdRequerimiento().toString().contains(getRequerimientoIdFiltro())) &&
 					    ( getFechaCreacionFiltro()==null || getFechaCreacionFiltro().toString().isEmpty() ||formatter.format(c.getFechaCreacion()).contains(getFechaCreacionFiltro())) &&
 					    ( compraFiltro.getPrecioVenta()==null || compraFiltro.getPrecioVenta().toString().isEmpty() || c.getPrecioVenta().toString().contains(compraFiltro.getPrecioVenta().toString())) &&
@@ -177,33 +173,6 @@ public class ListaComprasPendientesViewModel extends AbstractRequerimientoViewMo
 			}
 		}
 		
-		/**
-		 * Descripcion: Permitira obtener la cedula con tipo de persona
-		 * Parametros: @param view: formularioVerificarRequerimiento.zul    
-		 * Retorno: Ninguno
-		 * Nota: Ninguna
-		 * */
-		private String obtenerCedulaConTipoPersona(){
-			String cedula = null;
-			if(checkIsFormValid()){
-				String tipo = (this.tipoPersona.getValor())?"J":"V";
-				cedula = tipo+cliente.getCedula();
-			}
-			return cedula;
-		}
-		
-		/**
-		 * Descripcion: Permite cargar la vista para procesar el pago
-		 * Parametros: Requerimiento: requerimiento @param view: formularioVerificarRequerimiento.zul 
-		 * Retorno: Ninguno
-		 * Nota: Ninguna
-		 * */
-		@Command
-		public void pagarEfectivo(@BindingParam("compra") Compra compra){
-			Map<String, Object> parametros = new HashMap<String, Object>();
-			parametros.put("compra", compra);
-			llamarFormulario("/pago/formularioPagoEfectivo.zul", parametros);
-		}
 		
 		/**
 		 * Descripcion: Permite cargar la vista para procesar el pago de transferencia o deposito
@@ -302,13 +271,7 @@ public class ListaComprasPendientesViewModel extends AbstractRequerimientoViewMo
 			this.requerimientoIdFiltro = requerimientoIdFiltro;
 		}
 
-		public String getClienteNombreFiltro() {
-			return clienteNombreFiltro;
-		}
-
-		public void setClienteNombreFiltro(String clienteNombreFiltro) {
-			this.clienteNombreFiltro = clienteNombreFiltro;
-		}
+	
 		public String getFechaCreacionFiltro() {
 			return fechaCreacionFiltro;
 		}
@@ -317,20 +280,21 @@ public class ListaComprasPendientesViewModel extends AbstractRequerimientoViewMo
 			this.fechaCreacionFiltro = fechaCreacionFiltro;
 		}
 		
-		public String getClienteCedulaFiltro() {
-			return clienteCedulaFiltro;
-		}
-
-		public void setClienteCedulaFiltro(String clienteCedulaFiltro) {
-			this.clienteCedulaFiltro = clienteCedulaFiltro;
-		}
-		
+	
 		public String getEstatusFiltro() {
 			return estatusFiltro;
 		}
 
 		public void setEstatusFiltro(String estatusFiltro) {
 			this.estatusFiltro = estatusFiltro;
+		}
+		
+		public String getCedula() {
+			return cedula;
+		}
+
+		public void setCedula(String cedula) {
+			this.cedula = cedula;
 		}
 
 }
