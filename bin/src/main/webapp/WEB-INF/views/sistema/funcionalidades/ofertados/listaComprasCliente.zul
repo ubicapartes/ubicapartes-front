@@ -1,0 +1,114 @@
+<zk xmlns:w="client" xmlns:n="native">
+
+
+	<window border="none" apply="org.zkoss.bind.BindComposer" width="0px" height="0px" title="@bind(vm.titulo)"
+		closable="true"  id="winListaCompras"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.ListaComprasClienteViewModel')"
+		onClose="@command('cambiarRequerimientos')">
+		
+		<n:div aria-hidden="false" class="modal fade in" role="dialog"
+			tabindex="-1" style="display: block;">
+			<div class="modal-dialog modal-full" height="auto"><!-- modal-xs -->
+				<div sclass="modal-content">
+					<include
+						src="/WEB-INF/views/template/modal/titleModal.zul"
+						titulo="Lista Compras Cliente" />
+					<n:div class="modal-inner">
+					
+		<borderlayout height="480px">
+			<north title="Requerimiento">
+				<columnlayout sclass="base_contenedor_campos">
+					<columnchildren sclass="base_division_campos">
+						<label value="Fecha de Creación:"/>
+						<label value="@bind(vm.getFormatoFecha(vm.requerimiento.fechaCreacion))"/>
+					</columnchildren>
+					<columnchildren sclass="base_division_campos">
+						<label value="Estado:"/>
+						<label value="@bind(vm.requerimiento.determinarEstatus())"/>
+					</columnchildren>
+					<columnchildren sclass="base_division_campos">
+						<label value="Cliente:"/>
+						<label value="@bind(vm.requerimiento.cliente.nombre)"/>
+					</columnchildren>
+					<!-- FALTAN DATOS -->
+				</columnlayout>
+			</north>
+			<center title="Solicitudes de Compra">
+				<div>
+			<!-- LISTA DE COMPRAS-->
+			<panel sclass="borderGrid">
+				<panelchildren>
+					<hbox width="100%" align="center">
+						<paging id="pagComprasCliente" hflex="1"
+							onPaging="@command('paginarLista')" autohide="true" />
+						<div sclass="z-paging z-paging-info" height="28px">
+							<label id="lblComprasCliente" sclass="rRmWwb-info"/>
+						</div>
+					</hbox>
+					<listbox id="gridComprasCliente" mold="paging" emptyMessage="No hay solicitudes"
+						pageSize="10" pagingPosition="top" sclass="mylist"
+						model="@load(vm.listaCompras)"
+						onAfterRender="@command('updatePaging', paging = pagComprasCliente, label=lblComprasCliente)">
+
+						<listhead>
+
+							<listheader value="idCompra" width="150px"
+								label="Nro." sort="auto(idCompra)"/>
+
+							<listheader value="fechaCreacion"
+								label="F. Creación" sort="auto(fechaCreacion)" width="200px"/>
+							
+							<listheader value="estatus"
+								label="Estado" sort="auto(estatus)">
+							
+							</listheader>
+							<listheader label="Operaciones" sort="none"/>
+
+						</listhead>
+						<template name="model">
+							<listitem>
+								<listcell label="@bind(each.idCompra)" />
+								<listcell label="@bind(vm.getFormatoFecha(each.fechaCreacion))"/>
+								<listcell label="@bind(each.determinarEstatus())"/>
+								<listcell>
+									<hbox spacing="20px">
+										<div class="btn-group btn-group-sm">
+											<button  iconSclass="z-icon-eye blue bigger-160" tooltiptext="Ver Solicitud de Compra"  
+								    			onClick="@command('verCompra', compra = each)"/>
+								    		<button  iconSclass="fa fa-credit-card green bigger-160" tooltiptext="Registrar Compra"  
+								    			onClick="@command('registrarCompra', compra = each)" if="${ each.registrar() }"/>
+										</div>
+									</hbox>
+								</listcell>
+							</listitem>
+						</template>
+					</listbox>
+					</panelchildren>
+				</panel>
+				</div>
+			</center>
+			<south border="none">
+<!-- 				<div width="100%" align="right"> -->
+<!-- 					<div sclass="btn btn-xs btn-primary"> -->
+<!-- 						<button label="Enviar a Cliente" type="submit" sclass="btn-primary" -->
+<!-- 							onClick="@command('enviarCliente')" disabled="@bind(!vm.enviarACliente())" /> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+			</south>
+			
+			</borderlayout>
+			
+			</n:div>
+					<n:div class="modal-footer">
+						<hbox width="100%" >
+							
+							<div align="right">
+							</div>
+						</hbox>
+					</n:div>
+				</div>
+			</div>
+		</n:div>
+		
+	</window>
+</zk>

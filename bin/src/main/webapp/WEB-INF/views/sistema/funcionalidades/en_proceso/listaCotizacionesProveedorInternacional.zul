@@ -1,0 +1,121 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winCotizaciones" border="none" height="0px" width="0px"
+	    closable="true" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.CotizacionesProveedorInternacionalViewModel')"
+		onClose="@command('onCloseWindow')">
+		
+		<n:div aria-hidden="false" class="modal fade in" role="dialog" tabindex="-1" style="display: block;">
+			<div class="modal-dialog modal-full" height="auto"><!-- modal-xs -->
+				<div sclass="modal-content">
+					<include src="/WEB-INF/views/template/modal/titleModal.zul"
+						titulo="Proveedores Internacionales con Cotizaciones Pendientes A Registrar" />
+					<n:div class="modal-inner">
+					
+						<!-- LISTA COTIZACIONES PROVEEDOR INTERNACIONAL-->
+						<borderlayout height="500px">
+							<west width="100%" collapsible="false"
+								title="Informacion del Vehiculo" >
+								<div>
+									<grid>
+										<columns>
+											<column label="Marca:" />
+											<column label="Modelo:" />
+											<column label="Motor:" />
+											<column label="Tipo de Repuesto:" />
+										</columns>
+										<rows>
+											<row>
+												<label
+													value="@bind(vm.requerimiento.marcaVehiculo.nombre)" />
+												<label
+													value="@bind(vm.requerimiento.modeloV)" />
+												<label
+													value="@bind(vm.requerimiento.motor.nombre)" />
+												<label
+													value="@bind(vm.requerimiento.determinarTipoRepuesto())" />
+											</row>
+										</rows>
+									</grid>
+
+									<!-- LISTA DE COTIZACIONES-->
+									<panel sclass="borderGrid">
+										<panelchildren>
+											<hbox width="100%" align="center">
+												<paging id="pagCotizaciones" hflex="1" sclass="custom-paging"
+													onPaging="@command('paginarLista')" autohide="true" />
+												<div sclass="z-paging z-paging-info" height="28px">
+													<label id="lblCotizaciones" sclass="rRmWwb-info" />
+												</div>
+											</hbox>
+											<listbox
+												id="gridCotizaciones" emptyMessage="No hay solicitudes"
+												model="@load(vm.listaCotizacion)" 
+												onAfterRender="@command('updatePaging', paging = pagCotizaciones, label=lblCotizaciones)">
+												<auxhead>
+													<auxheader />
+													<auxheader>
+														<div sclass="z-icon-filter bigger-200" />
+														<spinner instant="true"
+															value="@bind(vm.cotizacionFiltro.idCotizacion)"
+															onChange="@command('aplicarFiltro')" />
+													</auxheader>
+													<auxheader />
+													<auxheader>
+														<div sclass="z-icon-filter bigger-200" />
+														<datebox format="@bind(vm.formatDate)" instant="true" hflex="1"
+															value="@bind(vm.cotizacionFiltro.fechaCreacion)"
+															onChange="@command('aplicarFiltro')" />
+													</auxheader>
+													<auxheader />
+													<auxheader />
+												</auxhead>
+												<listhead>
+													<listheader width="2%" />
+													<listheader value="idCotizacion"  width="13%"
+														label="Nro. Solicitud" sort="auto(idCotizacion)">
+													</listheader>
+													<listheader width="20%" 
+														label="Proveedor" sort="none"/>
+													<listheader value="nombre" width="13%"
+														label="Fecha de Creación" sort="auto(fechaCreacion)" >
+													</listheader>
+													<listheader width="13%" 
+														label="Fecha de Vencimiento" sort="none"/>
+													<listheader width="8%" label="Operaciones" />
+												</listhead>
+												<template name="model">
+													<listitem>
+														<listcell label="${forEachStatus.index+1}" sclass="boxed-grey" />
+														<listcell label="@bind(each.idCotizacion)" />
+														<listcell label="@bind(each.proveedor.nombre)"/>
+														<listcell label="@bind(each.fechaCreacion)
+																			@converter('formatedDate', format=vm.formatDate)"/>
+														<listcell label="@bind(each.fechaVencimiento)
+																			@converter('formatedDate', format=vm.formatDate)"/>
+														<listcell>
+															<hbox spacing="20px">
+																<div class="btn-group btn-group-sm">
+																	<button
+																		iconSclass="z-icon-pencil green bigger-160"
+																		tooltiptext="Cotizar"
+																		onClick="@command('cotizar', cotizacion = each)" />
+																</div>
+															</hbox>
+														</listcell>
+													</listitem>
+												</template>
+
+											</listbox>
+										</panelchildren>
+									</panel>
+								</div>
+							</west>
+						</borderlayout>
+						
+					</n:div>
+					<n:div class="modal-footer"/>
+				</div>
+			</div>
+		</n:div>
+	</window>
+</zk>

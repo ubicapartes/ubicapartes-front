@@ -1,0 +1,11 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window>
+	<n:div aria-hidden="true" class="modal fade" role="dialog" tabindex="-1">
+		<n:div class="modal-dialog modal-full">
+			<n:div class="modal-content">
+				<n:iframe class="iframe-seamless" src="${requestScope.route}" title="${requestScope.title}"></n:iframe>
+			</n:div>
+		</n:div>
+	</n:div>
+	</window>
+</zk>

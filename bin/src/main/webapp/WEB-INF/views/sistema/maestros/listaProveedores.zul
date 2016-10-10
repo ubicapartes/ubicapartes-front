@@ -1,0 +1,80 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window border="none" apply="org.zkoss.bind.BindComposer" sclass="winMyList"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.ListaProveedoresViewModel')">
+		
+		<!-- LISTA DE PROVEEDORES-->
+			<panel sclass="borderGrid">
+				<panelchildren>
+					<hbox width="100%" align="center">
+						<paging id="pagProveedores" hflex="1"
+							onPaging="@command('paginarLista')" autohide="true" />
+						<div sclass="z-paging z-paging-info" height="28px">
+							<label id="lblProveedores" sclass="rRmWwb-info"/>
+						</div>
+					</hbox>
+		<listbox id="gridProveedores" mold="paging" pagingPosition="top"  emptyMessage="No hay proveedores"
+			model="@load(vm.proveedores)"
+			onAfterRender="@command('updatePaging', paging = pagProveedores, label=lblProveedores)">
+			<auxhead sclass="nombre-center">
+			<auxheader/>
+				<auxheader>
+					<div sclass="z-icon-filter bigger-200" />
+					<spinner constraint="no negative, no zero"
+						width="150px" value="@bind(vm.proveedorFiltro.id)" hflex="1" instant="true"
+						onChange="@command('aplicarFiltro')" />
+				</auxheader>
+				<auxheader colspan="1">
+					<div sclass="z-icon-filter bigger-200" />
+					<textbox value="@bind(vm.proveedorFiltro.nombre)"
+						instant="true" 
+						onChange="@command('aplicarFiltro')" hflex="1" />
+				</auxheader>
+				<auxheader colspan="1">
+					<div sclass="z-icon-filter bigger-200" />
+					<label value="Estado: " />
+
+					<separator orient="vertical" width="10px"
+						bar="false" />
+				</auxheader>
+				<auxheader width="20%">
+					<button label="Nuevo Proveedor"
+						onClick="@command('registrarProveedor')" sclass="btn-primary" />
+				</auxheader>
+			</auxhead>
+			<listhead menupopup="auto">
+				<listheader width="2%"/>
+				<listheader id="id" label="Código" sort="auto(id)"
+					width="18%" />
+				<listheader id="nombre" label="Nombre"
+					sort="auto(nombre)" width="18%" />
+				<listheader label="Estado" sort="none" width="31%" />
+				<listheader label="Operaciones" width="15%" sort="none"/>
+			</listhead>
+			<template name="model">
+				<listitem>
+				    <listcell label="${forEachStatus.index+1}" sclass="boxed-grey" />
+					<listcell label="@bind(each.id)" />
+					<listcell label="@bind(each.nombre)" />
+					<listcell label="@bind(each.estatus)" />
+					<listcell>
+
+						<div class="btn-group btn-group-sm">
+									<button  iconSclass="z-icon-eye blue bigger-160" tooltiptext="Ver Proveedor"  
+								    onClick="@command('verProveedor', proveedor = each)" />
+								    <button iconSclass="z-icon-pencil green bigger-160" tooltiptext="Editar Proveedor"
+									onClick="@command('editarProveedor', proveedor = each)" if="${ !each.isEliminar() }" />
+								    <button  iconSclass="z-icon-trash-o red bigger-160" tooltiptext="Eliminar Proveedor"  
+								    onClick="@command('eliminarProveedor', proveedor = each)" if="${ !each.isEliminar() }" />
+								    <button iconSclass="z-icon-fa fa-unlock-alt cyan fa-2x bigger-150"
+										tooltiptext="Activar Proveedor"
+										onClick="@command('actualizarEstatus', proveedor=each)"
+										if="${ each.isEliminar() }" />
+						</div>
+					</listcell>
+				</listitem>
+			</template>
+		</listbox>
+		</panelchildren>
+				</panel>
+	</window>
+</zk>

@@ -1,0 +1,80 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window  id="windowMonedas" border="none" apply="org.zkoss.bind.BindComposer" sclass="winMyList"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.ListaMonedasViewModel')">
+		
+		<!-- LISTA DE MONEDAS-->
+			<panel sclass="borderGrid">
+				<panelchildren>
+					<hbox width="100%" align="center">
+						<paging id="pagMonedas" hflex="1"
+							onPaging="@command('paginarLista')" autohide="true" />
+						<div sclass="z-paging z-paging-info" height="28px">
+							<label id="lblMonedas" sclass="rRmWwb-info"/>
+						</div>
+					</hbox>
+		<listbox id="gridMonedas" mold="paging" pagingPosition="top"  emptyMessage="No hay monedas"
+			model="@load(vm.monedas)"
+			onAfterRender="@command('updatePaging', paging = pagMonedas, label=lblMonedas)">
+			<auxhead sclass="nombre-center">
+			<auxheader/>
+				<auxheader>
+					<div sclass="z-icon-filter bigger-200" />
+					<spinner constraint="no negative, no zero"
+						width="150px" value="@bind(vm.monedaFiltro.idMoneda)" instant="true"
+						placeholder="Buscar por Codigo"
+						onChange="@command('aplicarFiltro')" />
+				</auxheader>
+				<auxheader colspan="1">
+					<div sclass="z-icon-filter bigger-200" />
+					<textbox value="@bind(vm.monedaFiltro.nombre)"
+						instant="true" placeholder="Buscar por Nombre"
+						onChange="@command('aplicarFiltro')" hflex="1" />
+				</auxheader>
+				<auxheader colspan="1">
+					<div sclass="z-icon-filter bigger-200" />
+					<label value="Simbolo:" />
+
+					<separator orient="vertical" width="10px"
+						bar="false" />
+				</auxheader>
+				<auxheader width="20%">
+					<button label="Nueva Moneda" 
+				 	 onClick="@command('nuevaMoneda')" sclass="btn-primary"/>
+				</auxheader>
+			</auxhead>
+			<listhead menupopup="auto">
+				<listheader width="2%"/>
+				<listheader id="id" label="Codigo" sort="auto(id)"
+					width="18%" />
+				<listheader id="nombre" label="Nombre"
+					sort="auto(nombre)" width="18%" />
+				<listheader label="Simbolo" sort="none" width="31%" />
+				<listheader label="Operaciones" width="15%" sort="none"/>
+			</listhead>
+			<template name="model">
+				<listitem>
+				    <listcell label="${forEachStatus.index+1}" sclass="boxed-grey" />
+					<listcell label="@bind(each.idMoneda)" />
+					<listcell label="@bind(each.nombre)" />
+					<listcell label="@bind(each.simbolo)" />
+					<listcell>
+
+						<div class="btn-group btn-group-sm">
+									<button iconSclass="z-icon-pencil green bigger-160" tooltiptext="Editar Moneda" 
+									onClick="@command('editarMoneda', moneda = each)" />
+									 
+									<button  iconSclass="z-icon-eye blue bigger-160" tooltiptext="Ver Moneda"  
+									 onClick="@command('verMoneda', moneda = each)"  />
+								  
+								    <button  iconSclass="z-icon-trash-o red bigger-200" tooltiptext="Eliminar Moneda"
+								    onClick="@command('eliminarMoneda', moneda = each)"/>
+								  
+						</div>
+					</listcell>
+				</listitem>
+			</template>
+		</listbox>
+		</panelchildren>
+				</panel>
+	</window>
+</zk>

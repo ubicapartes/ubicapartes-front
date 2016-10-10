@@ -1,0 +1,6 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<n:header class="header header-transparent header-waterfall">
+		<image src="/resources/img/logo.png" sclass="header-logo margin-left-no" height="65px"/>
+		<include src="${requestScope.menu}" if="${ not empty requestScope.menu }"/>
+	</n:header>
+</zk>

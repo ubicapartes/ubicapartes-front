@@ -1,0 +1,94 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window border="none" apply="org.zkoss.bind.BindComposer"
+		sclass="winMyList"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.configuracion.EditarPerfilViewModel')"
+		form="@id('rs') @load(vm.usuario) @save(vm.usuario, before='enviar')">
+		<groupbox closable="false" width="80%">
+
+			<caption label="Datos Personales" sclass="custom_caption" />
+			<div align="center">
+
+				<label value="Editar Datos Personales" sclass="z-letra-grande" />
+
+				<grid>
+					<columns>
+						<column width="35%" align="right" />
+						<column width="65%" />
+						<column width="35%" align="right" />
+						<column width="65%" />
+					</columns>
+					<rows>
+						<row spans="4">
+							<div align="right">
+								<image id="imgFoto" width="110px"
+									height="110px" src="@bind(vm.usuario.getFoto64())" />
+
+								<button id="btnCambFoto" label="..."
+									sclass="btn-primary" upload="true" style="margin-bottom:0px" />
+							</div>
+						</row>
+
+						<row></row>
+						<row>
+							<label value="Usuario: "
+								sclass="label-not-mandatory" />
+							<textbox id="txtUsername" width="100%"
+								sclass="form-control" disabled="true"
+								value="@bind(rs.username)" />
+
+							<label value="Cédula: "
+								sclass="label-not-mandatory" />
+							<textbox id="txtcodCedula" width="100%"
+								sclass="form-control" disabled="true"
+								value="@bind(rs.persona.cedula)" />
+						</row>
+						<row>
+							<label value="Nombre: "
+								sclass="label-not-mandatory" />
+							<textbox id="txtNombre" width="100%"
+								sclass="form-control" disabled="true"
+								value="@bind(rs.persona.nombre)" />
+
+							<label value="Apellido: "
+								sclass="label-not-mandatory" />
+							<textbox id="txtApellido" width="100%"
+								sclass="form-control" disabled="true"
+								value="@bind(rs.persona.apellido)" />
+						</row>
+
+						<row>
+							<label value="Dirección: "
+								sclass="label-not-mandatory" />
+							<textbox id="txtDireccion" width="100%"
+								sclass="form-control" disabled="true" maxlength="100" rows="2"
+								value="@bind(rs.persona.direccion)" />
+
+							<label value="Correo: "
+								sclass="label-not-mandatory" />
+							<textbox id="txtCorreo" width="100%"
+								sclass="form-control" disabled="true" maxlength="50"
+								value="@bind(rs.persona.correo)" />
+						</row>
+						<row>
+							<label value="Nueva Contraseña: " />
+							<textbox id="txtClaveNueva" width="100%"
+								sclass="form-control" type="password" maxlength="50" />
+
+							<label value="Confirmar Contraseña: " />
+							<textbox id="txtClaveNuevaConf" width="100%"
+								sclass="form-control" type="password" maxlength="50" />
+						</row>
+
+					</rows>
+				</grid>
+			</div>
+			<div align="right">
+				<button id="btnLimpiar" label="Limpiar" type="submit"
+					onClick="@command('limpiar')" sclass="btn-sm btn-info" />
+				<button label="Enviar" type="submit"
+					onClick="@command('actualizar', btnEnviar=self, btnLimpiar=btnLimpiar)"
+					sclass="btn-sm btn-primary" />
+			</div>
+		</groupbox>
+	</window>
+</zk>

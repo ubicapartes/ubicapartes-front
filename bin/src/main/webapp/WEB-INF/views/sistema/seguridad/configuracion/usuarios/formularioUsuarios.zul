@@ -1,0 +1,135 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winUsuario"
+		border="none" width="0px" height="0px" closable="true"
+		apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.seguridad.configuracion.FormularioUsuariosViewModel')">
+		
+		<n:div aria-hidden="false" class="modal fade in" role="dialog"
+			tabindex="-1" style="display: block;">
+			<div class="modal-dialog modal-full" height="auto"><!-- modal-xs -->
+				<div sclass="modal-content">
+					<include
+						src="/WEB-INF/views/template/modal/titleModal.zul"
+						titulo="Nuevo Usuario" />
+					<n:div class="modal-inner">
+					
+		<label value="Tipo de Usuario" sclass="label-not-mandatory" />
+		<separator orient="vertical" width="10px" />
+		<combobox id="cmbTipoUsuario" readonly="true" model="@load(vm.tiposUsuario)"
+			selectedItem="@bind(vm.tipoSeleccionado)" onSelect="@command('consultarPersonas')">
+			<template name="model">
+				<comboitem label="@bind(each.nombre)" value="@bind(each.valor)" />
+			</template>
+		</combobox>
+		<separator />
+		<columnlayout width="100%" height="90%">
+			<columnchildren width="70%">
+				<div style="border: 5px solid #d9e5ef;" height="100%">
+				
+				<hbox width="100%" align="center">
+			<paging id="pagPersonas" hflex="1"
+				onPaging="@command('paginarLista')" autohide="true" />
+			<div sclass="z-paging z-paging-info" height="28px">
+				<label id="lblPagPersonas" sclass="rRmWwb-info" />
+			</div>
+		</hbox>
+					<listbox id="gridPersonas" mold="paging" checkmark="false" multiple="false"
+						model="@load(vm.personasSinUsuario)" height="100%">
+						<auxhead sclass="nombre-center">
+							<auxheader colspan="1">
+								<div sclass="z-icon-filter bigger-200" />
+								<textbox value="@bind(vm.personaFiltro.cedula)"
+									instant="true" placeholder="Buscar por Cédula"
+									onChange="@command('aplicarFiltro')" />
+							</auxheader>
+							<auxheader colspan="1">
+								<div sclass="z-icon-filter bigger-200" />
+								<textbox value="@bind(vm.personaFiltro.nombre)"
+									instant="true" placeholder="Buscar por Nombre"
+									onChange="@command('aplicarFiltro')" />
+							</auxheader>
+							<auxheader colspan="1"></auxheader>
+						</auxhead>
+						<listhead menupopup="auto">
+							<listheader id="cedula" label="Cédula" sort="auto(cedula)" />
+							<listheader id="nombre" label="Nombre" sort="auto(nombre)" />
+							<listheader width="10%" />
+						</listhead>
+						<template name="model">
+							<listitem>
+								<listcell label="@bind(each.cedula)" />
+								<listcell label="@bind(each.nombre)" />
+								<listcell>
+									<div sclass=" action">
+										<a iconSclass="z-icon-pencil green bigger-200"
+											tooltiptext="Crear Usuario"
+											onClick="@command('verInfoPersona', persona = each)" />
+									</div>
+								</listcell>
+							</listitem>
+						</template>
+					</listbox>
+				</div>
+			</columnchildren>
+			<columnchildren width="30%">
+				<div style="border: 5px" height="100%" 
+					form="@id('fx') @load(vm.personaSeleccionada) 
+					@save(vm.personaSeleccionada, before='guardar')">
+					
+					<window title="Nuevo Usuario" border="none"  sclass="btn-info">
+					
+						<grid>
+							<columns>
+								<column width="120px" />
+								<column />
+							</columns>
+							<rows >
+								<row>
+									<label value="Cédula" sclass="label-not-mandatory" />
+									<vbox>
+									<textbox readonly="true" value="@bind(fx.cedula)" constraint="@bind(vm.validatorClienteCedulaRif)" sclass="form-control"/>
+									</vbox>
+								</row>
+								<row>
+									<label value="Nombre" sclass="label-not-mandatory"/>
+									<vbox>
+									<textbox readonly="true" value="@bind(fx.nombre)" constraint="@bind(vm.notEmptyValidator)" sclass="form-control"/>
+									</vbox>
+								</row>
+								<row>
+									<label value="Usuario" sclass="label-not-mandatory" />
+									<vbox>
+									<textbox sclass="form-control" readonly="true" value="@bind(vm.usuario.username)" constraint="@bind(vm.notEmptyValidator)"/>
+									</vbox>
+								</row>
+								<row>
+									<label value="Clave" sclass="label-not-mandatory"/>
+									<vbox>
+									<textbox id="txtPassword" readonly="true" type="password" sclass="form-control"
+										value="@bind(vm.usuario.pasword)" constraint="@bind(vm.notEmptyValidator)" />
+									</vbox>
+								</row>
+							</rows>
+						</grid>
+						<toolbar >
+							<button label="Guardar" sclass="btn-sm btn-primary" onClick="@command('guardar', txtPassword=txtPassword)"/>
+        				</toolbar>
+					</window>
+				</div>
+			</columnchildren>
+		</columnlayout>
+		
+		</n:div>
+					<n:div class="modal-footer">
+						<hbox width="100%">
+							<include hflex="1" />
+							<div align="right">
+
+							</div>
+						</hbox>
+					</n:div>
+				</div>
+			</div>
+		</n:div>
+	</window>
+</zk>

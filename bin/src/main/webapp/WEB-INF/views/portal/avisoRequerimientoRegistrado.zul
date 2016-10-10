@@ -1,0 +1,27 @@
+<zk>
+    <window width="500px" height="300px" 
+    id="winVisor" border="normal" mode="modal"
+       apply="org.zkoss.bind.BindComposer" 
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.avisoModalViewModel')"
+		 sizable="true">
+		 <html>
+		 <div align="center" top="0">
+			 <p>
+				<h4>Pronto vamos a estar en contacto contigo</h4> 
+			 </p>
+		 </div>
+		 </html>
+		 <div align="center" width="500px">
+		 <image src="/resources/img/motor_01.jpg" sclass="header-logo margin-left-no" height="135px"/>
+         <image src="/resources/img/motor_02.jpg" sclass="header-logo margin-left-no" height="135px"/>
+         <image src="/resources/img/motor_03.jpg" sclass="header-logo margin-left-no" height="135px"/>
+         </div>
+         <hbox hflex="1" sclass="panel-footer">
+		         <div align="center" width="500px" top="400px">
+		         
+		         <button label="Cerrar" sclass="btn-sm btn-danger" onClick="@command('cerrar')"/>
+		         </div>
+         </hbox>
+         
+    </window>
+</zk> 

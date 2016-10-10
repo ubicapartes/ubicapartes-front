@@ -1,0 +1,5 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<n:h2 class="content-sub-heading">
+		${requestScope.subtitulo}
+	</n:h2><!-- style="text-align:left;" -->
+</zk>

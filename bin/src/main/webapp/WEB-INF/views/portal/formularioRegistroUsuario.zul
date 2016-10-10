@@ -1,0 +1,207 @@
+<?page title="Registrate" contentType="text/html;charset=UTF-8" session="false" ?>
+<?link rel="stylesheet" href="/resources/css/bootstrap/css/bootstrap.css" type="text/css"?>
+<?link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'?>
+<?link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'?>
+<?link rel="stylesheet" href="/resources/css/css/font-awesome/css/font-awesome.min.css" type="text/css"?>
+<?link rel="stylesheet" href="/resources/css/css/styleHome.css" type="text/css"?>
+ <!-- IE 9. ICO 32x32 pixels -->
+        <?link rel="shortcut icon" href="/resources/css/css/img/favicon.ico"?>
+
+        <!-- iOS and Android 2.1+ 180x180 pixels. --> 
+        <?link rel="apple-touch-icon-precomposed" href="/resources/css/css/img/favicon.png"?>
+
+        <!-- Firefox, Chrome, Safari, IE 11+ and Opera. 196x196 pixels. -->
+       <?link rel="icon" href="/resources/css/css/img/favicon.ico"?>
+       
+
+<zk xmlns:w="client" xmlns:n="native">
+
+		<n:header class="navbar navbar-default navbar-fixed-top" style="height:15px">
+	<div align="left">
+	 <a class="navbar-brand" href="/">
+			<image src="/resources/img/logo.png" width="45%" style="margin-top:-10px !important;" />
+			</a>
+	</div>
+		
+		<n:ul class="nav navbar-nav navbar-right">
+                    <n:li>
+                        <a class="page-scroll" href="/inicioSession" sclass="labelstyle">Iniciar Sesión</a>
+                    </n:li>
+                </n:ul>
+			
+		</n:header>
+	<center sclass="hole">
+	<div align="center" height="100%">
+	<div width="80%">
+	
+	<vlayout sclass="formulario" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.RegistrarUsuarioViewModel')">
+		<n:h3>Inscríbete</n:h3>
+		<hlayout>
+			<div hflex="1">
+				<!-- DATOS DEL CLIENTE -->
+				<!--<include src="/WEB-INF/views/template/subTitle.zul" subtitulo="Datos Personales del Cliente" />-->
+				<div sclass="col-lg-12 col-sm-0">
+					<div sclass="card">
+						<div sclass="card-main">
+							<div sclass="card-inner">
+							<grid>
+								<columns>
+									<column width="15%"/>
+									<column width="35%"/>
+									<column width="19%"/>
+									<column />
+								</columns>
+								<rows>
+								<row>
+										<!-- CEDULA -->
+										<include src="/WEB-INF/views/template/fieldMandatory.zul" field="ID / RIF:" />
+										<hbox hflex="1">
+											<vbox>
+												<combobox
+													id="comboTipoPersona" width="30%" readonly="true"
+													selectedItem="@bind(vm.tipoPersona)"
+													model="@load(vm.listaTipoPersona)">
+													<template name="model">
+														<comboitem label="@bind(each.nombre)" />
+													</template>
+												</combobox>
+											</vbox>
+											<space/>
+											<vbox>
+												<intbox id="cedulaRif"
+													sclass="form-control" mold="rounded"
+													placeholder="Ej: 401402375" maxlength="9"
+													value="@bind(vm.cliente.cedula)"
+													constraint="@bind(vm.validatorClienteCedulaRif)"
+													  onBlur="@command('buscarCliente')"
+													onOK="@command('buscarCliente')"/>
+											</vbox>
+										</hbox>
+									</row>
+								<row>
+								<!-- NOMBRE -->
+										<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Nombre:" />
+										<vbox hflex="1">
+											<textbox
+												id="nombre" sclass="form-control" mold="rounded"
+												value="@bind(vm.cliente.nombre)"
+												placeholder="Juan"
+												constraint="@bind(vm.notEmptyValidator)" />
+										</vbox>
+										
+										<!-- APELLIDO -->
+										<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Apellido:" />
+										<vbox hflex="1">
+											<textbox
+												id="apellido" sclass="form-control" mold="rounded"
+												value="@bind(vm.cliente.apellido)"
+												placeholder="Pérez"
+												constraint="@bind(vm.notEmptyValidator)" />
+										</vbox>
+								
+								</row>
+								<row>
+								<!-- CORREO -->
+										<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Correo:" />
+										<vbox hflex="1">
+											<textbox id="email"
+												sclass="form-control" mold="rounded"
+												placeholder="Ej. correo@gmail.com"
+												value="@bind(vm.cliente.correo)"
+												constraint="@bind(vm.emailValidator)"
+												onChange="@command('verificarCorreo')" />
+										</vbox>
+											<!-- TELEFONO -->
+										<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Teléfono:" />
+										<vbox hflex="1">
+											<textbox id="telefono"
+												sclass="form-control" mold="rounded"
+												placeholder="Cod Area + N Ej: 0251 2552233" hflex="1"
+												value="@bind(vm.cliente.telefono)" maxlength="11"
+												constraint="@bind(vm.telefonoValidator)" />
+										</vbox>
+									
+								</row>
+								<row>
+								<!-- CLAVE -->
+										<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Crear Clave:" />
+										<vbox hflex="1">
+											<textbox
+												id="crearClave" sclass="form-control" mold="rounded"
+												value="@bind(vm.usuario.pasword)" type="password"
+												placeholder="entre 6 a 20 caracteres" hflex="1"
+												constraint="@bind(vm.notEmptyValidator)" />
+										</vbox>	
+							
+								<!-- REPETIR CLAVE -->
+										<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Repetir Clave:" />
+										<vbox hflex="1">
+											<textbox
+												id="repetirClave" sclass="form-control" mold="rounded"
+												value="@bind(vm.usuario.paswordRepeat)" type="password"
+												placeholder="entre 6 a 20 caracteres" hflex="1"
+												constraint="@bind(vm.notEmptyValidator)" />
+										</vbox>		
+								</row>
+									
+									
+									<row>
+										<!-- ESTADO -->
+										<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Estado:" />
+										<vbox hflex="1">
+											<combobox readonly="true"
+												placeholder="Seleccione..." hflex="1"
+												selectedItem="@bind(vm.estado)"
+												model="@load(vm.listaEstados)"
+												constraint="@bind(vm.notEmptyValidator)"
+												onSelect="@command('buscarCiudades')"
+												onChange="@command('buscarCiudades')">
+												<template
+													name="model">
+													<comboitem
+														label="@bind(each.nombre)" />
+												</template>
+											</combobox>
+										</vbox>
+
+										<!-- CIUDAD -->
+										<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Ciudad:" />
+										<vbox hflex="1">
+											<combobox
+												placeholder="Seleccione..." readonly="true" hflex="1"
+												selectedItem="@bind(vm.cliente.ciudad)"
+												constraint="@bind(vm.notEmptyValidator)"
+												model="@load(vm.listaCiudades)">
+												<template
+													name="model">
+													<comboitem
+														label="@bind(each.nombre)" />
+												</template>
+											</combobox>
+										</vbox>
+									</row>
+								</rows>
+							</grid>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</hlayout>
+		<!-- BOTONES -->
+		<hbox hflex="1" sclass="botonera">
+			<include src="/WEB-INF/views/template/textFieldsMandatory.zul" hflex="1" />
+			<div align="right" hflex="1">
+				<button id="btnLimpiar" label="Limpiar" sclass="btn btn-limpiar btn-xl sr-button"
+					onClick="@command('limpiar')" />
+				<button label="Inscribirme" type="submit" sclass="btn btn-primary btn-xl sr-button"
+					onClick="@command('registrar',  btnEnviar=self, btnLimpiar=btnLimpiar)"/>
+			</div>
+		</hbox>
+	</vlayout>
+	</div>
+	</div>
+	</center>
+	
+</zk>
