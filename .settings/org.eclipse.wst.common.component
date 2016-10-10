@@ -5,7 +5,7 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/resources"/>
-        <dependent-module archiveName="OkiImportPersistencia.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/OkiImportPersistencia/OkiImportPersistencia">
+        <dependent-module archiveName="OkiImportPersistencia.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/persistencia/persistencia">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="app"/>

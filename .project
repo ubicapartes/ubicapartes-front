@@ -3,7 +3,7 @@
 	<name>app</name>
 	<comment></comment>
 	<projects>
-		<project>OkiImportPersistencia</project>
+		<project>persistencia</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
