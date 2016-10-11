@@ -5,7 +5,7 @@
 		<n:div aria-hidden="false" class="modal fade in" role="dialog"
 			tabindex="-1" style="display: block;">
 			<div class="modal-dialog modal-full" height="auto"><!-- modal-xs -->
-				<div sclass="modal-content" width="95%">
+				<div sclass="modal-content" width="100%">
 					<include src="/WEB-INF/views/template/modal/titleModal.zul"
 						titulo="Pago de Factura" />
 					<n:div class="modal-inner" height="300px">
