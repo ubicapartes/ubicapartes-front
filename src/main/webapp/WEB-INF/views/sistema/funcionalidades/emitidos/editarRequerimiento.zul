@@ -283,7 +283,8 @@
 																<combobox hflex="1" readonly="true" buttonVisible="@bind(vm.editar)"
 																	value="@bind(each.clasificacionRepuesto.descripcion)"
 																	model="@bind(vm.listaClasificacionRepuesto)"
-																	selectedItem="@bind(each.clasificacionRepuesto)">
+																	selectedItem="@bind(each.clasificacionRepuesto)"
+																	constraint="@bind(vm.notEmptyValidator)">
 																	<template name="model">
 																		<comboitem label="@bind(each.descripcion)" />
 																	</template>
