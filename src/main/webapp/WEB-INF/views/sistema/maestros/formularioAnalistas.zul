@@ -67,7 +67,7 @@
 												</vbox>
 											</hbox>
 
-											<!-- NOMBRE O RAZON SOCIAL -->
+											<!-- NOMBRE  -->
 														<include
 															src="/WEB-INF/views/template/fieldMandatory.zul"
 															field="Nombre: " />
@@ -76,12 +76,25 @@
 												<textbox id="nombre" sclass="form-control"
 													width="125%" readonly="@bind(vm.makeAsReadOnly)" mold="rounded"
 													value="@bind(vm.analista.nombre)"
-													placeholder="Ej: Alejandro Urbina"
+													placeholder="Ej: Alejandro"
 													constraint="@bind(vm.notEmptyValidator)" />
 											</vbox>
 										</row>
 
 										<row>
+										
+										<!-- APELLIDO -->
+														<include
+															src="/WEB-INF/views/template/fieldMandatory.zul"
+															field="Apellido: " />
+
+											<vbox>
+												<textbox id="apellido" sclass="form-control"
+													width="125%" readonly="@bind(vm.makeAsReadOnly)" mold="rounded"
+													value="@bind(vm.analista.apellido)"
+													placeholder="Ej: Perez"
+													constraint="@bind(vm.notEmptyValidator)" />
+											</vbox>
 
 											<!-- TELEFONO -->
 														<include
@@ -96,8 +109,12 @@
 													constraint="@bind(vm.telefonoValidator)" />
 											</vbox>
 
+										</row>
+										
 
-											<!-- CORREO -->
+										<row>
+										
+										<!-- CORREO -->
 														<include
 															src="/WEB-INF/views/template/fieldMandatory.zul"
 															field="Correo: " />
@@ -112,12 +129,7 @@
 												</textbox>
 												<label id="msgCorreoA" visible="false" sclass="requerido"/>
 											</vbox>
-
-
-										</row>
-										
-
-										<row>
+											
 											<!-- ESTADO -->
 														<include
 															src="/WEB-INF/views/template/fieldMandatory.zul"
@@ -142,9 +154,12 @@
 													</template>
 												</combobox>
 											</vbox>
+
+										</row>
 										
+										<row>
 										
-											<!-- CIUDAD -->
+										<!-- CIUDAD -->
 														<include
 															src="/WEB-INF/views/template/fieldMandatory.zul"
 															field="Ciudad: "  />
@@ -168,10 +183,6 @@
 												</combobox>
 											</vbox>
 											
-												
-
-										</row>
-										<row>
 										<!-- DIRECCION -->
 											<include
 											 src="/WEB-INF/views/template/fieldMandatory.zul"

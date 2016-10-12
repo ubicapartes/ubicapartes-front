@@ -1,9 +1,10 @@
 <zk xmlns:w="client" xmlns:n="native">
 	<vlayout sclass="winMyList" apply="org.zkoss.bind.BindComposer"
 		width="100%"
-		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.ListaComprasPendientesViewModel')"><!-- -->
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.compra.MisComprasViewModel')">
 
-		<!-- LISTA DE COMPRAS PENDIENTES (POR PAGAR) -->
+		<!-- LISTA DE COMPRAS CLIENTE -->
+		
 			<panel sclass="borderGrid">
 				<panelchildren>
 					<hbox width="100%" align="center">
@@ -13,22 +14,12 @@
 							<label id="lblComprasCliente" sclass="rRmWwb-info" />
 						</div>
 					</hbox>
-					<listbox id="gridComprasCliente" emptyMessage="No hay compras pendientes"
+					<listbox id="gridComprasCliente" emptyMessage="No hay compras"
 						onAfterRender="@command('updatePaging', paging=pagComprasCliente, label=lblComprasCliente)"
 						model="@load(vm.listaCompras)">
 
 						<auxhead>
 							<auxheader/>
-							<auxheader>
-								<div sclass="z-icon-filter bigger-200" />
-								<textbox instant="true" hflex="1"
-									value="@bind(vm.clienteNombreFiltro)" onChange="@command('aplicarFiltro')" />
-							</auxheader>
-							<auxheader>
-								<div sclass="z-icon-filter bigger-200" />
-								<textbox instant="true" hflex="1"
-									value="@bind(vm.clienteCedulaFiltro)" onChange="@command('aplicarFiltro')" />
-							</auxheader>
 							<auxheader>
 								<div sclass="z-icon-filter bigger-200" />
 								<spinner instant="true" hflex="1"
@@ -58,8 +49,6 @@
 
 						<listhead>
 							<listheader width="2%"/>
-							<listheader width="12%" label="Cliente"  value="idCliente" />
-							<listheader width="12%" label="Cedula"  value="cedulaCliente" />
 							<listheader width="12%" label="N° Compra"  value="idCompra" />
 							<listheader width="12%" label="N° Solicitud"  value="requerimiento.idRequerimiento" />
 							<listheader width="12%" label="Fecha Creación"  value="fechaCreacion" />
@@ -70,11 +59,6 @@
 						<template name="model">
 							<listitem>
 								<listcell label="${forEachStatus.index+1}" sclass="boxed-grey" />
-								<listcell
-									label="@bind((each.requerimiento.cliente.nombre).concat(' ').concat(each.requerimiento.cliente.apellido))" />
-								<listcell
-									label="@bind(each.requerimiento.cliente.cedula)" />
-								
 								<listcell label="@bind(each.idCompra)" />
 								<listcell label="@bind(each.requerimiento.idRequerimiento)" />
 								<listcell
@@ -91,6 +75,8 @@
 												tooltiptext="Registrar pago" onClick="@command('pagarTransferenciaDeposito',compra = each)" visible="@load(vm.mostrarIcono('En Espera Transferencia', each.determinarEstatus()))"/>
 											<button iconSclass="z-icon-file blue"
 												tooltiptext="Registrar pago" onClick="@command('pagarTransferenciaDeposito',compra = each)" visible="@load(vm.mostrarIcono('En Espera Depósito', each.determinarEstatus()))"/>
+											<button iconSclass="z-icon-dollar blue"
+												tooltiptext="Detalle de Pago" onClick="@command('pagarTransferenciaDeposito',compra = each)" visible="@load(vm.mostrarIcono('Pagada', each.determinarEstatus()))"/>
 										</div>
 									</hbox>
 								</listcell>
@@ -99,6 +85,7 @@
 					</listbox>
 				</panelchildren>
 			</panel>
+		
 	</vlayout>
 </zk>
 
