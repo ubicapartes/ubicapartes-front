@@ -58,6 +58,12 @@ public class RegistrarUsuarioViewModel extends AbstractRequerimientoViewModel {
 	
 	@Wire("#comboTipoPersona")
 	private Combobox comboTipoPersona;
+	
+	@Wire("#msgCorreoC")
+	private Label lblMsgCorreoC;
+
+	@Wire("#msgCedulaRifC")
+	private Label lblMsgCedulaRif;
 
 	//Atributos
 	private CustomConstraint constrEstado = null;
@@ -71,6 +77,8 @@ public class RegistrarUsuarioViewModel extends AbstractRequerimientoViewModel {
 	protected Usuario usuario;
 	protected Persona persona;
 	protected Cliente cliente;
+	private Boolean validacionCorreo=false;
+	private Boolean validacionCedulaRif=false;
 
 
 	/**
@@ -96,11 +104,15 @@ public class RegistrarUsuarioViewModel extends AbstractRequerimientoViewModel {
 	 * Nota: Ninguna
 	 * */
 	@Command
-	@NotifyChange({ "usuario", "cliente", "estado", "constrEstado", "constrCiudad" })
+	@NotifyChange({ "usuario", "cliente", "estado", "constrEstado", "constrCiudad", "lblMsgCorreoC", "lblMsgCedulaRif" })
 	public void limpiar() {
 		this.cliente = new Cliente();
 		this.usuario = new Usuario(this.cliente, true);
 		limpiarEstadoYCiudad();
+		this.validacionCorreo=false;
+		this.validacionCedulaRif=false;
+		this.lblMsgCorreoC.setVisible(false);
+		this.lblMsgCedulaRif.setVisible(false);
 	}
 	
 	/**METODOS OVERRIDE*/
@@ -212,6 +224,46 @@ public class RegistrarUsuarioViewModel extends AbstractRequerimientoViewModel {
 	 * */
 	private String getCedulaComleta(){
 		return this.tipoPersona.getNombre() + cliente.getCedula();
+	}
+	
+	/**
+	 * Descripcion: Permitira verificar que el correo ingresado existe o no en la BD
+	 * Parametros: Ninguno
+	 * Retorno Ninguno
+	 * Nota: Ninguna
+	 * */
+	@Command
+	public void verificarCorreo(){
+		
+		this.lblMsgCorreoC.setValue("El correo ya existe");
+		this.validacionCorreo=this.sMaestros.consultarCorreoCliente(cliente.getCorreo());
+		//llamada al metodo del validar 
+		if(this.validacionCorreo){
+			this.lblMsgCorreoC.setVisible(true);
+		}else{
+			this.lblMsgCorreoC.setVisible(false);
+			this.validacionCorreo=false;
+		}
+	}
+	
+	/**
+	 * Descripcion: Permitira verificar que la cedula/rif ingresado existe o no en la BD
+	 * Parametros: Ninguno
+	 * Retorno Ninguno
+	 * Nota: Ninguna
+	 * */
+	@Command
+	public void verificarCedulaRif(){
+		
+		this.lblMsgCedulaRif.setValue("La cedula/Rif ya existe");
+		this.validacionCedulaRif=this.sMaestros.consultarCedulaCliente(this.getCedulaComleta());
+		//llamada al metodo del validar 
+		if(this.validacionCedulaRif){
+			this.lblMsgCedulaRif.setVisible(true);
+		}else{
+			this.lblMsgCedulaRif.setVisible(false);
+			this.validacionCedulaRif=false;
+		}
 	}
 
 
@@ -358,6 +410,21 @@ public class RegistrarUsuarioViewModel extends AbstractRequerimientoViewModel {
 		this.cedulaRif = cedulaRif;
 	}
 	
+	public Boolean getValidacionCorreo() {
+		return validacionCorreo;
+	}
+
+	public void setValidacionCorreo(Boolean validacionCorreo) {
+		this.validacionCorreo = validacionCorreo;
+	}
+
+	public Boolean getValidacionCedulaRif() {
+		return validacionCedulaRif;
+	}
+
+	public void setValidacionCedulaRif(Boolean validacionCedulaRif) {
+		this.validacionCedulaRif = validacionCedulaRif;
+	}
 	
 
 }

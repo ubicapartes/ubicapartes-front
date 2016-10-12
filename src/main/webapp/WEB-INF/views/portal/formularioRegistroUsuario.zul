@@ -74,6 +74,7 @@
 													placeholder="Ej: 401402375" maxlength="9"
 													value="@bind(vm.cliente.cedula)"
 													constraint="@bind(vm.validatorClienteCedulaRif)"/>
+													<label id="msgCedulaRifC" visible="false" sclass="requerido"/>
 											</vbox>
 										</hbox>
 									</row>
@@ -108,6 +109,7 @@
 												placeholder="Ej. correo@gmail.com"
 												value="@bind(vm.cliente.correo)"
 												constraint="@bind(vm.emailValidator)"/>
+												<label id="msgCorreoC" visible="false" sclass="requerido"/>
 										</vbox>
 											<!-- TELEFONO -->
 										<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Teléfono:" />

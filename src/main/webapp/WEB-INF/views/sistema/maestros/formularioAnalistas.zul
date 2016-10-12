@@ -60,7 +60,10 @@
 														id="cedula_Rif" width="83%" readonly="@bind(vm.makeAsReadOnly)" mold="rounded"
 														value="@bind(vm.analista.cedula)" sclass="form-control"
 														placeholder="Ej: 402405375" maxlength="12"
-														constraint="@bind(vm.validatorClienteCedulaRif)" />
+														constraint="@bind(vm.validatorClienteCedulaRif)"
+														onChange="@command('verificarCedulaRif')"
+														onOK="@command('verificarCedulaRif')"/>
+														<label id="msgCedulaRifA" visible="false" sclass="requerido"/>
 												</vbox>
 											</hbox>
 
@@ -103,8 +106,11 @@
 													width="125%" readonly="@bind(vm.makeAsReadOnly)" mold="rounded"
 													value="@bind(vm.analista.correo)"
 													placeholder="Ej. fusa@gmail.com"
-													constraint="@bind(vm.emailValidator)">
+													constraint="@bind(vm.emailValidator)"
+													onChange="@command('verificarCorreo')"
+													onOK="@command('verificarCorreo')">
 												</textbox>
+												<label id="msgCorreoA" visible="false" sclass="requerido"/>
 											</vbox>
 
 
