@@ -60,11 +60,14 @@
 														id="cedula_Rif" width="83%" readonly="@bind(vm.makeAsReadOnly)" mold="rounded"
 														value="@bind(vm.analista.cedula)" sclass="form-control"
 														placeholder="Ej: 402405375" maxlength="12"
-														constraint="@bind(vm.validatorClienteCedulaRif)" />
+														constraint="@bind(vm.validatorClienteCedulaRif)"
+														onChange="@command('verificarCedulaRif')"
+														onOK="@command('verificarCedulaRif')"/>
+														<label id="msgCedulaRifA" visible="false" sclass="requerido"/>
 												</vbox>
 											</hbox>
 
-											<!-- NOMBRE  -->
+											<!-- NOMBRE O RAZON SOCIAL -->
 														<include
 															src="/WEB-INF/views/template/fieldMandatory.zul"
 															field="Nombre: " />
@@ -73,25 +76,12 @@
 												<textbox id="nombre" sclass="form-control"
 													width="125%" readonly="@bind(vm.makeAsReadOnly)" mold="rounded"
 													value="@bind(vm.analista.nombre)"
-													placeholder="Ej: Alejandro"
+													placeholder="Ej: Alejandro Urbina"
 													constraint="@bind(vm.notEmptyValidator)" />
 											</vbox>
 										</row>
 
 										<row>
-										
-										<!-- APELLIDO -->
-														<include
-															src="/WEB-INF/views/template/fieldMandatory.zul"
-															field="Apellido: " />
-
-											<vbox>
-												<textbox id="apellido" sclass="form-control"
-													width="125%" readonly="@bind(vm.makeAsReadOnly)" mold="rounded"
-													value="@bind(vm.analista.apellido)"
-													placeholder="Ej: Perez"
-													constraint="@bind(vm.notEmptyValidator)" />
-											</vbox>
 
 											<!-- TELEFONO -->
 														<include
@@ -106,12 +96,8 @@
 													constraint="@bind(vm.telefonoValidator)" />
 											</vbox>
 
-										</row>
-										
 
-										<row>
-										
-										<!-- CORREO -->
+											<!-- CORREO -->
 														<include
 															src="/WEB-INF/views/template/fieldMandatory.zul"
 															field="Correo: " />
@@ -120,10 +106,18 @@
 													width="125%" readonly="@bind(vm.makeAsReadOnly)" mold="rounded"
 													value="@bind(vm.analista.correo)"
 													placeholder="Ej. fusa@gmail.com"
-													constraint="@bind(vm.emailValidator)">
+													constraint="@bind(vm.emailValidator)"
+													onChange="@command('verificarCorreo')"
+													onOK="@command('verificarCorreo')">
 												</textbox>
+												<label id="msgCorreoA" visible="false" sclass="requerido"/>
 											</vbox>
-											
+
+
+										</row>
+										
+
+										<row>
 											<!-- ESTADO -->
 														<include
 															src="/WEB-INF/views/template/fieldMandatory.zul"
@@ -148,12 +142,9 @@
 													</template>
 												</combobox>
 											</vbox>
-
-										</row>
 										
-										<row>
 										
-										<!-- CIUDAD -->
+											<!-- CIUDAD -->
 														<include
 															src="/WEB-INF/views/template/fieldMandatory.zul"
 															field="Ciudad: "  />
@@ -177,6 +168,10 @@
 												</combobox>
 											</vbox>
 											
+												
+
+										</row>
+										<row>
 										<!-- DIRECCION -->
 											<include
 											 src="/WEB-INF/views/template/fieldMandatory.zul"

@@ -144,7 +144,7 @@ AbstractRequerimientoViewModel {
 		@NotifyChange("*")
 		public void procesarCompra(){
 			if(registarCompra()){
-				mostrarMensaje("Compra", "Su compra fue procesada correctamente, por favor dirijase al menu 'Mis Compras' para elegir el método de pago de su preferencia.", null,null,null,null);
+				mostrarMensaje("Compra", "Su compra fue procesada correctamente, por favor dirijase a una de nuestras oficinas para consignar el pago en efectivo.", null,null,null,null);
 				enviarMail();
 			} else {
 				mostrarMensaje("Compra", "ERROR PROCESANDO SU COMPRA FAVOR COMUNICARSE CON ADMINISTRADOR.", Messagebox.ERROR,null,null,null);			

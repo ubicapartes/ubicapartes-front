@@ -1,7 +1,6 @@
 package com.okiimport.app.mvvm.controladores;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +14,6 @@ import org.zkoss.bind.annotation.ExecutionArgParam;
 import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.SortEvent;
@@ -30,7 +28,6 @@ import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Messagebox.ClickEvent;
 import org.zkoss.zul.Paging;
-import org.zkoss.zul.Tabpanel;
 import org.zkoss.zul.Window;
 
 import com.okiimport.app.model.Ciudad;
@@ -43,7 +40,6 @@ import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
 import com.okiimport.app.mvvm.AbstractRequerimientoViewModel;
 import com.okiimport.app.mvvm.model.ModeloCombo;
 import com.okiimport.app.mvvm.resource.BeanInjector;
-import com.okiimport.app.mvvm.resource.ComponentUtil;
 import com.okiimport.app.service.maestros.SMaestros;
 import com.okiimport.app.service.transaccion.STransaccion;
 
@@ -241,28 +237,18 @@ public class EditarRequerimientoViewModel extends AbstractRequerimientoViewModel
 	@Command
 	public void actualizar(@BindingParam("btnEnviar") Button btnEnviar,
 			@BindingParam("btnLimpiar") Button btnLimpiar){
-		try {
-			if(checkIsFormValid()){
-				btnEnviar.setDisabled(true);
-				btnLimpiar.setDisabled(true);
-				if(traccion!=null)
-					requerimiento.setTraccionV(traccion.getValor());
-				if(transmision!=null)
-					requerimiento.setTransmisionV(transmision.getValor());
-				if(tipoRepuesto!=null)
-					requerimiento.setTipoRepuesto(tipoRepuesto.getValor());
-				requerimiento.setEstatus(EEstatusRequerimiento.RECIBIDO_EDITADO);
-				sTransaccion.actualizarRequerimiento(requerimiento);
-				mostrarMensaje("Informaci\u00F3n", "Requerimiento Actualizado Exitosamente", null, null, this, null);
-			}
-		} catch(WrongValueException e){
-			Component comp = e.getComponent();
-			List<Tabpanel> tabpanels = ComponentUtil.findParents(Tabpanel.class, comp, null);
-			for (Iterator<Tabpanel> iterator = tabpanels.iterator(); iterator.hasNext(); ) {
-				Tabpanel tabpanel = iterator.next();
-				tabpanel.getTabbox().setSelectedPanel(tabpanel);
-			}
-			throw e;
+		if(checkIsFormValid()){
+			btnEnviar.setDisabled(true);
+			btnLimpiar.setDisabled(true);
+			if(traccion!=null)
+				requerimiento.setTraccionV(traccion.getValor());
+			if(transmision!=null)
+				requerimiento.setTransmisionV(transmision.getValor());
+			if(tipoRepuesto!=null)
+				requerimiento.setTipoRepuesto(tipoRepuesto.getValor());
+			requerimiento.setEstatus(EEstatusRequerimiento.RECIBIDO_EDITADO);
+			sTransaccion.actualizarRequerimiento(requerimiento);
+			mostrarMensaje("Informaci\u00F3n", "Requerimiento Actualizado Exitosamente", null, null, this, null);
 		}
 	}
 	
