@@ -91,6 +91,13 @@ public class RegistrarAnalistasViewModel extends AbstractRequerimientoViewModel 
 		listaEstados = llenarListaEstados();
 		listaTipoPersona = llenarListaTipoPersona();
 		this.tipoPersona = listaTipoPersona.get(1);
+		 tipoPersona=consultarTipoPersona(this.analista.getCedula(),listaTipoPersona); 
+		    String cedula = this.analista.getCedula(); 
+		    this.valor=valor;
+		    if(cedula!=null) 
+		        this.analista.setCedula(this.analista.getCedula().substring(1)); 
+		      if(this.analista.getCiudad() != null) 
+		        this.estado = this.analista.getCiudad().getEstado();
 		
 		
 	}
@@ -202,6 +209,22 @@ public class RegistrarAnalistasViewModel extends AbstractRequerimientoViewModel 
 		    return this.tipoPersona.getNombre() + analista.getCedula(); 
 		  } 
 	 
+	 
+	 /** 
+	   * Descripcion: Permite Consultar el tipo de persona 
+	   * Parametros: @param view: formularioAnalista.zul  
+	   * Retorno: Ninguno 
+	   * Nota: Ninguna 
+	   * */
+	 private ModeloCombo<Boolean> consultarTipoPersona(String cedula, List <ModeloCombo<Boolean>> listaTipoPersona){ 
+		    if (cedula!=null){ 
+		      String tipoPersona = cedula.substring(0, 1); 
+		      for(ModeloCombo<Boolean> tipoPersonal: listaTipoPersona ) 
+		        if (tipoPersonal.getNombre().equalsIgnoreCase(tipoPersona)) 
+		          return tipoPersonal; 
+		    } 
+		    return this.tipoPersona; 
+	  } 
 	
     /**METODOS SETTERS AND GETTERS */
 	
