@@ -70,7 +70,9 @@
 						</groupbox>
 					</n:div>
 					<n:div class="modal-footer">
-						<button label="Guardar Pago" sclass="btn-sm btn-primary"
+						<button id="btnLimpiar" label="Limpiar" sclass="btn-sm btn-info"
+							onClick="@command('limpiar')"/>
+						<button label="Registrar Pago" sclass="btn-sm btn-primary"
 							onClick="@command('registrarPago', btnEnviar=self, btnLimpiar=btnLimpiar)"/>
 						<button label="Cancelar" sclass="btn-sm btn-danger"
 							onClick="@command('closeModal')"/>
