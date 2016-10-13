@@ -76,7 +76,7 @@ public class RegistrarAnalistasViewModel extends AbstractRequerimientoViewModel 
 		//limpiar();
 		this.valor=valor;
 		
-		System.out.println("ciudad esta en:"+this.analista.getCiudad());
+		System.out.println("ciudad esta en: "+this.analista.getCiudad());
 		if(this.analista.getCiudad()==null){
 			this.ciudad=new Ciudad();
 			this.estado=new Estado();
@@ -92,6 +92,14 @@ public class RegistrarAnalistasViewModel extends AbstractRequerimientoViewModel 
 		listaEstados = llenarListaEstados();
 		listaTipoPersona = llenarListaTipoPersona();
 		this.tipoPersona = listaTipoPersona.get(1);
+		tipoPersona=consultarTipoPersona(this.analista.getCedula(),listaTipoPersona);
+		String cedula = this.analista.getCedula();
+		this.valor=valor;
+		
+		if(cedula!=null)
+			this.analista.setCedula(this.analista.getCedula().substring(1));
+		if(this.analista.getCiudad() != null)
+			this.estado = this.analista.getCiudad().getEstado();
 		
 		
 	}
@@ -162,6 +170,24 @@ public class RegistrarAnalistasViewModel extends AbstractRequerimientoViewModel 
 	}
 	
 	/**METODOS PROPIOS DE LA CLASE*/
+	
+	
+	/**
+	 * Descripcion: Permite Consultar el tipo de persona
+	 * Parametros: @param view: formularioAnalista.zul 
+	 * Retorno: Ninguno
+	 * Nota: Ninguna
+	 * */
+	private ModeloCombo<Boolean> consultarTipoPersona(String cedula, List <ModeloCombo<Boolean>> listaTipoPersona){
+		if (cedula!=null){
+			String tipoPersona = cedula.substring(0, 1);
+			for(ModeloCombo<Boolean> tipoPersonal: listaTipoPersona )
+				if (tipoPersonal.getNombre().equalsIgnoreCase(tipoPersona))
+					return tipoPersonal;
+		}
+		return this.tipoPersona;
+	}
+	
 	
 	/**
 	 * Descripcion: Permitira verificar que el correo ingresado existe o no en la BD
