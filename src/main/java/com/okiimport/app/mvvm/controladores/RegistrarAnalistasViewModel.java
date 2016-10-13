@@ -14,6 +14,7 @@ import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Button;
+import org.zkoss.zul.Label;
 import org.zkoss.zul.Window;
 
 import com.okiimport.app.model.Analista;
@@ -35,6 +36,12 @@ public class RegistrarAnalistasViewModel extends AbstractRequerimientoViewModel 
 	@Wire("#winFormularioAnalista")
 	private Window winFormularioAnalista;
 	
+		@Wire("#msgCorreoA") 
+	  private Label lblMsgCorreo; 
+	 
+	  @Wire("#msgCedulaRifA") 
+	  private Label lblMsgCedulaRif;
+	
 	//Atributos
 	private Analista analista;
 	private Ciudad ciudad;
@@ -44,6 +51,8 @@ public class RegistrarAnalistasViewModel extends AbstractRequerimientoViewModel 
 	private String recordMode;
 	private Boolean cerrar;
 	private String valor=null;
+	private Boolean validacionCorreo=false; 
+	  private Boolean validacionCedulaRif=false; 
 	private boolean makeAsReadOnly;
 	
 	/**
@@ -146,10 +155,53 @@ public class RegistrarAnalistasViewModel extends AbstractRequerimientoViewModel 
 		analista = new Analista();
 		this.ciudad=new Ciudad();
 		this.estado=new Estado();
+		 this.validacionCorreo=false; 
+		 this.validacionCedulaRif=false;
 		super.cleanConstraintForm();
 	}
 	
 	/**METODOS PROPIOS DE LA CLASE*/
+	/**
+	 * Descripcion: Permitira verificar que el correo ingresado existe o no en la BD 
+	   * Parametros: Ninguno 
+	   * Retorno Ninguno 
+	   * Nota: Ninguna 
+	   * */ 
+	 @Command 
+	  public void verificarCorreo(){ 
+	     
+	    this.lblMsgCorreo.setValue("El correo ya existe"); 
+	    this.validacionCorreo=this.sMaestros.consultarCorreoAnalista(analista.getCorreo()); 
+	    //llamada al metodo del validar  
+	    if(this.validacionCorreo){ 
+	      this.lblMsgCorreo.setVisible(true); 
+	    }else{ 
+	        this.lblMsgCorreo.setVisible(false); 
+	        this.validacionCorreo=false; 
+	      } 
+	    } 
+	 
+	 
+	 @Command 
+	  public void verificarCedulaRif(){ 
+	     
+	    this.lblMsgCedulaRif.setValue("La cedula/Rif ya existe"); 
+	    //System.out.println("cedula que ingresada es: "+analista.getCedula()); 
+	    this.validacionCedulaRif=this.sMaestros.consultarCedulaRifAnalista(this.getCedulaCompleta()); 
+	    //llamada al metodo del validar  
+	    if(this.validacionCedulaRif){ 
+	    	 this.lblMsgCedulaRif.setVisible(true); 
+	    }else{ 
+	      this.lblMsgCedulaRif.setVisible(false); 
+	      this.validacionCedulaRif=false; 
+	    } 
+	  } 
+	    
+	 private String getCedulaCompleta(){ 
+		    //String tipo = (this.tipoPersona.getValor()) ? "J" : "V"; 
+		    return this.tipoPersona.getNombre() + analista.getCedula(); 
+		  } 
+	 
 	
     /**METODOS SETTERS AND GETTERS */
 	
@@ -248,6 +300,22 @@ public class RegistrarAnalistasViewModel extends AbstractRequerimientoViewModel 
 	public void setValor(String valor) {
 		this.valor = valor;
 	}
+	
+	public Boolean getValidacionCorreo() { 
+	    return validacionCorreo; 
+	  } 
+	 
+	  public void setValidacionCorreo(Boolean validacionCorreo) { 
+	    this.validacionCorreo = validacionCorreo; 
+	  } 
+	  
+	  public Boolean getValidacionCedulaRif() { 
+		    return validacionCedulaRif; 
+		  } 
+		 
+		  public void setValidacionCedulaRif(Boolean validacionCedulaRif) { 
+		    this.validacionCedulaRif = validacionCedulaRif; 
+		  } 
 	
 	
 

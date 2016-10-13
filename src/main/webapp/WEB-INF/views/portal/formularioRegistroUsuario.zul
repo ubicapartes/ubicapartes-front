@@ -73,8 +73,13 @@
 													sclass="form-control" mold="rounded"
 													placeholder="Ej: 401402375" maxlength="9"
 													value="@bind(vm.cliente.cedula)"
-													constraint="@bind(vm.validatorClienteCedulaRif)"/>
+													constraint="@bind(vm.validatorClienteCedulaRif)"
+													onChange="@command('verificarCedulaRif')" 
+                            						onOK="@command('verificarCedulaRif')"/>
 											</vbox>
+											 <label id="msgCedulaRifC" visible="false" sclass="requerido"/>
+ 
+                     
 										</hbox>
 									</row>
 								<row>
@@ -107,7 +112,11 @@
 												sclass="form-control" mold="rounded"
 												placeholder="Ej. correo@gmail.com"
 												value="@bind(vm.cliente.correo)"
-												constraint="@bind(vm.emailValidator)"/>
+												constraint="@bind(vm.emailValidator)"
+												onChange="@command('verificarCorreo')" 
+                          						onOK="@command('verificarCorreo')"/>
+												 <label id="msgCorreoC" visible="false" sclass="requerido"/>
+												
 										</vbox>
 											<!-- TELEFONO -->
 										<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Teléfono:" />
