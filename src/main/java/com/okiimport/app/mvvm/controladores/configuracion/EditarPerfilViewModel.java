@@ -80,7 +80,7 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 				usuario=sControlUsuario.actualizarUsuario(usuario, true);
 			}
 			else
-				mostrarMensaje("Error", "Las Contrase�as no son iguales", null, null, null, null);
+				mostrarMensaje("Error", "Las Contraseñas no son iguales", null, null, null, null);
 		}
 		else
 			usuario=sControlUsuario.actualizarUsuario(usuario, false);
