@@ -50,8 +50,14 @@ public class PerfilViewModel extends AbstractRequerimientoViewModel {
 			if(objCliente==null){
 				menCarrito.setVisible(false);
 			}
-			menInfoUsuario.setTooltiptext(usuario.getUsername()+" Avatar");
+			menInfoUsuario.setTooltiptext("Bienvenido "+usuario.getUsername());
 			menInfoUsuario.setLabel(usuario.getUsername().toUpperCase());
+			if(usuario.getFoto64()!=null){
+				menInfoUsuario.setImage(usuario.getFoto64());
+			} else {
+				menInfoUsuario.setImage("/resources/img/user.png");
+			}
+			
 			setIdCliente(usuario.getPersona().getId());
 			getSizeShoppingCar();
 		}
@@ -62,6 +68,22 @@ public class PerfilViewModel extends AbstractRequerimientoViewModel {
 		Integer size = 0;
 		size = sTransaccion.consultarDetallesOfertaInShoppingCar(getIdCliente()).size();
 		menCarrito.setLabel("("+size+")");
+	}
+	
+	@GlobalCommand
+	public void updateProfile(){
+		UserDetails user = super.getUser();
+		
+		if(user!=null){
+			Usuario usuario = sControlUsuario.consultarUsuario(user.getUsername(), user.getPassword(), null);
+			menInfoUsuario.setTooltiptext("Bienvenido "+usuario.getUsername());
+			menInfoUsuario.setLabel(usuario.getUsername().toUpperCase());
+			if(usuario.getFoto64()!=null){
+				menInfoUsuario.setImage(usuario.getFoto64());
+			} else {
+				menInfoUsuario.setImage("/resources/img/user.png");
+			}
+		}
 	}
 	
 	@Command

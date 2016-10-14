@@ -3,8 +3,7 @@
 	<menubar sclass="user-menu light-blue" apply="org.zkoss.bind.BindComposer"
 		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.seguridad.PerfilViewModel')"
 		binder="@init(queueName='perfil',queueScope='application')">
-		<menuitem id="menInfoUsuario" tooltiptext="John's Avatar" label="Welcome, Jason" 
-			image="/resources/img/user.png" sclass="menubarCustom"/>
+		<menuitem id="menInfoUsuario" sclass="menubarCustom"/>
 		<menu label="">
 			<menupopup>
 				<menuitem label="Configuración" iconSclass="z-icon-cog" />
