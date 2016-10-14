@@ -1,5 +1,6 @@
 package com.okiimport.app.mvvm.controladores.configuracion;
 
+import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
@@ -8,6 +9,7 @@ import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.EventQueues;
 import org.zkoss.zk.ui.event.UploadEvent;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Button;
@@ -78,11 +80,12 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 				usuario=sControlUsuario.actualizarUsuario(usuario, true);
 			}
 			else
-				mostrarMensaje("Error", "Las Contraseñas no son iguales", null, null, null, null);
+				mostrarMensaje("Error", "Las Contraseï¿½as no son iguales", null, null, null, null);
 		}
 		else
 			usuario=sControlUsuario.actualizarUsuario(usuario, false);
-		
+		    
+		BindUtils.postGlobalCommand("perfil", EventQueues.APPLICATION, "updateProfile", null);	
 		mostrarMensaje("Informacion", "Datos Guardados Satisfactoriamente", null, null, null, null);
 		txtClaveNueva.setValue("");
 		txtClaveNuevaConf.setValue("");

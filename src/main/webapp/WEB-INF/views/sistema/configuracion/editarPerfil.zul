@@ -86,7 +86,7 @@
 				<button id="btnLimpiar" label="Limpiar" type="submit"
 					onClick="@command('limpiar')" sclass="btn-sm btn-info" />
 				<button label="Enviar" type="submit"
-					onClick="@command('actualizar', btnEnviar=self, btnLimpiar=btnLimpiar)"
+					onClick="@command('enviar', btnEnviar=self, btnLimpiar=btnLimpiar)"
 					sclass="btn-sm btn-primary" />
 			</div>
 		</groupbox>
