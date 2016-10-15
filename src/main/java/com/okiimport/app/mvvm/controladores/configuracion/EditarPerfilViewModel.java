@@ -37,11 +37,15 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 	@Wire("#txtClaveNuevaConf")
 	private Textbox txtClaveNuevaConf;
 	
+	@Wire("#closeFoto")
+	private Component closeFoto;
+	
 	//Modelos
 	private Usuario usuario;
 	
 	//Atributos
-	
+	private boolean isValidFoto;
+
 	@AfterCompose
 	public void doAfterCompose(@ContextParam(ContextType.VIEW) Component view){
 		super.doAfterCompose(view);
@@ -49,6 +53,14 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 		btnCambFoto.addEventListener("onUpload", this);
 		
 		usuario = super.getUsuario();
+		
+		if(usuario.getFoto64()!=null && !usuario.getFoto64().isEmpty()){
+			setValidFoto(true);
+			closeFoto.setVisible(true);
+		} else {
+			setValidFoto(false);
+			closeFoto.setVisible(false);
+		}
 	}
 
 	/**INTERFACES*/
@@ -57,10 +69,15 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 	public void onEvent(UploadEvent event) throws Exception {
 		// TODO Auto-generated method stub
 		Media media = event.getMedia();
-		if (media instanceof org.zkoss.image.Image)
+		if (media instanceof org.zkoss.image.Image){
 			imgFoto.setContent((org.zkoss.image.Image) media);
-		else if (media != null)
+			closeFoto.setVisible(true);
+			setValidFoto(true);
+		}else if (media != null){
 			mostrarMensaje("Error", "No es una imagen: " + media, null, null, null, null);
+			closeFoto.setVisible(false);
+			setValidFoto(false);
+		}
 	}
 	
 	/**COMMAND*/
@@ -71,7 +88,7 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 		String nuevaClaveConf = txtClaveNuevaConf.getValue();
 		org.zkoss.image.Image foto = this.imgFoto.getContent();
 		
-		if(foto!=null)
+		if(foto!=null && isValidFoto())
 			usuario.setFoto(foto.getByteData());
 		
 		if(!(nuevaClave.equalsIgnoreCase("") && nuevaClaveConf.equalsIgnoreCase(""))){ //Arreglar
@@ -91,6 +108,14 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 		txtClaveNuevaConf.setValue("");
 	}
 	
+	@Command
+	@NotifyChange("usuario")
+	public void eliminarFoto(){
+		usuario.setFoto(null);
+		closeFoto.setVisible(false);
+		setValidFoto(true);
+	}
+	
 	/**SETTERS Y GETTERS*/	
 	public Usuario getUsuario() {
 		return usuario;
@@ -98,5 +123,13 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+	
+	public boolean isValidFoto() {
+		return isValidFoto;
+	}
+
+	public void setValidFoto(boolean isValidFoto) {
+		this.isValidFoto = isValidFoto;
 	}
 }

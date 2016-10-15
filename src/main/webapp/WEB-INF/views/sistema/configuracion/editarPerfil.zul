@@ -4,7 +4,28 @@
 		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.configuracion.EditarPerfilViewModel')"
 		form="@id('rs') @load(vm.usuario) @save(vm.usuario, before='enviar')">
 		<groupbox closable="false" width="80%">
-
+		<style>
+			.boxImagen {
+			    position: relative;
+			    display: inline-block;
+			}
+			.close:before {
+			    content: '✕';
+			    font-size:16px;
+			    color:white;
+			    border-radius:50%;
+			    background-color:black;
+			}
+			.close {
+			    position: absolute;
+			    top: 0;
+			    right: 0;
+			    cursor: pointer;
+			    color:white;
+			    border-radius:50%;
+			    background-color:black;
+			}
+		</style>
 			<caption label="Datos Personales" sclass="custom_caption" />
 			<div align="center">
 
@@ -19,16 +40,20 @@
 					</columns>
 					<rows>
 						<row spans="4">
-							<div align="right">
+							<div class="boxImagen" align="right">
 								<image id="imgFoto" width="110px"
 									height="110px" src="@bind(vm.usuario.getFoto64())" />
+									<span id="closeFoto" class="close" tooltiptext="Eliminar Foto" onClick="@command('eliminarFoto')"></span>
 
-								<button id="btnCambFoto" label="..."
-									sclass="btn-primary" upload="true" style="margin-bottom:0px" />
+								
 							</div>
 						</row>
 
-						<row></row>
+						<row spans="4">
+						<div align="right">
+							<button id="btnCambFoto" tooltiptext="Cambiar Foto" label="..." sclass="btn-primary" upload="true" style="margin-bottom:0px" />
+						</div>
+						</row>
 						<row>
 							<label value="Usuario: "
 								sclass="label-not-mandatory" />
