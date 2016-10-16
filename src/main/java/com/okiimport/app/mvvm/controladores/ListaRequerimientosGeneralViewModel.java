@@ -20,6 +20,7 @@ import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Paging;
 
+import com.okiimport.app.model.Analista;
 import com.okiimport.app.model.Cliente;
 import com.okiimport.app.model.Requerimiento;
 import com.okiimport.app.model.enumerados.EEstatusRequerimiento;
@@ -57,7 +58,7 @@ public class ListaRequerimientosGeneralViewModel extends AbstractRequerimientoVi
 	@AfterCompose
 	public void doAfterCompose(@ContextParam(ContextType.VIEW) Component view){
 		super.doAfterCompose(view);
-		requerimientoFiltro = new Requerimiento(new Cliente());
+		requerimientoFiltro = new Requerimiento(new Cliente(), new Analista());
 		cambiarRequerimientos(0, null, null);
 		agregarGridSort(gridMisRequerimientos);
 		pagMisRequerimientos.setPageSize(pageSize);

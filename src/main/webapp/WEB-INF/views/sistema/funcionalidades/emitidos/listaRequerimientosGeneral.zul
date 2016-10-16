@@ -51,7 +51,7 @@
 						<auxheader>
 							<div sclass="z-icon-filter bigger-200" />
 							<textbox instant="true" hflex="1"
-								value="@bind(vm.requerimientoFiltro.analista)"
+								value="@bind(vm.requerimientoFiltro.analista.nombre)"
 								onChange="@command('aplicarFiltro')" />
 						</auxheader>
 						<auxheader>
@@ -81,7 +81,7 @@
 						<listheader value="modeloV" width="15%"
 							label="Modelo" sort="auto(modeloV)" />
 						<listheader value="analista" width="15%"
-							label="Analista" sort="auto(analista)" />
+							label="Analista" sort="auto(analista.nombre)" />
 						<listheader value="estatus" width="20%"
 							label="Estado" sort="none" />
 					</listhead>
