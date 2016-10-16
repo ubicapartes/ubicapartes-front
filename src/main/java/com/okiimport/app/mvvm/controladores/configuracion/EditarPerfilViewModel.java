@@ -1,5 +1,6 @@
 package com.okiimport.app.mvvm.controladores.configuracion;
 
+import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
@@ -8,6 +9,7 @@ import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.EventQueues;
 import org.zkoss.zk.ui.event.UploadEvent;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Button;
@@ -35,11 +37,15 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 	@Wire("#txtClaveNuevaConf")
 	private Textbox txtClaveNuevaConf;
 	
+	@Wire("#closeFoto")
+	private Component closeFoto;
+	
 	//Modelos
 	private Usuario usuario;
 	
 	//Atributos
-	
+	private boolean isValidFoto;
+
 	@AfterCompose
 	public void doAfterCompose(@ContextParam(ContextType.VIEW) Component view){
 		super.doAfterCompose(view);
@@ -47,6 +53,14 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 		btnCambFoto.addEventListener("onUpload", this);
 		
 		usuario = super.getUsuario();
+		
+		if(usuario.getFoto64()!=null && !usuario.getFoto64().isEmpty()){
+			setValidFoto(true);
+			closeFoto.setVisible(true);
+		} else {
+			setValidFoto(false);
+			closeFoto.setVisible(false);
+		}
 	}
 
 	/**INTERFACES*/
@@ -55,10 +69,15 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 	public void onEvent(UploadEvent event) throws Exception {
 		// TODO Auto-generated method stub
 		Media media = event.getMedia();
-		if (media instanceof org.zkoss.image.Image)
+		if (media instanceof org.zkoss.image.Image){
 			imgFoto.setContent((org.zkoss.image.Image) media);
-		else if (media != null)
+			closeFoto.setVisible(true);
+			setValidFoto(true);
+		}else if (media != null){
 			mostrarMensaje("Error", "No es una imagen: " + media, null, null, null, null);
+			closeFoto.setVisible(false);
+			setValidFoto(false);
+		}
 	}
 	
 	/**COMMAND*/
@@ -69,7 +88,7 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 		String nuevaClaveConf = txtClaveNuevaConf.getValue();
 		org.zkoss.image.Image foto = this.imgFoto.getContent();
 		
-		if(foto!=null)
+		if(foto!=null && isValidFoto())
 			usuario.setFoto(foto.getByteData());
 		
 		if(!(nuevaClave.equalsIgnoreCase("") && nuevaClaveConf.equalsIgnoreCase(""))){ //Arreglar
@@ -78,14 +97,23 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 				usuario=sControlUsuario.actualizarUsuario(usuario, true);
 			}
 			else
-				mostrarMensaje("Error", "Las Contraseñas no son iguales", null, null, null, null);
+				mostrarMensaje("Error", "Las ContraseÃ±as no son iguales", null, null, null, null);
 		}
 		else
 			usuario=sControlUsuario.actualizarUsuario(usuario, false);
-		
+		    
+		BindUtils.postGlobalCommand("perfil", EventQueues.APPLICATION, "updateProfile", null);	
 		mostrarMensaje("Informacion", "Datos Guardados Satisfactoriamente", null, null, null, null);
 		txtClaveNueva.setValue("");
 		txtClaveNuevaConf.setValue("");
+	}
+	
+	@Command
+	@NotifyChange("usuario")
+	public void eliminarFoto(){
+		usuario.setFoto(null);
+		closeFoto.setVisible(false);
+		setValidFoto(true);
 	}
 	
 	/**SETTERS Y GETTERS*/	
@@ -95,5 +123,13 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+	
+	public boolean isValidFoto() {
+		return isValidFoto;
+	}
+
+	public void setValidFoto(boolean isValidFoto) {
+		this.isValidFoto = isValidFoto;
 	}
 }

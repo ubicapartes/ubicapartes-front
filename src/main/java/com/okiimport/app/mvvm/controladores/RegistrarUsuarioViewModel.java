@@ -49,6 +49,12 @@ public class RegistrarUsuarioViewModel extends AbstractRequerimientoViewModel {
 	@Wire("#lblMsgCorreo")
 	public Label lblMsgCorreo;
 	
+	@Wire("#msgCorreoC") 
+	  private Label lblMsgCorreoC; 
+	 
+	  @Wire("#msgCedulaRifC") 
+	  private Label lblMsgCedulaRif; 
+	
 	
 	@Wire("#cmbEstado")
 	private Combobox cmbEstado;
@@ -71,6 +77,8 @@ public class RegistrarUsuarioViewModel extends AbstractRequerimientoViewModel {
 	protected Usuario usuario;
 	protected Persona persona;
 	protected Cliente cliente;
+	private Boolean validacionCorreo=false; 
+	private Boolean validacionCedulaRif=false;
 
 
 	/**
@@ -96,11 +104,15 @@ public class RegistrarUsuarioViewModel extends AbstractRequerimientoViewModel {
 	 * Nota: Ninguna
 	 * */
 	@Command
-	@NotifyChange({ "usuario", "cliente", "estado", "constrEstado", "constrCiudad" })
+	@NotifyChange({ "usuario", "cliente", "estado", "constrEstado", "constrCiudad", "lblMsgCorreoC", "lblMsgCedulaRif" }) 
 	public void limpiar() {
 		this.cliente = new Cliente();
 		this.usuario = new Usuario(this.cliente, true);
 		limpiarEstadoYCiudad();
+		 this.validacionCorreo=false; 
+		    this.validacionCedulaRif=false; 
+		    this.lblMsgCorreoC.setVisible(false); 
+		    this.lblMsgCedulaRif.setVisible(false); 
 	}
 	
 	/**METODOS OVERRIDE*/
@@ -215,6 +227,36 @@ public class RegistrarUsuarioViewModel extends AbstractRequerimientoViewModel {
 	}
 
 
+	@Command 
+	  public void verificarCorreo(){ 
+	     
+	    this.lblMsgCorreoC.setValue("El correo ya existe"); 
+	    this.validacionCorreo=this.sMaestros.consultarCorreoCliente(cliente.getCorreo()); 
+	    //llamada al metodo del validar  
+	    if(this.validacionCorreo){ 
+	      this.lblMsgCorreoC.setVisible(true); 
+	    }else{ 
+	        this.lblMsgCorreoC.setVisible(false); 
+	        this.validacionCorreo=false; 
+	      } 
+	    } 
+	
+	
+	@Command 
+	  public void verificarCedulaRif(){ 
+	     
+	    this.lblMsgCedulaRif.setValue("La cedula/Rif ya existe"); 
+	    this.validacionCedulaRif=this.sMaestros.consultarCedulaCliente(this.getCedulaComleta()); 
+	    //llamada al metodo del validar  
+	    if(this.validacionCedulaRif){
+	    	this.lblMsgCedulaRif.setVisible(true); 
+	    }else{ 
+	      this.lblMsgCedulaRif.setVisible(false); 
+	      this.validacionCedulaRif=false; 
+	    } 
+	  } 
+	      
+	      
 	/**GETTERS Y SETTERS*/
 	public List<Estado> getListaEstados() {
 		return listaEstados;
@@ -358,6 +400,20 @@ public class RegistrarUsuarioViewModel extends AbstractRequerimientoViewModel {
 		this.cedulaRif = cedulaRif;
 	}
 	
-	
+	 public Boolean getValidacionCorreo() { 
+		    return validacionCorreo; 
+		  } 
+		 
+	 public void setValidacionCorreo(Boolean validacionCorreo) { 
+		    this.validacionCorreo = validacionCorreo; 
+		  }
+		  
+    public Boolean getValidacionCedulaRif() { 
+			    return validacionCedulaRif; 
+			  } 
+			 
+	public void setValidacionCedulaRif(Boolean validacionCedulaRif) { 
+			    this.validacionCedulaRif = validacionCedulaRif; 
+	} 
 
 }

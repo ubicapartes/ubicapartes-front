@@ -1,10 +1,10 @@
 <zk xmlns:w="client" xmlns:n="native">
-	<vlayout sclass="card-inner" apply="org.zkoss.bind.BindComposer"
+	<vlayout sclass="winMyList" apply="org.zkoss.bind.BindComposer"
 		width="100%"
 		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.compra.MisComprasViewModel')">
 
 		<!-- LISTA DE COMPRAS CLIENTE -->
-		<div width="95%">
+		
 			<panel sclass="borderGrid">
 				<panelchildren>
 					<hbox width="100%" align="center">
@@ -19,6 +19,7 @@
 						model="@load(vm.listaCompras)">
 
 						<auxhead>
+							<auxheader/>
 							<auxheader>
 								<div sclass="z-icon-filter bigger-200" />
 								<spinner instant="true" hflex="1"
@@ -47,16 +48,17 @@
 						</auxhead>
 
 						<listhead>
+							<listheader width="2%"/>
 							<listheader width="12%" label="N° Compra"  value="idCompra" />
 							<listheader width="12%" label="N° Solicitud"  value="requerimiento.idRequerimiento" />
 							<listheader width="12%" label="Fecha Creación"  value="fechaCreacion" />
 							<listheader width="12%" value="precioVenta" label="Precio de venta"	 />
 							<listheader width="12%" label="Estatus" />
-							<listheader width="16%" label="Operaciones" />
+							<listheader width="14%" label="Operaciones" />
 						</listhead>
 						<template name="model">
 							<listitem>
-									
+								<listcell label="${forEachStatus.index+1}" sclass="boxed-grey" />
 								<listcell label="@bind(each.idCompra)" />
 								<listcell label="@bind(each.requerimiento.idRequerimiento)" />
 								<listcell
@@ -68,11 +70,11 @@
 									<hbox spacing="20px">
 										<div class="btn-group btn-group-sm">
 											<button iconSclass="z-icon-money blue"
-												tooltiptext="Procesar pago efectivo" onClick="@command('pagarTransferenciaDeposito',compra = each)" visible="@load(vm.mostrarIcono('En Espera', each.determinarEstatus()))" />
+												tooltiptext="Registrar pago" onClick="@command('pagarTransferenciaDeposito',compra = each)" visible="@load(vm.mostrarIcono('En Espera', each.determinarEstatus()))" />
 											<button iconSclass="z-icon-desktop blue"
-												tooltiptext="Detalle transferencia" onClick="@command('pagarTransferenciaDeposito',compra = each)" visible="@load(vm.mostrarIcono('En Espera Transferencia', each.determinarEstatus()))"/>
+												tooltiptext="Registrar pago" onClick="@command('pagarTransferenciaDeposito',compra = each)" visible="@load(vm.mostrarIcono('En Espera Transferencia', each.determinarEstatus()))"/>
 											<button iconSclass="z-icon-file blue"
-												tooltiptext="Detalle depósito" onClick="@command('pagarTransferenciaDeposito',compra = each)" visible="@load(vm.mostrarIcono('En Espera Depósito', each.determinarEstatus()))"/>
+												tooltiptext="Registrar pago" onClick="@command('pagarTransferenciaDeposito',compra = each)" visible="@load(vm.mostrarIcono('En Espera Depósito', each.determinarEstatus()))"/>
 											<button iconSclass="z-icon-dollar blue"
 												tooltiptext="Detalle de Pago" onClick="@command('pagarTransferenciaDeposito',compra = each)" visible="@load(vm.mostrarIcono('Pagada', each.determinarEstatus()))"/>
 										</div>
@@ -83,7 +85,7 @@
 					</listbox>
 				</panelchildren>
 			</panel>
-		</div>
+		
 	</vlayout>
 </zk>
 

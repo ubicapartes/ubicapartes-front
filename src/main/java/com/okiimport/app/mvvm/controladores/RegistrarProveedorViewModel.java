@@ -86,6 +86,9 @@ public class RegistrarProveedorViewModel extends AbstractRequerimientoViewModel 
 	@Wire("#msgCorreoP")
 	private Label lblMsgCorreo;
 	
+	@Wire("#msgCedulaRifP") 
+	  private Label lblMsgCedulaRif;
+	
 	//Atributos
 	private static final Comparator<MarcaVehiculo> COMPR_MARCA_VEHICULO = MarcaVehiculo.getComparator();
 	private static final Comparator<ClasificacionRepuesto> COMPR_CLASIFICACION_REPUESTO = ClasificacionRepuesto.getComparator();
@@ -110,6 +113,7 @@ public class RegistrarProveedorViewModel extends AbstractRequerimientoViewModel 
 	protected Proveedor proveedor;
 	private String valor=null;
 	private Boolean validacionCorreo=false;
+	 private Boolean validacionCedulaRif=false; 
 	private String tipoRegistro=null;
 	
 	/**
@@ -178,6 +182,7 @@ public class RegistrarProveedorViewModel extends AbstractRequerimientoViewModel 
 		limpiarEstadoYCiudad();
 		this.lblMsgCorreo.setVisible(false);
 		this.validacionCorreo=false;
+	    this.validacionCedulaRif=false; 
 	}
 	
 	 /**
@@ -393,7 +398,8 @@ public class RegistrarProveedorViewModel extends AbstractRequerimientoViewModel 
 	 * */
 	protected Proveedor registrarProveedor(boolean enviarEmail){
 		
-		proveedor.setCedula(getCedulaComleta());
+		
+		proveedor.setCedula(getCedulaCompleta()); 
 		proveedor.setEstatus(EstatusProveedorFactory.getEstatusSolicitante().getValue());
 
 		if (proveedor.isNacional())
@@ -522,6 +528,25 @@ public class RegistrarProveedorViewModel extends AbstractRequerimientoViewModel 
 		}
 	}
 	
+	@Command 
+	  public void verificarCedulaRif(){ 
+	     
+	    this.lblMsgCedulaRif.setValue("La cedula/Rif ya existe");
+	    this.validacionCedulaRif=this.sMaestros.consultarCedulaRifProveedor(this.getCedulaCompleta()); 
+	    //llamada al metodo del validar  
+	    if(this.validacionCedulaRif){ 
+	      //System.out.println("la cedula/rif "+proveedor.getCedula()+" ya existe."); 
+	      this.lblMsgCedulaRif.setVisible(true); 
+	      //return new GeneralConstraint(EConstraint.EMAIL_INVALID); 
+	    }else{ 
+	    	 //System.out.println("la cedula/rif es valido. No existe en la BD."); 
+	        this.lblMsgCedulaRif.setVisible(false); 
+	        this.validacionCedulaRif=false; 
+	        //return new GeneralConstraint(EConstraint.NO_EMPTY); 
+	      } 
+	    } 
+	    
+	
 	
 	/**
 	 * Descripcion: Permitira obtener la cedula completa del proveedor
@@ -529,13 +554,13 @@ public class RegistrarProveedorViewModel extends AbstractRequerimientoViewModel 
 	 * Retorno Ninguno
 	 * Nota: Ninguna
 	 * */
-	private String getCedulaComleta(){
+	private String getCedulaCompleta(){
 		//String tipo = (this.tipoPersona.getValor()) ? "J" : "V";
 		return this.tipoPersona.getNombre() + proveedor.getCedula();
 	}
 	
 	protected boolean verificarExistencia(){
-		return (sMaestros.consultarProveedor(new Proveedor(getCedulaComleta()))!=null);
+		 return (sMaestros.consultarProveedor(new Proveedor(getCedulaCompleta()))!=null);
 	}
 	
 	/**GETTERS Y SETTERS*/	
@@ -720,5 +745,13 @@ public class RegistrarProveedorViewModel extends AbstractRequerimientoViewModel 
 	public void setTipoRegistro(String tipoRegistro) {
 		this.tipoRegistro = tipoRegistro;
 	}
+	
+	public Boolean getValidacionCedulaRif() { 
+	    return validacionCedulaRif; 
+	  } 
+	 
+	  public void setValidacionCedulaRif(Boolean validacionCedulaRif) { 
+	    this.validacionCedulaRif = validacionCedulaRif; 
+	  } 
 	
 }
