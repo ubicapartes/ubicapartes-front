@@ -15,6 +15,8 @@ import org.zkoss.zk.ui.event.UploadEvent;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Image;
+import org.zkoss.zul.Label;
+import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
@@ -42,6 +44,12 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 	@Wire("#btnCambFoto")
 	private Button btnCambFoto;
 	
+	@Wire("#msgUsername") 
+	  private Label lblMsgUsername;
+	
+	@Wire("#msgPassword") 
+	  private Label lblMsgPassword;
+	
 	private Textbox txtUsername;
 	
 	//Modelos
@@ -51,6 +59,7 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 	//Atributos
 	private AbstractValidator validadorUsername;
 	private String username;
+	private String repetirPassword;
 
 	@AfterCompose
 	public void doAfterCompose(@ContextParam(ContextType.VIEW) Component view,
@@ -62,7 +71,8 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 		username = this.usuario.getUsername();
 		
 		btnCambFoto.addEventListener("onUpload", this);
-		
+		this.lblMsgPassword.setVisible(false);
+		this.lblMsgUsername.setVisible(false);
 		validadorUsername = new AbstractValidator() {
 			
 			@Override
@@ -99,14 +109,28 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 	public void guardar(){
 		org.zkoss.image.Image foto = this.imgFoto.getContent();
 		
-		if(foto!=null)
-			usuario.setFoto(foto.getByteData());
-		usuario=sControlUsuario.actualizarUsuario(usuario, false);
-		if(usuario.getPersona() instanceof Analista)
-			mailUsuario.enviarUsuarioyPassword(usuario, mailService);
-		mostrarMensaje("Informacion", "El usuario se ha actualizado exitosamente", null, null, null, null);
-		winEditarUsuario.detach();
-		ejecutarGlobalCommand("cambiarUsuarios", null);
+		
+				if(usuario.getPasword().equals(usuario.getPaswordRepeat())){
+							if (checkIsFormValid()) {
+							
+									if(foto!=null)
+										usuario.setFoto(foto.getByteData());
+									usuario=sControlUsuario.actualizarUsuario(usuario, false);
+									if(usuario.getPersona() instanceof Analista)
+										mailUsuario.enviarUsuarioyPassword(usuario, mailService);
+									mostrarMensaje("Informacion", "El usuario se ha actualizado exitosamente", null, null, null, null);
+									winEditarUsuario.detach();
+									ejecutarGlobalCommand("cambiarUsuarios", null);
+									
+							}
+				}else{
+					this.lblMsgPassword.setValue("Las contraseñas no coinciden");
+					this.lblMsgPassword.setVisible(true);
+					mostrarMensaje("Informaci\u00F3n", "Las contraseñas no coinciden", Messagebox.EXCLAMATION, null, null, null);
+					
+				}
+		
+		
 	}
 
 	/**SETTERS Y GETTERS*/	
@@ -141,5 +165,15 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 	public void setMailUsuario(MailUsuario mailUsuario) {
 		this.mailUsuario = mailUsuario;
 	}
+
+	public String getRepetirPassword() {
+		return repetirPassword;
+	}
+
+	public void setRepetirPassword(String repetirPassword) {
+		this.repetirPassword = repetirPassword;
+	}
+	
+	
 	
 }
