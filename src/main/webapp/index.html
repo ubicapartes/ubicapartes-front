@@ -524,6 +524,7 @@
 			        })
 			        .done(function(data) {
 	                	if(data.statusCode==200){
+	                		limpiarData();
 	                		$("#success-alert").fadeIn('slow');
 	  		              	window.setTimeout(function () { 
 	  		                  $("#success-alert").fadeOut('slow'); 
@@ -547,6 +548,13 @@
 		        
 		        
 		    });
+		    
+		    function limpiarData(){
+		    	 $('input[name=nombre]').val(""),
+		         $('input[name=correo]').val(""),
+		         $('input[name=telefono]').val(""),
+		         $('textarea[name=mensaje]').val("")
+		    }
 		    
 		    function validarDatos(formData){
 		    	if(formData.nombre =="" || formData.correo =="" || formData.telefono =="" || formData.mensaje =="" ){
