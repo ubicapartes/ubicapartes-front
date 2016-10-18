@@ -93,10 +93,11 @@
 																	placeholder="Ej: 402405375" sclass="form-control"
 																	readonly="@bind(vm.makeAsReadOnly)"
 																	value="@bind(vm.proveedor.cedula)"
-																	constraint="@bind(vm.validatorClienteCedulaRif)" />
-																<!-- onBlur="@command('buscarProveedor')"-->
-																<!-- onOK="@command('buscarProveedor')" -->
-															</vbox>
+																	constraint="@bind(vm.validatorClienteCedulaRif)" 
+																	onChange="@command('verificarCedulaRif')" 
+                                  									onOK="@command('verificarCedulaRif')"/>
+																<label id="msgCedulaRifP" visible="false" sclass="requerido"/> 
+                                						   </vbox>
 														</hbox>
 
 														<!-- NOMBRE O RAZON SOCIAL -->

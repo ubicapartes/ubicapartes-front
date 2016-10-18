@@ -1,0 +1,78 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window border="none" apply="org.zkoss.bind.BindComposer" sclass="winMyList"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.ListaMarcasViewModel')">
+		
+		<!-- LISTA DE MARCAS-->
+			<panel sclass="borderGrid">
+				<panelchildren>
+					<hbox width="100%" align="center">
+						<paging id="pagMarcas" hflex="1"
+							onPaging="@command('paginarLista')" autohide="true" />
+						<div sclass="z-paging z-paging-info" height="28px">
+							<label id="lblMarcas" sclass="rRmWwb-info"/>
+						</div>
+					</hbox>
+		<listbox id="gridMarcas" mold="paging" pagingPosition="top" emptyMessage="No hay marcas"
+			model="@load(vm.marcas)"
+			onAfterRender="@command('updatePaging', paging = pagMarcas, label=lblMarcas)">
+			<auxhead sclass="nombre-center">
+			<auxheader/>
+				<auxheader>
+					<div sclass="z-icon-filter bigger-200" />
+					<spinner constraint="no negative, no zero"
+						width="150px" value="@bind(vm.marcaFiltro.idMarcaVehiculo)"
+						instant="true" 
+						onChange="@command('aplicarFiltro')" />
+				</auxheader>
+				<auxheader colspan="1">
+					<div sclass="z-icon-filter bigger-200" />
+					<textbox value="@bind(vm.marcaFiltro.nombre)"
+						instant="true" 
+						onChange="@command('aplicarFiltro')" hflex="1" />
+				</auxheader>
+				
+				<auxheader colspan="1" />
+				<auxheader width="20%">
+					<button label="Nueva Marca"
+						onClick="@command('nuevaMarca')" sclass="btn-primary" />
+				</auxheader>
+			</auxhead>
+			<listhead menupopup="auto">
+			<listheader width="2%"/>
+				<listheader id="id" label="Código" sort="auto(id)"
+					width="18%" />
+				<listheader id="nombre" label="Nombre"
+					sort="auto(nombre)" width="18%" />
+				<listheader label="Estado" sort="none" width="20%" />
+				
+				<listheader label="Operaciones" width="15%" sort="none" />
+			</listhead>
+			<template name="model">
+				<listitem>
+				<listcell label="${forEachStatus.index+1}" sclass="boxed-grey" />
+					<listcell label="@bind(each.idMarcaVehiculo)" />
+					<listcell label="@bind(each.nombre)" />
+					<listcell label="@bind(each.estatus)" />
+					<listcell>
+						<div class="btn-group btn-group-sm">
+		
+								<button  iconSclass="z-icon-eye blue bigger-160" tooltiptext="Ver Marca"  
+								    onClick="@command('verMarca', marca = each)"/>
+								<button iconSclass="z-icon-pencil green bigger-160" tooltiptext="Editar Marca"
+									onClick="@command('editarMarca', marca = each)" if="${ !each.isEliminar() }" />
+								<button iconSclass="z-icon-trash-o red bigger-160" tooltiptext="Eliminar Marca"
+									onClick="@command('eliminarMarca', marca=each)" if="${ !each.isEliminar() }"/>
+								<button iconSclass="z-icon-fa fa-unlock-alt cyan fa-2x bigger-150"
+										tooltiptext="Activar Marca"
+										onClick="@command('actualizarEstatus', marca=each)"
+										if="${ each.isEliminar() }" />
+							</div>
+						
+					</listcell>
+				</listitem>
+			</template>
+		</listbox>
+		</panelchildren>
+				</panel>
+	</window>
+</zk>

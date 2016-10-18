@@ -1,0 +1,51 @@
+<?page title="Sistema" contentType="text/html;charset=UTF-8"?>
+<?link href="/resources/css/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css"?>
+<?link href="/resources/css/fonts.css" rel="stylesheet" type="text/css"?>
+<?link href="/resources/css/less/index.css.dsp" rel="stylesheet" type="text/css"?>
+<?link href="/resources/css/font-awesome.min.css" rel="stylesheet" type="text/css"?>
+<?link href="/resources/css/aplication.css" rel="stylesheet" type="text/css"?>
+<?link href="/resources/css/grid.css" rel="stylesheet" type="text/css"?>
+
+<!-- MATERIAL DESIGN -->
+<?link href="/resources/css/material-design/css/base.min.css" rel="stylesheet"?>
+
+<zk>
+	<script src="/resources/css/material-design/js/base.min.js" type="text/javascript"/>
+	<borderlayout hflex="1" vflex="1" apply="org.zkoss.bind.BindComposer">
+		
+		<north><!-- height="60px" border="none" -->
+			<div sclass="navbar" height="59px">
+			    <image src="/resources/img/LogoSinSombreado.png" width="200px" height="95%"/>
+				<hlayout sclass="nav-user pull-right" spacing="0">
+					<include src="/WEB-INF/views/sistema/seguridad/perfil.zul" />
+				</hlayout>
+			</div>
+		</north>
+		<!-- width="300px" minsize="300" width="15%"  -->
+		<west  autoscroll="true" style="border-style: solid;" title="Menú" collapsible="true">
+			<include src="/WEB-INF/views/sistema/seguridad/sidebar.zul" />
+		</west>
+		
+		<center autoscroll="true" style="border-style: solid;">
+			<vlayout width="100%">
+				<div  sclass="breadcrumbs">
+					<div id="hrefEnlacesMenu"  sclass="breadcrumbs">
+  						<!-- Search input-->
+						
+					</div>
+				</div>
+				<include id="mainInclude" self="@define(content)"/>
+			</vlayout>
+			
+		</center>
+		
+		<south height="30px" style="border-style: solid;">
+			<!-- 
+			<include
+				src="/WEB-INF/views/SistemaOrion/VPrincipal/footer.zul" />
+			-->
+		</south>
+		
+	</borderlayout>
+	
+</zk>

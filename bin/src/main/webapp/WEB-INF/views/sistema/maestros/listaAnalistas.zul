@@ -1,0 +1,100 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window border="none" apply="org.zkoss.bind.BindComposer"
+		id="winListaAnalistas" sclass="winMyList"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.ListaAnalistasViewModel')">
+
+		<!-- LISTA DE ANALISTAS-->
+		<panel sclass="borderGrid">
+			<panelchildren>
+				<hbox width="100%" align="center">
+					<paging id="pagAnalistas" hflex="1"
+						onPaging="@command('paginarLista')" autohide="true" />
+					<div sclass="z-paging z-paging-info"
+						height="28px">
+						<label id="lblAnalistas" sclass="rRmWwb-info" />
+					</div>
+				</hbox>
+				<listbox id="gridAnalistas" mold="paging"
+					pagingPosition="top" emptyMessage="No hay analistas"
+					model="@load(vm.analistas)"
+					onAfterRender="@command('updatePaging', paging = pagAnalistas, label=lblAnalistas)">
+					<auxhead sclass="nombre-center">
+					<auxheader/>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<spinner constraint="no negative, no zero"
+								width="150px" value="@bind(vm.analistaFiltro.id)" instant="true"
+								onChange="@command('aplicarFiltro')" />
+						</auxheader>
+						<auxheader colspan="1">
+							<div sclass="z-icon-filter bigger-200" />
+							<textbox
+								value="@bind(vm.analistaFiltro.nombre)" instant="true"
+								onChange="@command('aplicarFiltro')" hflex="1" />
+						</auxheader>
+						<auxheader colspan="1">
+
+							<label value="Estado: " />
+
+							<separator orient="vertical" width="10px"
+								bar="false" />
+						</auxheader>
+						<auxheader colspan="1" />
+						<auxheader width="20%">
+							<button label="Nuevo Analista"
+								onClick="@command('nuevoAnalista')" sclass="btn-primary" />
+						</auxheader>
+					</auxhead>
+					<listhead menupopup="auto">
+					<listheader width="2%"/>
+						<listheader id="id" label="Código"
+							sort="auto(id)" width="18%" />
+						<listheader id="nombre" label="Nombre"
+							sort="auto(nombre)" width="18%" />
+						<listheader label="Estado" sort="none"
+							width="20%" />
+							<listheader label="Foto" sort="none"
+							width="15%" />
+						<listheader label="Operaciones" width="15%"
+							sort="none" />
+					</listhead>
+					<template name="model">
+						<listitem>
+						<listcell label="${forEachStatus.index+1}" sclass="boxed-grey" />
+							<listcell label="@bind(each.id)" />
+							<listcell label="@bind((each.nombre).concat(' ').concat(each.apellido))" />
+							<listcell
+								label="@bind(each.estatus)" />
+							<listcell></listcell>
+							<listcell>
+
+								<div class="btn-group btn-group-sm action">
+									<button
+										iconSclass="z-icon-eye blue bigger-160"
+										tooltiptext="Ver Analista"
+										onClick="@command('verAnalista', analista = each)" />
+									<button
+										iconSclass="z-icon-pencil green bigger-160"
+										tooltiptext="Editar Analista"
+										onClick="@command('editarAnalista', analista = each)" if="${ !each.isEliminar() }" />
+									<button
+										iconSclass="z-icon-trash-o red bigger-160"
+										tooltiptext="Eliminar Analista"
+										onClick="@command('eliminarAnalista', analista = each)" if="${ !each.isEliminar() }"/>
+										
+									<button
+									    iconSclass="z-icon-fa fa-unlock-alt cyan fa-2x bigger-150"
+										tooltiptext="Activar Analista"
+										onClick="@command('actualizarEstatus', analista=each)"
+										if="${ each.isEliminar() }" />
+
+
+								</div>
+							</listcell>
+						</listitem>
+					</template>
+				</listbox>
+			</panelchildren>
+		</panel>
+	</window>
+</zk>

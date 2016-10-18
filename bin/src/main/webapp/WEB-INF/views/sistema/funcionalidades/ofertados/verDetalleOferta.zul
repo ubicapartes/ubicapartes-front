@@ -1,0 +1,271 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winOferta" border="none" width="0px" height="0px"
+		apply="org.zkoss.bind.BindComposer" closable="true"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.VerDetalleOfertaViewModel')">
+
+		<n:div aria-hidden="false" class="modal fade in" role="dialog"
+			tabindex="-1" style="display: block;">
+			<div class="modal-dialog modal-full" height="auto"><!-- modal-xs -->
+				<div sclass="modal-content">
+					<include
+						src="/WEB-INF/views/template/modal/titleModal.zul"
+						titulo="Oferta" />
+					<n:div class="modal-inner">
+
+						<groupbox closable="false">
+							<div>
+								<space></space>
+								<space></space>
+								<label value="Nro. Oferta:"
+									sclass="label-not-mandatory" />
+								<label
+									value="@bind(vm.oferta.idOferta)" />
+								<space></space>
+								<space></space>
+								<label value="Fecha: "
+									sclass="label-not-mandatory" />
+								<label
+									value="@bind(vm.oferta.fechaCreacion)
+		    				@converter('formatedDate', format=vm.formatDate)" />
+								<space></space>
+								<space></space>
+								<label value="Estado:"
+									sclass="label-not-mandatory" />
+								<label
+									value="@bind(vm.requerimiento.determinarEstatus())"
+									sclass="z-letra-grande" />
+
+
+							</div>
+
+							<tabbox maximalHeight="true"
+								sclass="tab-nav tab-nav-blue">
+								<tabs>
+									<tab
+										sclass="waves-color-blue waves-effect">
+										<label value="Datos Generales" />
+									</tab>
+									<tab
+										sclass="waves-color-blue waves-effect">
+										<label value="Detalle Oferta" />
+									</tab>
+								</tabs>
+								<tabpanels>
+									<!-- DATOS GENERALES -->
+									<tabpanel>
+										<!-- DATOS DEL REQUERIMIENTO -->
+										<include
+											src="/WEB-INF/views/template/modal/subTitleModal.zul"
+											subtitulo="Datos del Requerimiento" />
+										<div
+											sclass="card card-main card-inner">
+											<grid>
+												<columns>
+													<column width="35%"
+														align="right" />
+													<column width="65%" />
+													<column width="35%"
+														align="right" />
+													<column width="65%" />
+												</columns>
+
+												<rows>
+													<row>
+														<!-- NRO REQUERIMIENTO -->
+														<label
+															value="Nro. Requerimiento: " sclass="label-not-mandatory" />
+														<label
+															value="@bind(vm.requerimiento.idRequerimiento)" />
+
+
+													</row>
+
+												</rows>
+											</grid>
+										</div>
+
+										<!-- DATOS DEL VEHICULO -->
+										<include
+											src="/WEB-INF/views/template/modal/subTitleModal.zul"
+											subtitulo="Datos del Vehículo" />
+										<tabbox
+											sclass="tab-nav tab-nav-blue">
+											<tabs>
+												<tab
+													sclass="waves-color-blue waves-effect">
+													<label
+														value="Datos Básicos" />
+												</tab>
+												<tab
+													sclass="waves-color-blue waves-effect">
+													<label
+														value="Datos Adicionales" />
+												</tab>
+											</tabs>
+											<tabpanels>
+												<!-- DATOS BASICOS -->
+												<tabpanel>
+													<grid>
+														<columns>
+															<column
+																width="35%" align="right" />
+															<column
+																width="65%" />
+															<column
+																width="35%" align="right" />
+															<column
+																width="65%" />
+														</columns>
+
+														<rows>
+															<row>
+																<!-- MARCA -->
+																<label
+																	value="Marca: " sclass="label-not-mandatory" />
+																<label
+																	value="@bind(vm.requerimiento.marcaVehiculo.nombre)" />
+																<!-- MODELO -->
+																<label
+																	value="Modelo: " sclass="label-not-mandatory" />
+																<label
+																	value="@bind(vm.requerimiento.modeloV)" />
+
+
+															</row>
+
+														</rows>
+													</grid>
+												</tabpanel>
+
+												<!-- DATOS ADICIONALES -->
+												<tabpanel>
+													<grid>
+														<columns>
+															<column
+																width="35%" align="right" />
+															<column
+																width="65%" />
+															<column
+																width="35%" align="right" />
+															<column
+																width="65%" />
+														</columns>
+
+														<rows>
+															<row>
+																<!-- TIPO REPUESTO -->
+																<label
+																	value="Tipo Repuesto: " sclass="label-not-mandatory" />
+																<vbox>
+																	<label
+																		value="@bind(vm.requerimiento.determinarTipoRepuesto())"
+																		sclass="label-not-mandatory" />
+																</vbox>
+															</row>
+
+														</rows>
+													</grid>
+												</tabpanel>
+											</tabpanels>
+										</tabbox>
+									</tabpanel>
+
+									<!-- DETALLE OFERTA -->
+									<tabpanel>
+										<!-- LISTA DETALLES OFERTAS-->
+										<panel sclass="borderGrid">
+											<panelchildren>
+												<hbox width="100%"
+													align="center">
+													<paging
+														id="paglistaOf" hflex="1"
+														onPaging="@command('paginarLista')" autohide="true" />
+													<div
+														sclass="z-paging z-paging-info" height="28px">
+														<label
+															id="lbllistaOf" sclass="rRmWwb-info" />
+													</div>
+												</hbox>
+												<listbox
+													id="listaOferta" mold="paging" pagingPosition="top"
+													model="@load(vm.oferta.detalleOfertas)"
+													emptyMessage="No hay solicitudes" style="margin-top:10px"
+													pageSize="5"
+													onAfterRender="@command('updatePaging', paging = paglistaOf, label=lbllistaOf)">
+
+
+													<listhead>
+
+														<listheader
+															label="Descripción" sort="auto" />
+
+														<listheader
+															label="Marca" sort="auto" />
+
+														<listheader
+															label="Cantidad Solicitada" sort="auto" />
+
+														<listheader
+															label="Cant. Encontrada" sort="auto" />
+
+														<listheader
+															label="Precio Venta S/F" sort="auto" />
+
+													</listhead>
+
+													<template
+														name="model">
+														<listitem>
+
+															<listcell
+																label="@bind(each.detalleCotizacion.detalleRequerimiento.descripcion)" />
+															<listcell
+																label="@bind(each.detalleCotizacion.marcaRepuesto)" />
+															<listcell
+																label="@bind(each.detalleCotizacion.detalleRequerimiento.cantidad)" />
+															<listcell
+																label="@bind(each.detalleCotizacion.cantidad)" />
+															<listcell
+																label="@bind(each.calcularPrecioVenta()) 
+									 						@converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+									 							converterMoneda=each.detalleCotizacion.cotizacion.historicoMoneda, monedaBase=vm.monedaBase) " />
+														</listitem>
+													</template>
+
+													<listfoot>
+														<listfooter />
+														<listfooter />
+														<listfooter />
+														<listfooter />
+
+														<listfooter
+															label="Total:">
+															<label
+																value="@bind(vm.oferta.calcularTotal())
+											@converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+									 			converterMoneda=vm.monedaBase, monedaBase=vm.monedaBase) " />
+														</listfooter>
+													</listfoot>
+
+
+												</listbox>
+											</panelchildren>
+										</panel>
+									</tabpanel>
+								</tabpanels>
+							</tabbox>
+						</groupbox>
+					</n:div>
+					<n:div class="modal-footer">
+						<hbox width="100%">
+							<include hflex="1" />
+							<div align="right">
+
+							</div>
+						</hbox>
+					</n:div>
+				</div>
+			</div>
+		</n:div>
+	</window>
+</zk>

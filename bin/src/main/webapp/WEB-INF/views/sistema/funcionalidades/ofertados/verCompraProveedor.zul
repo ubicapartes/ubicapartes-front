@@ -1,0 +1,78 @@
+<zk>
+	<window border="none" apply="org.zkoss.bind.BindComposer"
+		closable="true" sclass="btn-primary" width="95%" height="95%"
+		title="@bind(vm.titulo)" id="winVerCompraProveedor"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.VerCompraProveedorViewModel')"
+		onClose="@command('cambiarRequerimientos')">
+		<borderlayout>
+			<north title="Requerimiento">
+				<columnlayout sclass="base_contenedor_campos">
+					<columnchildren sclass="base_division_campos">
+						<label value="Fecha de Creación:"/>
+						<label value="@bind(vm.getFormatoFecha(vm.requerimiento.fechaCreacion))"/>
+					</columnchildren>
+					<columnchildren sclass="base_division_campos">
+						<label value="Fecha de Vencimiento:"/>
+						<label value="@bind(vm.getFormatoFecha(vm.requerimiento.fechaVencimiento))"/>
+					</columnchildren>
+					<columnchildren sclass="base_division_campos">
+					</columnchildren>
+				</columnlayout>
+			</north>
+			<center title="Solicitudes de Compra">
+				<div>
+					<listbox id="gridComprasProveedor" mold="paging"
+						pageSize="10" pagingPosition="top" sclass="mylist"
+						model="@load(vm.listaCompras)">
+
+						<listhead>
+
+							<listheader value="idRequerimiento" width="150px"
+								label="Nro."/>
+
+							<listheader value="Descripción"
+								label="Descripcion"  width="200px"/>
+							
+							<listheader value="Clasificación"
+								label="Clasificacion" width="200px"/>
+								
+							<listheader value="Cant Solicitada"
+								label="Cant Solicitada" >
+							
+							</listheader>
+							<listheader value="Precio Venta"
+								label="Precio Venta" >
+								
+							</listheader>
+							<listheader value="Precio Flete"
+								label="Precio Flete" sort="auto(precioF)">
+							</listheader>
+							<listheader label="Operaciones" sort="none"/>
+
+						</listhead>
+						<template name="model">
+							<listitem>
+								<listcell label="@bind(each.detalleCotizacion.detalleRequerimiento.requerimiento.idRequerimiento)" />
+								<listcell label="@bind(each.detalleCotizacion.detalleRequerimiento.descripcion)" />
+								<listcell label="@bind(each.detalleCotizacion.detalleRequerimiento.clasificacionRepuesto.descripcion)" />
+								<listcell label="@bind(each.detalleCotizacion.cantidad)" />
+								<listcell label="@bind(each.detalleCotizacion.precioVenta) 
+										@converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+											converterMoneda=each.cotizacion.historicoMoneda, monedaBase=vm.monedaBase)" />
+								<listcell label="@bind(each.detalleCotizacion.precioFlete) 
+								          @converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+											converterMoneda=each.cotizacion.historicoMoneda, monedaBase=vm.monedaBase)" />
+							</listitem>
+						</template>
+
+					</listbox>
+					<paging id="pagComprasProveedor"
+						onPaging="@command('paginarLista')" autohide="true" />
+					
+				</div>
+			</center>
+			<south border="none">
+			</south>
+		</borderlayout>
+	</window>
+</zk>

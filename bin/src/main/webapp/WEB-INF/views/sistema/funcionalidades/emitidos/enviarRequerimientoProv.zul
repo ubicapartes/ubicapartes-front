@@ -1,0 +1,214 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winEnviarReqProv" border="none" width="0%"
+		apply="org.zkoss.bind.BindComposer"  
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.EnviarRequerimientoProvViewModel')">
+		
+		<n:div aria-hidden="false" class="modal fade in" role="dialog" tabindex="-1" style="display: block;">
+			<div class="modal-dialog modal-full"  height="auto"><!-- modal-xs -->
+				<div sclass="modal-content">
+					<include src="/WEB-INF/views/template/modal/titleModal.zul" titulo="Solicitar Repuestos a Proveedores" />
+					<n:div class="modal-inner">
+						<groupbox closable="false">
+							<div> 
+		    					<space/>
+		    					<space/> 
+		    					<label value="N° Solicitud:" sclass="label-not-mandatory"/>
+		    					<label value="@bind(vm.requerimiento.idRequerimiento)"/>
+		    					<space/>
+		    					<space/> 
+		    					<label value="Fecha de Creación:" sclass="label-not-mandatory"/>
+		    					<label value="@bind(vm.requerimiento.fechaCreacion)
+		    									@converter('formatedDate', format=vm.formatDate)"/>
+		    					<space/>
+		    					<space/>
+		   						<label value="Estado:" sclass="label-not-mandatory"/>
+		    					<label value="@bind(vm.requerimiento.determinarEstatus())" sclass="z-letra-grande" /> 
+		    
+							</div>
+							<tabbox maximalHeight="true" sclass="tab-nav tab-nav-blue">
+								<tabs>
+									<tab sclass="waves-color-blue waves-effect">
+										<label value="Datos Generales" />
+									</tab>
+									<tab sclass="waves-color-blue waves-effect">
+										<label value="Repuestos" />
+									</tab>
+								</tabs>
+								<tabpanels>
+									<!-- DATOS GENERALES -->
+									<tabpanel>
+										<!-- DATOS DEL CLIENTE -->
+										<include src="/WEB-INF/views/template/modal/subTitleModal.zul" subtitulo="Datos del Cliente"/>
+										<div sclass="card card-main card-inner">
+											<grid>
+												<columns>
+													<column width="10%" />
+													<column  width="20%"/>
+													<column  width="20%"/>
+													<column  />
+												</columns>
+												<rows>
+													<row>
+														<!-- CEDULA -->
+														<label value="Cédula/RIF: " sclass="label-not-mandatory"/>
+														<label value="@bind(vm.requerimiento.cliente.cedula)"/>
+
+														<!-- NOMBRE O RAZON SOCIAL -->
+														<label value="Nombre / Razón Social: " sclass="label-not-mandatory"/>
+														<label value="@bind(vm.requerimiento.cliente.nombre)" />
+													</row>
+												
+													<row>
+														<!-- TELEFONO -->
+														<label value="Teléfono: " sclass="label-not-mandatory"/>
+														<label value="@bind(vm.requerimiento.cliente.telefono)"/>
+													
+														<!-- E-Mail -->
+														<label value="Correo: " sclass="label-not-mandatory"/>
+														<label value="@bind(vm.requerimiento.cliente.correo)"/>
+													</row>
+							
+													<row>
+														<!-- ESTADO -->
+							    						<label value="Estado: " sclass="label-not-mandatory"/>
+							    						<label value="@bind(vm.requerimiento.cliente.ciudad.estado.nombre)"/>
+									
+														<!-- CIUDAD -->
+														<label value="Ciudad: " sclass="label-not-mandatory"/>
+														<label value="@bind(vm.requerimiento.cliente.ciudad.nombre)" />
+													</row>
+												</rows>
+											</grid>
+										</div>
+										
+										<!-- DATOS DEL VEHICULO -->
+										<include src="/WEB-INF/views/template/modal/subTitleModal.zul" subtitulo="Datos del Vehiculo"/>
+										<tabbox sclass="tab-nav tab-nav-blue">
+											<tabs>
+												<tab sclass="waves-color-blue waves-effect">
+													<label value="Datos Básicos" />
+												</tab>
+												<tab sclass="waves-color-blue waves-effect">
+													<label value="Datos Adicionales" />
+												</tab>
+											</tabs>
+											<tabpanels>
+												<!-- DATOS BASICOS -->
+												<tabpanel>
+													<grid>
+														<columns>
+															<column width="10%" />
+															<column  width="20%"/>
+															<column  width="20%"/>
+															<column  />
+														</columns>
+														<rows>
+															<row>
+																<!-- MARCA -->
+																<label value="Marca: " sclass="label-not-mandatory"/>
+																<label value="@bind(vm.requerimiento.marcaVehiculo.nombre)"/>
+																
+																<!-- MODELO -->
+																<label value="Modelo: " sclass="label-not-mandatory"/>
+																<label value="@bind(vm.requerimiento.modeloV)"/>
+															</row>
+															
+															<row>
+																<!-- AÑO -->								
+																<label value="Año:" sclass="label-not-mandatory"/>
+																<label value="@bind(vm.requerimiento.annoV)"/>
+													
+																<!-- SERIAL DE CARROCERIA -->
+																<label value="Serial Carrocería:" sclass="label-not-mandatory"/>
+																<label value="@bind(vm.requerimiento.serialCarroceriaV)"/>
+															</row>
+														</rows>
+													</grid>
+												</tabpanel>
+												
+												<!-- DATOS ADICIONALES -->
+												<tabpanel>
+													<grid>
+														<columns>
+															<column width="10%" />
+															<column  width="20%"/>
+															<column  width="20%"/>
+															<column  />
+														</columns>
+														<rows>
+															<row>
+																<!-- MOTOR -->
+																<label value="Motor:" sclass="label-not-mandatory"/>
+																<label value="@bind(vm.requerimiento.motor.nombre)"/>
+																															
+																<!-- TRANSMISION -->
+																<label value="Transmisión:" sclass="label-not-mandatory"/>
+																<label value="@bind(vm.requerimiento.determinarTransmision())"/>
+															</row>
+															<row>
+																<!-- TRACCION -->
+																<label value="Tracción:" sclass="label-not-mandatory"/>
+																<label value="@bind(vm.requerimiento.determinarTraccion())"/>
+																															
+																<!-- TIPO REPUESTO -->
+																<label value="Tipo Repuesto: " sclass="label-not-mandatory"/>
+																<label value="@bind(vm.requerimiento.determinarTipoRepuesto())" />
+															</row>
+														</rows>
+													</grid>
+												</tabpanel>
+											</tabpanels>
+										</tabbox>
+									</tabpanel>
+									
+									<!-- REPUESTOS -->
+									<tabpanel>
+										<panel sclass="borderGrid">
+											<panelchildren>											
+												<listbox id="listRepuestos" mold="paging" pageSize="5" pagingPosition="top"
+													checkmark="true" multiple="true"  sclass="mylist"
+													model="@load(vm.requerimiento.detalleRequerimientos)"
+													selectedItems="@bind(vm.listaDetalleRequerimientoSeleccionados)">
+													<listhead>
+														<listheader sort="none" width="15%" label="Codigo OEM"/>
+														<listheader sort="none" width="300px" label="Descripcion"/>
+														<listheader sort="none" width="15%" label="Cantidad"/>
+														<listheader sort="none" width="15%" label="Clasificación"/>
+														<listheader sort="none" width="15%" label="Peso (Kg.)"/>
+														<listheader sort="auto" width="15%" label="Foto"/>
+													</listhead>
+													<template name="model">
+														<listitem>
+															<listcell label="@bind(each.codigoOem)"/>
+															<listcell label="@bind(each.descripcion)"/>
+															<listcell label="@bind(each.cantidad)"/>
+															<listcell label="@bind(each.clasificacionRepuesto.descripcion)"/>
+															<listcell label="@bind(each.peso)"/>
+															<listcell>
+																<image width="50px" height="50px" src="@bind(each.getFoto64())" />
+															</listcell>
+														</listitem>
+													</template>
+												</listbox>
+											</panelchildren>
+										</panel>
+									</tabpanel>
+								</tabpanels>
+							</tabbox>
+						</groupbox>
+					</n:div>
+					<n:div class="modal-footer">
+						<div align="right" hflex="1">
+							<button id="btnLimpiar" label="Limpiar" type="submit"
+								onClick="@global-command('removerSeleccionados')" sclass="btn-sm btn-info" />
+							<button label="Cotización por Analista" type="submit" sclass="btn-sm btn-primary"
+								onClick="@command('enviarSolicitudProv', btnEnviar=self, btnLimpiar=btnLimpiar, enviar = false)" />
+							<button label="Enviar a Proveedores" type="submit" sclass="btn-sm btn-primary"
+								onClick="@command('enviarSolicitudProv', btnEnviar=self, btnLimpiar=btnLimpiar, enviar = true)" />						
+						</div>
+					</n:div>
+				</div>
+			</div>
+		</n:div>
+	</window>
+</zk>

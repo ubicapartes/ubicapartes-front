@@ -117,18 +117,18 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 				}else{
 					if(!(nuevaClave.equalsIgnoreCase("") && nuevaClaveConf.equalsIgnoreCase(""))){
 						if((nuevaClave.equals(nuevaClaveConf))){
-							if(verificarContraseña(nuevaClaveConf)){
+							if(verificarContraseï¿½a(nuevaClaveConf)){
 								usuario.setPasword(nuevaClave);
 								usuario=sControlUsuario.actualizarUsuario(usuario, false);
 								severidad = "Informacion";
 								msg ="Datos guardados satisfactoriamente";
 							}else{
 								severidad = "Error";
-								msg ="La contraseña debe contener al menos un número y una letra mayúscula";
+								msg ="La contraseï¿½a debe contener al menos un nï¿½mero y una letra mayï¿½scula";
 							}
 						}else{
 							severidad = "Error";
-							msg ="Las contraseñas no coinciden, por favor verifique";
+							msg ="Las contraseï¿½as no coinciden, por favor verifique";
 						}
 					}else{
 						BindUtils.postGlobalCommand("perfil", EventQueues.APPLICATION, "updateProfile", null);	
@@ -166,11 +166,11 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 	}
 
 	/**
-	 * Metodo que verifica si el formato de la contraseña es correcto
-	 * @param clave contraseña a verificar
+	 * Metodo que verifica si el formato de la contraseï¿½a es correcto
+	 * @param clave contraseï¿½a a verificar
 	 * @return true si el formato es correcto, false caso contrario
 	 */
-	public boolean verificarContraseña(String clave){
+	public boolean verificarContraseï¿½a(String clave){
 		boolean m=false;
 		boolean n=false;
 		for(char x: clave.toCharArray()){

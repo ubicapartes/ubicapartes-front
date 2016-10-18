@@ -1,0 +1,109 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window border="none" apply="org.zkoss.bind.BindComposer"
+		sclass="winMyList"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.RequerimientosProveedorViewModel')">
+
+		<!-- LISTA REQUERIMIENTOS A OFERTAR-->
+		<panel sclass="borderGrid">
+			<panelchildren>
+				<hbox width="100%" align="center">
+					<paging id="pagMisRequerimientos" hflex="1"
+						onPaging="@command('paginarLista')" autohide="true" />
+					<div sclass="z-paging z-paging-info"
+						height="28px">
+						<label id="lblMisRequerimientos"
+							sclass="rRmWwb-info" />
+					</div>
+				</hbox>
+				<listbox id="gridMisRequerimientos"
+					emptyMessage="No hay solicitudes" sclass="mylist" checkmark="true"
+					multiple="true"
+					onAfterRender="@command('updatePaging', paging = pagMisRequerimientos, label=lblMisRequerimientos)"
+					model="@load(vm.listaRequerimientos)">
+
+					<auxhead>
+						<auxheader />
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<spinner instant="true" hflex="1"
+								value="@bind(vm.requerimientoFiltro.idRequerimiento)"
+								onChange="@command('aplicarFiltro')" />
+						</auxheader>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<datebox instant="true" hflex="1"
+								format="@bind(vm.formatDate)"
+								value="@bind(vm.requerimientoFiltro.fechaCreacion)"
+								onChange="@command('aplicarFiltro')" />
+						</auxheader>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<datebox instant="true" hflex="1"
+								format="@bind(vm.formatDate)"
+								value="@bind(vm.requerimientoFiltro.fechaVencimiento)"
+								onChange="@command('aplicarFiltro')" />
+						</auxheader>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<textbox instant="true" hflex="1"
+								value="@bind(vm.requerimientoFiltro.marcaVehiculo.nombre)"
+								onChange="@command('aplicarFiltro')" />
+						</auxheader>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<textbox instant="true" hflex="1"
+								value="@bind(vm.requerimientoFiltro.modeloV)"
+								onChange="@command('aplicarFiltro')" />
+						</auxheader>
+					</auxhead>
+					<listhead>
+						<listheader width="2%" />
+						<listheader value="idRequerimiento" width="10%"
+							label="Nro. Solicitud" sort="auto(idRequerimiento)" />
+						<listheader value="fechaCreacion" width="20%"
+							label="fecha de Creación" sort="auto(idRequerimiento)" />
+						<listheader value="fechaVencimiento" width="15%"
+							label="Fecha de Vencimiento" sort="auto(fechaCreacion)" />
+						<listheader value="marcaV" width="15%"
+							label="Marca" sort="auto(marcaVehiculo)" />
+						<listheader value="modeloV" width="15%"
+							label="Modelo" sort="auto(modeloV)" />
+						<listheader sort="none" label="Operaciones" />
+					</listhead>
+
+					<template name="model">
+						<listitem>
+							<listcell label="${forEachStatus.index+1}"
+								sclass="boxed-grey" />
+							<listcell
+								label="@bind(each.idRequerimiento)" />
+							<listcell
+								label="@bind(each.fechaCreacion)
+												@converter('formatedDate', format=vm.formatDate)" />
+							<listcell
+								label="@bind(each.fechaVencimiento)
+												@converter('formatedDate', format=vm.formatDate)" />
+							<listcell label="@bind(each.marcaVehiculo)" />
+							<listcell label="@bind(each.modeloV)" />
+							<listcell>
+								<hbox spacing="20px">
+									<div
+										class="btn-group btn-group-sm">
+										<button
+											iconSclass="fa fa-check-square-o blue bigger-160"
+											tooltiptext="Ver Solicitudes"
+											onClick="@command('verSolicitudes', requerimiento = each)" />
+										<button
+											iconSclass="fa fa-check-square-o blue bigger-160"
+											tooltiptext="Ver Compra"
+											onClick="@command('verCompra', requerimiento = each)" />
+									</div>
+								</hbox>
+							</listcell>
+						</listitem>
+					</template>
+				</listbox>
+			</panelchildren>
+		</panel>
+	</window>
+</zk>

@@ -27,6 +27,7 @@ import com.okiimport.app.model.enumerados.EEstatusGeneral;
 import com.okiimport.app.mvvm.AbstractRequerimientoViewModel;
 import com.okiimport.app.mvvm.resource.BeanInjector;
 import com.okiimport.app.service.maestros.SMaestros;
+import com.okiimport.app.service.transaccion.STransaccion;
 
 public class ListaMarcasViewModel extends AbstractRequerimientoViewModel implements
 		EventListener<SortEvent> {
@@ -34,6 +35,9 @@ public class ListaMarcasViewModel extends AbstractRequerimientoViewModel impleme
 	// Servicios
 	@BeanInjector("sMaestros")
 	private SMaestros sMaestros;
+	
+	@BeanInjector("sTransaccion") 
+	  private STransaccion sTransaccion;
 
 	// GUI
 	@Wire("#gridMarcas")
@@ -183,8 +187,8 @@ public class ListaMarcasViewModel extends AbstractRequerimientoViewModel impleme
 						// TODO Auto-generated method stub
 						Messagebox.Button button = (Messagebox.Button) event.getData();
 						if (button == Messagebox.Button.YES) {
-							
-							//if (sTransaccion.validarProveedorEnCotizaciones(proveedor)){
+							 
+				              if (sTransaccion.validarMarcaEnRequerimientos(marcaVehiculo) && sTransaccion.validarMarcaEnVehiculo(marcaVehiculo)){
 								//proveedor.setiEstatus(EstatusProveedorFactory.getEstatusEliminado());
 								//HAY QUE CREAR EN SMAESTROS EL SERVICIO PARA ACTUALIZAR LA MARCA
 								marcaVehiculo.setEstatus(EEstatusGeneral.INACTIVO);
@@ -194,10 +198,11 @@ public class ListaMarcasViewModel extends AbstractRequerimientoViewModel impleme
 							}
 							else
 								//SI ES QUE ES NECESARIO, ¿CUANDO NO PUEDO ELIMINAR UNA MARCA?
-								mostrarMensaje("Informacion", "No se Puede eliminar la Marca", Messagebox.EXCLAMATION, null, null, null);
+								mostrarMensaje("Informacion", "No se puede eliminar la marca, debido a que esta vinculada a un requerimiento o vehiculo en el sistema", Messagebox.EXCLAMATION, null, null, null); 
+				              
 						}
 						
-					//}
+					}
 					
 		}, null);
 	}
@@ -268,5 +273,13 @@ public class ListaMarcasViewModel extends AbstractRequerimientoViewModel impleme
 	public void setMarcaFiltro(MarcaVehiculo marcaFiltro) {
 		this.marcaFiltro = marcaFiltro;
 	}
+	
+	 public STransaccion getsTransaccion() { 
+		    return sTransaccion; 
+		  } 
+		 
+		  public void setsTransaccion(STransaccion sTransaccion) { 
+		    this.sTransaccion = sTransaccion; 
+		  } 
 
 }

@@ -1,0 +1,91 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<vlayout sclass="winMyList" apply="org.zkoss.bind.BindComposer"
+		width="100%"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.compra.MisComprasViewModel')">
+
+		<!-- LISTA DE COMPRAS CLIENTE -->
+		
+			<panel sclass="borderGrid">
+				<panelchildren>
+					<hbox width="100%" align="center">
+						<paging id="pagComprasCliente" autohide="true" hflex="1"
+							onPaging="@command('paginarLista')" />
+						<div sclass="z-paging z-paging-info" height="28px">
+							<label id="lblComprasCliente" sclass="rRmWwb-info" />
+						</div>
+					</hbox>
+					<listbox id="gridComprasCliente" emptyMessage="No hay compras"
+						onAfterRender="@command('updatePaging', paging=pagComprasCliente, label=lblComprasCliente)"
+						model="@load(vm.listaCompras)">
+
+						<auxhead>
+							<auxheader/>
+							<auxheader>
+								<div sclass="z-icon-filter bigger-200" />
+								<spinner instant="true" hflex="1"
+									value="@bind(vm.compraFiltro.idCompra)" onChange="@command('aplicarFiltro')" />
+							</auxheader>
+							<auxheader>
+								<div sclass="z-icon-filter bigger-200" />
+								<spinner instant="true" hflex="1"
+									value="@bind(vm.requerimientoIdFiltro)" onChange="@command('aplicarFiltro')" />
+							</auxheader>
+							<auxheader>
+								<div sclass="z-icon-filter bigger-200" />
+								<textbox instant="true" hflex="1"
+									value="@bind(vm.fechaCreacionFiltro)" onChange="@command('aplicarFiltro')" />
+							</auxheader>
+							<auxheader>
+								<div sclass="z-icon-filter bigger-200" />
+								<textbox instant="true" hflex="1"
+									value="@bind(vm.compraFiltro.precioVenta)" onChange="@command('aplicarFiltro')" />
+							</auxheader>
+							<auxheader>
+								<div sclass="z-icon-filter bigger-200" />
+								<textbox instant="true" hflex="1"
+									value="@bind(vm.estatusFiltro)" onChange="@command('aplicarFiltro')" />
+							</auxheader>
+						</auxhead>
+
+						<listhead>
+							<listheader width="2%"/>
+							<listheader width="12%" label="N° Compra"  value="idCompra" />
+							<listheader width="12%" label="N° Solicitud"  value="requerimiento.idRequerimiento" />
+							<listheader width="12%" label="Fecha Creación"  value="fechaCreacion" />
+							<listheader width="12%" value="precioVenta" label="Precio de venta"	 />
+							<listheader width="12%" label="Estatus" />
+							<listheader width="14%" label="Operaciones" />
+						</listhead>
+						<template name="model">
+							<listitem>
+								<listcell label="${forEachStatus.index+1}" sclass="boxed-grey" />
+								<listcell label="@bind(each.idCompra)" />
+								<listcell label="@bind(each.requerimiento.idRequerimiento)" />
+								<listcell
+									label="@bind(each.fechaCreacion)
+								@converter('formatedDate', format=vm.formatDate)" />
+								<listcell label="@bind(each.precioVenta)" />
+								<listcell label="@bind(each.determinarEstatus())" />
+								<listcell>
+									<hbox spacing="20px">
+										<div class="btn-group btn-group-sm">
+											<button iconSclass="z-icon-money blue"
+												tooltiptext="Registrar pago" onClick="@command('pagarTransferenciaDeposito',compra = each)" visible="@load(vm.mostrarIcono('En Espera', each.determinarEstatus()))" />
+											<button iconSclass="z-icon-desktop blue"
+												tooltiptext="Registrar pago" onClick="@command('pagarTransferenciaDeposito',compra = each)" visible="@load(vm.mostrarIcono('En Espera Transferencia', each.determinarEstatus()))"/>
+											<button iconSclass="z-icon-file blue"
+												tooltiptext="Registrar pago" onClick="@command('pagarTransferenciaDeposito',compra = each)" visible="@load(vm.mostrarIcono('En Espera Depósito', each.determinarEstatus()))"/>
+											<button iconSclass="z-icon-dollar blue"
+												tooltiptext="Detalle de Pago" onClick="@command('pagarTransferenciaDeposito',compra = each)" visible="@load(vm.mostrarIcono('Pagada', each.determinarEstatus()))"/>
+										</div>
+									</hbox>
+								</listcell>
+							</listitem>
+						</template>
+					</listbox>
+				</panelchildren>
+			</panel>
+		
+	</vlayout>
+</zk>
+

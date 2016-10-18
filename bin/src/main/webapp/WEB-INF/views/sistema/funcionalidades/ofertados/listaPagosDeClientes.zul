@@ -1,0 +1,106 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window border="none" apply="org.zkoss.bind.BindComposer" sclass="winMyList"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.ListaPagosDeClientesViewModel')">
+
+		<!-- LISTA DE PAGOS-->
+		<panel sclass="borderGrid">
+			<panelchildren>
+				<hbox width="100%" align="center">
+					<paging id="pagPagosDeClientes" hflex="1"
+						onPaging="@command('paginarLista')" autohide="true" />
+					<div sclass="z-paging z-paging-info"
+						height="28px">
+						<label id="lblPagosDeClientes"
+							sclass="rRmWwb-info" />
+					</div>
+				</hbox>
+				<listbox id="gridPagosDeClientes" emptyMessage="No hay Pagos Hasta Los Momentos" sclass="mylist"
+					 model="@load(vm.listaDePagos)"
+					onAfterRender="@command('updatePaging', paging = pagPagosDeClientes, label=lblPagosDeClientes)">
+
+					<auxhead>
+						<auxheader />
+							<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<spinner instant="true" hflex="1"
+								value="@bind(vm.pagoClienteFiltro.id)"
+								onChange="@command('aplicarFiltro')"  />
+						</auxheader>
+
+								<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<spinner instant="true" hflex="1"
+								value="@bind(vm.pagoClienteFiltro.compra.idCompra)"
+								onChange="@command('aplicarFiltro')"  />
+						</auxheader>
+
+									<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<textbox instant="true" hflex="1"
+								value="@bind(vm.pagoClienteFiltro.compra.requerimiento.cliente.nombre)"
+								onChange="@command('aplicarFiltro')"/>
+						</auxheader>
+
+								<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<textbox instant="true" hflex="1"
+								value="@bind(vm.pagoClienteFiltro.formaPago)"
+								onChange="@command('aplicarFiltro')"/>
+						</auxheader>
+									<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<datebox instant="true" hflex="1"
+								format="@bind(vm.formatDate)"
+								value="@bind(vm.pagoClienteFiltro.fechaCreacion)"
+								onChange="@command('aplicarFiltro')"/>
+						</auxheader>
+									<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<decimalbox instant="true" hflex="1" format="#,###.##"
+								value="@bind(vm.pagoClienteFiltro.monto)"
+								onChange="@command('aplicarFiltro')"/>
+						</auxheader>
+					</auxhead>
+
+								<listhead>
+						<listheader width="2%"/>
+						<listheader value="id" width="10%" 
+							label="Nro. Pago" sort="auto(id)"/>
+							<listheader value="compra.idCompra" width="10%" 
+							label="Nro. Compra" sort="auto(idCompra)"/>
+						<listheader value="compra.requerimiento.cliente.nombre" width="20%"
+							label="Cliente" sort="auto(cliente)"/>
+							<listheader value="formaPago" width="15%" 
+							label="Forma Pago" sort="auto(formaPago)"/>
+						<listheader value="fechaCreacion" width="15%"
+							label="Fecha de Creación" sort="auto(fechaCreacion)"/>
+						<listheader value="monto" width="15%"
+							label="Monto Pagado" sort="auto(monto)"/>
+						<listheader sort="none" label="Operaciones" />
+					</listhead>
+
+							<template name="model">
+						<listitem>
+							<listcell label="${forEachStatus.index+1}" sclass="boxed-grey" />
+							<listcell label="@bind(each.id)" />
+							<listcell label="@bind(each.compra.idCompra)" />
+							<listcell label="@bind(each.compra.requerimiento.cliente.nombre)" />
+							<listcell label="@bind(each.formaPago)" />
+							<listcell label="@bind(each.fechaCreacion)
+												@converter('formatedDate', format=vm.formatDate)"/>
+							<listcell label="@bind(each.monto)" />
+							<listcell>
+								<hbox spacing="20px">
+									<div class="btn-group btn-group-sm">
+										<button  iconSclass="z-icon-eye blue bigger-160" tooltiptext="Ver Compra"  
+								    			onClick="@command('verCompra', pago = each)"/>
+									</div>
+								</hbox>
+							</listcell>
+						</listitem>
+					</template>
+				</listbox>
+			</panelchildren>
+		</panel>
+	</window>
+</zk>
