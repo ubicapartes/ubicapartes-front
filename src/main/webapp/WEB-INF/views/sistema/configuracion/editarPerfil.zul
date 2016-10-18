@@ -30,44 +30,42 @@
 
 						<row></row>
 						<row>
-							<label value="Usuario: "
-								sclass="label-not-mandatory" />
+						<div>
+						<label value="Usuario:" />
+							<label value="*" sclass="requerido"/>
+						</div>
+							
 							<textbox id="txtUsername" width="100%"
-								sclass="form-control" disabled="true"
-								value="@bind(rs.username)" />
+								sclass="form-control" placeholder="Ingresa el usuario"
+								value="@bind(vm.usuario.username)" />
 
-							<label value="Cédula: "
-								sclass="label-not-mandatory" />
+							<label value="Cédula: "/>
 							<textbox id="txtcodCedula" width="100%"
-								sclass="form-control" disabled="true"
-								value="@bind(rs.persona.cedula)" />
+								sclass="form-control" disabled="true" style="border-style: none;"
+								value="@bind(vm.usuario.persona.cedula)" />
 						</row>
 						<row>
-							<label value="Nombre: "
-								sclass="label-not-mandatory" />
+							<label value="Nombre: " />
 							<textbox id="txtNombre" width="100%"
-								sclass="form-control" disabled="true"
-								value="@bind(rs.persona.nombre)" />
+								sclass="form-control" placeholder="Ingresa el nombre"
+								value="@bind(vm.usuario.persona.nombre)" />
 
-							<label value="Apellido: "
-								sclass="label-not-mandatory" />
+							<label value="Apellido: " />
 							<textbox id="txtApellido" width="100%"
-								sclass="form-control" disabled="true"
-								value="@bind(rs.persona.apellido)" />
+								sclass="form-control" placeholder="Ingresa el apellido"
+								value="@bind(vm.usuario.persona.apellido)" />
 						</row>
 
 						<row>
-							<label value="Dirección: "
-								sclass="label-not-mandatory" />
-							<textbox id="txtDireccion" width="100%"
-								sclass="form-control" disabled="true" maxlength="100" rows="2"
-								value="@bind(rs.persona.direccion)" />
+							<label value="Dirección: "/>
+							<textbox id="txtDireccion" width="100%" placeholder="Ingresa la dirección"
+								sclass="form-control" maxlength="100" rows="2"
+								value="@bind(vm.usuario.persona.direccion)" />
 
-							<label value="Correo: "
-								sclass="label-not-mandatory" />
+							<label value="Correo: "/>
 							<textbox id="txtCorreo" width="100%"
-								sclass="form-control" disabled="true" maxlength="50"
-								value="@bind(rs.persona.correo)" />
+								sclass="form-control" disabled="true" style="border-style: none;" maxlength="50"
+								value="@bind(vm.usuario.persona.correo)" />
 						</row>
 						<row>
 							<label value="Nueva Contraseña: " />
@@ -83,10 +81,11 @@
 				</grid>
 			</div>
 			<div align="right">
+			<label value="* Campos Obligatorios" hflex="1" sclass="requerido margen" />
 				<button id="btnLimpiar" label="Limpiar" type="submit"
 					onClick="@command('limpiar')" sclass="btn-sm btn-info" />
 				<button label="Enviar" type="submit"
-					onClick="@command('actualizar', btnEnviar=self, btnLimpiar=btnLimpiar)"
+					onClick="@command('enviar', btnEnviar=self, btnLimpiar=btnLimpiar)"
 					sclass="btn-sm btn-primary" />
 			</div>
 		</groupbox>
