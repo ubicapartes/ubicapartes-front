@@ -117,7 +117,7 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 				}else{
 					if(!(nuevaClave.equalsIgnoreCase("") && nuevaClaveConf.equalsIgnoreCase(""))){
 						if((nuevaClave.equals(nuevaClaveConf))){
-							if(verificarContrase�a(nuevaClaveConf)){
+							if(verificarContrasenia(nuevaClaveConf)){
 								usuario.setPasword(nuevaClave);
 								usuario=sControlUsuario.actualizarUsuario(usuario, false);
 								severidad = "Informacion";
@@ -170,7 +170,7 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 	 * @param clave contrase�a a verificar
 	 * @return true si el formato es correcto, false caso contrario
 	 */
-	public boolean verificarContrase�a(String clave){
+	public boolean verificarContrasenia(String clave){
 		boolean m=false;
 		boolean n=false;
 		for(char x: clave.toCharArray()){
