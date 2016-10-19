@@ -124,11 +124,11 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 								msg ="Datos guardados satisfactoriamente";
 							}else{
 								severidad = "Error";
-								msg ="La contrase�a debe contener al menos un n�mero y una letra may�scula";
+								msg ="La clave debe contener al menos un numero y una letra mayuscula";
 							}
 						}else{
 							severidad = "Error";
-							msg ="Las contrase�as no coinciden, por favor verifique";
+							msg ="Las claves no coinciden, por favor verifique";
 						}
 					}else{
 						BindUtils.postGlobalCommand("perfil", EventQueues.APPLICATION, "updateProfile", null);	
@@ -167,7 +167,7 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 
 	/**
 	 * Metodo que verifica si el formato de la contrase�a es correcto
-	 * @param clave contrase�a a verificar
+	 * @param clave contrasenia a verificar
 	 * @return true si el formato es correcto, false caso contrario
 	 */
 	public boolean verificarContrasenia(String clave){
