@@ -523,7 +523,7 @@
 		            'mensaje'  : $('textarea[name=mensaje]').val()
 		        };
 				
-		        if(validarEmail(formData) &amp;&amp; validarDatos(formData)){
+		        if(validarDatos(formData) &amp;&amp; validarEmail(formData)){
 		        	$.ajax({
 			        	contentType : 'application/json',
 			            type        : 'GET', 
@@ -548,13 +548,7 @@
 			        });
 
 			        event.preventDefault();
-		        }else{
-		        	$("#validar-datos-alert").fadeIn('slow');
-	              	window.setTimeout(function () { 
-	                  $("#validar-datos-alert").fadeOut('slow'); 
-	            }, 4000);
-		        }
-		        
+		        }		        
 		        
 		    });
 		    
@@ -567,6 +561,10 @@
 		    
 		    function validarDatos(formData){
 		    	if(formData.nombre =="" || formData.correo =="" || formData.telefono =="" || formData.mensaje =="" ){
+		    		$("#validar-datos-alert").fadeIn('slow');
+	              	window.setTimeout(function () { 
+	                  $("#validar-datos-alert").fadeOut('slow'); 
+	            }, 4000);
 		    		return false;
 		    	} else {
 		    		return true;
