@@ -1,5 +1,6 @@
 package com.okiimport.app.mvvm.controladores.configuracion;
 
+
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.Command;
@@ -21,39 +22,49 @@ import com.okiimport.app.mvvm.AbstractRequerimientoViewModel;
 
 
 public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implements EventListener<UploadEvent> {
-	
+
 	//Servicios
-	
+
 	//GUI
 	@Wire("#imgFoto")
 	private Image imgFoto;
-	
+
 	@Wire("#btnCambFoto")
 	private Button btnCambFoto;
-	
+
 	@Wire("#txtClaveNueva")
 	private Textbox txtClaveNueva;
-	
+
 	@Wire("#txtClaveNuevaConf")
 	private Textbox txtClaveNuevaConf;
+	
+	@Wire("#txtUsername")
+	private Textbox txtUsername;
+
+	@Wire("#txtNombre")
+	private Textbox txtNombre;
+
+	@Wire("#txtApellido")
+	private Textbox txtApellido;
+
+	@Wire("#txtDireccion")
+	private Textbox txtDireccion;
 	
 	@Wire("#closeFoto")
 	private Component closeFoto;
 	
+
 	//Modelos
 	private Usuario usuario;
-	
+
 	//Atributos
 	private boolean isValidFoto;
 
 	@AfterCompose
 	public void doAfterCompose(@ContextParam(ContextType.VIEW) Component view){
 		super.doAfterCompose(view);
-		
 		btnCambFoto.addEventListener("onUpload", this);
-		
 		usuario = super.getUsuario();
-		
 		if(usuario.getFoto64()!=null && !usuario.getFoto64().isEmpty()){
 			setValidFoto(true);
 			closeFoto.setVisible(true);
@@ -79,11 +90,13 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 			setValidFoto(false);
 		}
 	}
-	
+
 	/**COMMAND*/
 	@Command
 	@NotifyChange("usuario")
 	public void enviar(){
+		String severidad ="";
+		String msg="";
 		String nuevaClave = txtClaveNueva.getValue();
 		String nuevaClaveConf = txtClaveNuevaConf.getValue();
 		org.zkoss.image.Image foto = this.imgFoto.getContent();
@@ -91,21 +104,84 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 		if(foto!=null && isValidFoto())
 			usuario.setFoto(foto.getByteData());
 		
-		if(!(nuevaClave.equalsIgnoreCase("") && nuevaClaveConf.equalsIgnoreCase(""))){ //Arreglar
-			if(nuevaClave.equalsIgnoreCase(nuevaClaveConf)){
-				usuario.setPasword(nuevaClave);
-				usuario=sControlUsuario.actualizarUsuario(usuario, true);
+		usuario.getPersona().setApellido(txtApellido.getValue());
+		usuario.getPersona().setNombre(txtNombre.getValue());
+		usuario.getPersona().setDireccion(txtDireccion.getValue());
+		
+		if (!txtUsername.getValue().equalsIgnoreCase("")){
+			try {
+				if (sControlUsuario.verificarUsername(txtUsername.getValue())
+						& !(usuario.getUsername().equalsIgnoreCase(txtUsername.getValue()))){
+					severidad = "Error";
+					msg ="El username ya se encuentra registrado";
+				}else{
+					if(!(nuevaClave.equalsIgnoreCase("") && nuevaClaveConf.equalsIgnoreCase(""))){
+						if((nuevaClave.equals(nuevaClaveConf))){
+							if(verificarContrasenia(nuevaClaveConf)){
+								usuario.setPasword(nuevaClave);
+								usuario=sControlUsuario.actualizarUsuario(usuario, false);
+								severidad = "Informacion";
+								msg ="Datos guardados satisfactoriamente";
+							}else{
+								severidad = "Error";
+								msg ="La clave debe contener al menos un numero y una letra mayuscula";
+							}
+						}else{
+							severidad = "Error";
+							msg ="Las claves no coinciden, por favor verifique";
+						}
+					}else{
+						BindUtils.postGlobalCommand("perfil", EventQueues.APPLICATION, "updateProfile", null);	
+						usuario=sControlUsuario.actualizarUsuario(usuario, false);
+						severidad = "Informacion";
+						msg ="Datos guardados satisfactoriamente";
+					}
+				}
+			}catch(Exception e){
+				System.out.println(e.getMessage());
+				severidad="Error";
+				msg="Error interno";
 			}
-			else
-				mostrarMensaje("Error", "Las Contraseñas no son iguales", null, null, null, null);
+		}else{
+			severidad = "Error";
+			msg ="Campos obligatorios vacios";
 		}
-		else
-			usuario=sControlUsuario.actualizarUsuario(usuario, false);
-		    
-		BindUtils.postGlobalCommand("perfil", EventQueues.APPLICATION, "updateProfile", null);	
-		mostrarMensaje("Informacion", "Datos Guardados Satisfactoriamente", null, null, null, null);
+			mostrarMensaje(severidad, msg, null, null, null, null);
+			txtClaveNueva.setValue("");
+			txtClaveNuevaConf.setValue("");
+		
+	}
+	
+	/**
+	 * Metodo para limpiar los campos de texto de la vista
+	 */
+	@Command
+	public void limpiar(){
 		txtClaveNueva.setValue("");
 		txtClaveNuevaConf.setValue("");
+		txtNombre.setValue("");
+		txtApellido.setValue("");
+		txtDireccion.setValue("");
+		txtUsername.setValue("");
+	}
+
+	/**
+	 * Metodo que verifica si el formato de la contrase�a es correcto
+	 * @param clave contrasenia a verificar
+	 * @return true si el formato es correcto, false caso contrario
+	 */
+	public boolean verificarContrasenia(String clave){
+		boolean m=false;
+		boolean n=false;
+		for(char x: clave.toCharArray()){
+			if(Character.isUpperCase(x)){
+				m=true;
+			}
+			if(Character.isDigit(x)){
+				n=true;
+			}
+		}
+		return n && m?true:false;
 	}
 	
 	@Command
