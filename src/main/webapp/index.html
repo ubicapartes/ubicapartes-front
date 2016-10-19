@@ -472,6 +472,14 @@
 								    Debe proporcionar informacion para todos los campos, son obligatorios.
 								</div>
 						   </div>
+						   
+						    <div class="col-lg-12 text-center">
+                           		<div class="alert alert-danger" id="validar-email-alert">
+								    <button type="button" class="close" data-dismiss="alert">x</button>
+								    <strong>Error! </strong>
+								    Debe proporcionar un email valido.
+								</div>
+						   </div>
                            
                         </div>
                    <!--  </form> --> 
@@ -506,6 +514,7 @@
 		    $("#success-alert").hide();
 		    $("#danger-alert").hide();
 		    $("#validar-datos-alert").hide();
+		    $("#validar-email-alert").hide();
 		    $('#btnEnviarMensaje').click(function(event) {
 		        var formData = {
 		            'nombre'   : $('input[name=nombre]').val(),
@@ -514,7 +523,7 @@
 		            'mensaje'  : $('textarea[name=mensaje]').val()
 		        };
 				
-		        if(validarDatos(formData)){
+		        if(validarEmail(formData) &amp;&amp; validarDatos(formData)){
 		        	$.ajax({
 			        	contentType : 'application/json',
 			            type        : 'GET', 
@@ -562,6 +571,19 @@
 		    	} else {
 		    		return true;
 		    	}	
+		    }
+		    
+		    function validarEmail(formData) {
+		        expr = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+		        if ( !expr.test(formData.correo) ){
+			    	$("#validar-email-alert").fadeIn('slow');
+	              	window.setTimeout(function () { 
+	                  $("#validar-email-alert").fadeOut('slow'); 
+	            	}, 4000);
+		            return false;
+		        } else{
+		        	return true;
+		        }
 		    }
 	  	});	            
 	</script>
