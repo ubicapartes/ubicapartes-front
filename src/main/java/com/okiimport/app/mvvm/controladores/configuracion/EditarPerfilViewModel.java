@@ -40,6 +40,9 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 
 	@Wire("#txtClaveNueva")
 	private Textbox txtClaveNueva;
+	
+	@Wire("#txtClaveAct")
+	private Textbox txtClaveAct;
 
 	@Wire("#txtClaveNuevaConf")
 	private Textbox txtClaveNuevaConf;
@@ -120,36 +123,41 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 		
 		if (!txtUsername.getValue().equalsIgnoreCase("")){
 			try {
-				if (validarCambioUsuario() && sControlUsuario.verificarUsername(txtUsername.getValue())){
-					severidad = "Error";
-					msg ="El username ya se encuentra registrado";
-				}else{
-					if(!(nuevaClave.equalsIgnoreCase("") && nuevaClaveConf.equalsIgnoreCase(""))){
-						if((nuevaClave.equals(nuevaClaveConf))){
-							if(verificarContrasenia(nuevaClaveConf)){
-								usuario.setPasword(nuevaClave);
-								usuario=sControlUsuario.actualizarUsuario(usuario, false);
-								severidad = "Informacion";
-								msg ="Datos guardados satisfactoriamente";
-								setOriginalUsername(txtUsername.getValue());
-								cambiarUsuarioAutenticado(usuario);
-								
+				if(validarClaveAct()){
+					if (validarCambioUsuario() && sControlUsuario.verificarUsername(txtUsername.getValue())){
+						severidad = "Error";
+						msg ="El username ya se encuentra registrado";
+					}else{
+						if(!(nuevaClave.equalsIgnoreCase("") && nuevaClaveConf.equalsIgnoreCase(""))){
+							if((nuevaClave.equals(nuevaClaveConf))){
+								if(verificarContrasenia(nuevaClaveConf)){
+									usuario.setPasword(nuevaClave);
+									usuario=sControlUsuario.actualizarUsuario(usuario, false);
+									severidad = "Informacion";
+									msg ="Datos guardados satisfactoriamente";
+									setOriginalUsername(txtUsername.getValue());
+									cambiarUsuarioAutenticado(usuario);
+									
+								}else{
+									severidad = "Error";
+									msg ="La clave debe contener al menos un numero y una letra mayuscula";
+								}
 							}else{
 								severidad = "Error";
-								msg ="La clave debe contener al menos un numero y una letra mayuscula";
+								msg ="Las claves no coinciden, por favor verifique";
 							}
 						}else{
-							severidad = "Error";
-							msg ="Las claves no coinciden, por favor verifique";
+							BindUtils.postGlobalCommand("perfil", EventQueues.APPLICATION, "updateProfile", null);	
+							usuario=sControlUsuario.actualizarUsuario(usuario, false);
+							severidad = "Informacion";
+							msg ="Datos guardados satisfactoriamente";
+							setOriginalUsername(txtUsername.getValue());
+							cambiarUsuarioAutenticado(usuario);
 						}
-					}else{
-						BindUtils.postGlobalCommand("perfil", EventQueues.APPLICATION, "updateProfile", null);	
-						usuario=sControlUsuario.actualizarUsuario(usuario, false);
-						severidad = "Informacion";
-						msg ="Datos guardados satisfactoriamente";
-						setOriginalUsername(txtUsername.getValue());
-						cambiarUsuarioAutenticado(usuario);
 					}
+				} else {
+					severidad="Error";
+					msg="Clave actual invalida, por favor coloque su clave actual para poder realizar cambios";
 				}
 			}catch(Exception e){
 				System.out.println(e.getMessage());
@@ -171,6 +179,7 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 	 */
 	@Command
 	public void limpiar(){
+		txtClaveAct.setValue("");
 		txtClaveNueva.setValue("");
 		txtClaveNuevaConf.setValue("");
 		txtNombre.setValue("");
@@ -210,6 +219,14 @@ public class EditarPerfilViewModel extends AbstractRequerimientoViewModel implem
 		if(!getOriginalUsername().equalsIgnoreCase(txtUsername.getValue())){
 			respuesta = true;
 			
+		}
+		return respuesta;
+	}
+	
+	public boolean validarClaveAct(){
+		boolean respuesta = false;
+		if(usuario.getPasword().equalsIgnoreCase(txtClaveAct.getValue())){
+			respuesta = true;
 		}
 		return respuesta;
 	}
