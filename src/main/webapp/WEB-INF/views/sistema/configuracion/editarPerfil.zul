@@ -28,12 +28,14 @@
 			.container-style {
 				margin-top: -5px;
 				padding-top: -5px;
+				
 			}
 		</style>
-			<div align="center">
-
-				<label value="Editar Datos Personales" sclass="z-letra-grande" />
-
+			<div align="center" style="padding-right: 15%;">
+				<hbox>
+					<n:h2 class="modal-title">Editar Datos Personales</n:h2>
+				</hbox>
+				
 				<grid>
 					<columns>
 						<column width="35%" align="right" />
@@ -96,9 +98,15 @@
 								value="@bind(vm.usuario.persona.correo)" />
 						</row>
 						<row>
+							<label value="Contraseña actual: " />
+							<textbox id="txtClaveAct" width="100%"
+								sclass="form-control" type="password" maxlength="50" />
+								
 							<label value="Nueva Contraseña: " />
 							<textbox id="txtClaveNueva" width="100%"
 								sclass="form-control" type="password" maxlength="50" />
+						</row>
+						<row>
 
 							<label value="Confirmar Contraseña: " />
 							<textbox id="txtClaveNuevaConf" width="100%"
@@ -108,7 +116,7 @@
 					</rows>
 				</grid>
 			</div>
-			<div align="right">
+			<div align="right" style="padding-right: 15%;">
 			<label value="* Campos Obligatorios" hflex="1" sclass="requerido margen" />
 				<button id="btnLimpiar" label="Limpiar" type="submit"
 					onClick="@command('limpiar')" sclass="btn-sm btn-info" />
