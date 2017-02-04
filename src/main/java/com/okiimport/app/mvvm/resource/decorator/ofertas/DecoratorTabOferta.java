@@ -13,6 +13,7 @@ import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
 
 import com.okiimport.app.model.DetalleOferta;
+import com.okiimport.app.model.HistoricoMoneda;
 import com.okiimport.app.model.Oferta;
 import com.okiimport.app.model.enumerados.EEstatusOferta;
 import com.okiimport.app.mvvm.AbstractRequerimientoViewModel;
@@ -22,13 +23,14 @@ public class DecoratorTabOferta extends AbstractRequerimientoViewModel {
 	
 	public static final String LISTITEM_RED = "listitem-red";
 	public static final String LISTITEM_GREEN = "listitem-green";
-	
 	//Listener
 	private OnComunicatorOfertaListener listener;
 		
 	//Atributos
 	private Oferta oferta;
 	private Boolean visibleBtnOfertas;
+	private Double totalOferta = 0.0;
+	private HistoricoMoneda historicoMoneda;
 	
 	@Init
     public void init(@ExecutionArgParam("listener") OnComunicatorOfertaListener listener, 
@@ -37,7 +39,23 @@ public class DecoratorTabOferta extends AbstractRequerimientoViewModel {
 		this.setOferta(oferta);
 		for(DetalleOferta detalle : oferta.getDetalleOfertas()){
 			detalle.setAprobado(null);
+			totalOferta+= detalle.getDetalleCotizacion().getPrecioVenta() * detalle.getDetalleCotizacion().getCantidad();
+			setHistoricoMoneda(detalle.getDetalleCotizacion().getCotizacion().getHistoricoMoneda());
+
 		}
+	}
+	
+	public HistoricoMoneda getHistoricoMoneda(){
+		if (this.historicoMoneda==null){
+			this.historicoMoneda = new HistoricoMoneda();
+			this.historicoMoneda.setMontoConversion((float) 0);
+			this.historicoMoneda.convert(0);
+		}
+		return historicoMoneda;
+	}
+	
+	public void setHistoricoMoneda(HistoricoMoneda historicoMoneda){
+		this.historicoMoneda= historicoMoneda;
 	}
 	
 	@AfterCompose
@@ -132,7 +150,14 @@ public class DecoratorTabOferta extends AbstractRequerimientoViewModel {
 	public void setVisibleBtnOfertas(Boolean visibleBtnOfertas) {
 		this.visibleBtnOfertas = visibleBtnOfertas;
 	}
+	
+	public Double getTotalOferta() {
+		return totalOferta;
+	}
 
+	public void setTotalOferta(Double totalOferta) {
+		this.totalOferta = totalOferta;
+	}
 
 
 	/**

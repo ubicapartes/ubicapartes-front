@@ -26,12 +26,21 @@
 						<div>
 							<label value="Estado de la Oferta:" sclass="label-not-mandatory" />
 							<label sclass="z-letra-grande" value="@bind(vm.oferta.estatus.nombre)"/>
+							
+						</div>
+					</row>
+					<row>
+						<div>
+							<label value="Total de la Oferta:" sclass="label-not-mandatory" />
+							<label sclass="z-letra-grande" value="@bind(vm.totalOferta) @converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+									 							converterMoneda=vm.historicoMoneda, monedaBase=vm.monedaBase)"/>
 						</div>
 					</row>
 				</rows>
 			</grid>	
 			<div hflex="1" tooltiptext="Acciones sobre la Oferta">
 				<hbox width="100%" sclass="header-button">
+				
 					<button iconSclass="fa fa-history" label="Re-Cotizar" type="submit"
 						sclass="btn-success" onClick="@command('recotizar', actions = self.parent)" visible="@bind(vm.oferta.isParaReCotizacion())"/>
 					<button iconSclass="fa fa-check" label="Oferta" type="submit" visible="@bind((vm.visibleBtnOfertas eq null) or (!vm.visibleBtnOfertas))"
@@ -48,6 +57,9 @@
 					model="@load(vm.oferta.detalleOfertas)">
 					<listhead>
 						<listheader label="Proveedor" />
+						<listheader label="Telef. Proveedor" />
+						<listheader label="Correo Proveedor" />
+						
 						<listheader label="Ubicación" tooltiptext="Pais/Estado-Ciudad" />
 						<listheader label="Repuesto" />
 						<listheader label="Marca" />
@@ -62,6 +74,10 @@
 						<listitem sclass="@bind(vm.updateRow(each))">
 							<listcell
 								label="@bind(each.detalleCotizacion.cotizacion.proveedor.nombre)" />
+							<listcell
+								label="@bind(each.detalleCotizacion.cotizacion.proveedor.telefono)" />
+							<listcell
+								label="@bind(each.detalleCotizacion.cotizacion.proveedor.correo)" />
 							<listcell
 								label="@bind(each.detalleCotizacion.cotizacion.proveedor.ubicacion(' - '))" />
 							<listcell
@@ -81,7 +97,7 @@
   										@converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
   											converterMoneda=each.detalleCotizacion.cotizacion.historicoMoneda, monedaBase=vm.monedaBase)" />
 							<listcell
-								label="@bind(each.detalleCotizacion.calcularTotal())
+								label="@bind(each.detalleCotizacion.precioVenta * each.detalleCotizacion.cantidad)
   										@converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
   											converterMoneda=each.detalleCotizacion.cotizacion.historicoMoneda, monedaBase=vm.monedaBase)" />
 							<listcell>
