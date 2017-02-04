@@ -3,7 +3,7 @@
 		sclass="winMyList"
 		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.configuracion.EditarPerfilViewModel')"
 		form="@id('rs') @load(vm.usuario) @save(vm.usuario, before='enviar')">
-		<groupbox closable="false" width="80%">
+		<groupbox closable="false" width="100%" class= "container-style">
 		<style>
 			.boxImagen {
 			    position: relative;
@@ -25,8 +25,11 @@
 			    border-radius:50%;
 			    background-color:black;
 			}
+			.container-style {
+				margin-top: -5px;
+				padding-top: -5px;
+			}
 		</style>
-			<caption label="Datos Personales" sclass="custom_caption" />
 			<div align="center">
 
 				<label value="Editar Datos Personales" sclass="z-letra-grande" />
@@ -51,7 +54,7 @@
 
 						<row spans="4">
 						<div align="right">
-							<button id="btnCambFoto" tooltiptext="Cambiar Foto" label="..." sclass="btn-primary" upload="true" style="margin-bottom:0px" />
+							<button id="btnCambFoto" tooltiptext="Cambiar Foto" label="Buscar Imagen..." sclass="btn-primary" upload="true" style="margin-bottom:0px" />
 						</div>
 						</row>
 						<row>
