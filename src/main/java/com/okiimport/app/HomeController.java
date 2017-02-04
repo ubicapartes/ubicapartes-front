@@ -66,7 +66,7 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value= "/inicioSession", method = RequestMethod.GET)
-	public String iniciarSession(){
+	public String iniciarSession(Model model){
 //		1. Simple
 //		mailService.send("eugeniohernandez17@gmail.com", "SISTEMA", "PRUEBA DE MENSAJE");
 //		2.Completo
@@ -77,6 +77,13 @@ public class HomeController {
 //		model.put("cliente", cliente);
 //		String archivo = obtenerDirectorioRecursos("prueba.html");
 //		mailService.send("eugeniohernandez17@gmail.com", "SISTEMA", "prueba2.html", model, new File(archivo));
+		model.addAttribute("form", "login.zul");
+		return "security/index.zul";
+	}
+	
+	@RequestMapping(value="/recuperarUsuario", method = RequestMethod.GET)
+	public String recuperarUsuario(Model model){
+		model.addAttribute("form", "recuperarUsuario.zul");
 		return "security/index.zul";
 	}
 	
@@ -87,7 +94,8 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value= "/admin/home", method = RequestMethod.GET)
-	public String iniciarAdministrador(){
+	public String iniciarAdministrador(Model model){
+		model.addAttribute("form", "login.zul");
 		return "sistema/index.zul";
 	}
 	
