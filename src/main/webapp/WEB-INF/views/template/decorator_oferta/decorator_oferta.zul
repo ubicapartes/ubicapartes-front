@@ -15,6 +15,7 @@
 			.listitem-green, .listitem-green.z-listitem.z-listbox-odd {
 				background-color: rgba(76,175,80,0.1);
 			}
+			div.inline { display: inline-block; padding-left: 10px; }
 		</style>
 		<hbox hflex="1">
 			<grid>
@@ -26,14 +27,11 @@
 						<div>
 							<label value="Estado de la Oferta:" sclass="label-not-mandatory" />
 							<label sclass="z-letra-grande" value="@bind(vm.oferta.estatus.nombre)"/>
-							
-						</div>
-					</row>
-					<row>
-						<div visible="@bind(vm.visibleTotalOferta)">
-							<label value="Total de la Oferta:" sclass="label-not-mandatory" />
-							<label sclass="z-letra-grande" value="@bind(vm.totalOferta) @converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
-									 							converterMoneda=vm.historicoMoneda, monedaBase=vm.monedaBase)"/>
+							<div class="inline" visible="@bind(vm.visibleTotalOferta)">
+								<label value="Total de la Oferta:" sclass="label-not-mandatory" />
+								<label sclass="z-letra-grande" value="@bind(vm.totalOferta) @converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+										 							converterMoneda=vm.historicoMoneda, monedaBase=vm.monedaBase)"/>
+							</div>
 						</div>
 					</row>
 				</rows>
