@@ -1,0 +1,45 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<div align="center" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.seguridad.RecuperarUsuario')">
+		<div hflex="1" align="center">
+			<n:div class="inicio"></n:div>
+			<grid>
+				<columns>
+					<column label="" />
+				</columns>
+				<rows>
+					<row align="center" sclass="formulario"
+						style="background:#fff">
+
+						<vlayout spacing="15px">
+							<n:h3>Recuperar Usuario</n:h3>
+
+							<div class="input-group">
+								<span class="input-group-addon">
+									<n:i class="fa fa-envelope-o" />
+								</span>
+								<textbox sclass="form-control" hflex="1"
+									placeholder="Email" id="txtEmail" />
+							</div>
+
+							<div class="form-group">
+								<div class="row">
+									<div
+										class="col-md-10 col-md-push-1">
+
+										<button
+											label="Recuperar Usuario" width="100%" height="40px"
+											type="submit" sclass="btn btn-primary"
+											onClick="@command('enviar')" />
+
+									</div>
+								</div>
+							</div>
+
+						</vlayout>
+					</row>
+				</rows>
+			</grid>
+		</div>
+	</div>
+</zk>
