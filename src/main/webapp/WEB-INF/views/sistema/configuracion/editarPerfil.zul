@@ -3,7 +3,7 @@
 		sclass="winMyList"
 		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.configuracion.EditarPerfilViewModel')"
 		form="@id('rs') @load(vm.usuario) @save(vm.usuario, before='enviar')">
-		<groupbox closable="false" width="80%">
+		<groupbox closable="false" width="100%" class= "container-style">
 		<style>
 			.boxImagen {
 			    position: relative;
@@ -25,12 +25,17 @@
 			    border-radius:50%;
 			    background-color:black;
 			}
+			.container-style {
+				margin-top: -5px;
+				padding-top: -5px;
+				
+			}
 		</style>
-			<caption label="Datos Personales" sclass="custom_caption" />
-			<div align="center">
-
-				<label value="Editar Datos Personales" sclass="z-letra-grande" />
-
+			<div align="center" style="padding-right: 15%;">
+				<hbox>
+					<n:h2 class="modal-title">Editar Datos Personales</n:h2>
+				</hbox>
+				
 				<grid>
 					<columns>
 						<column width="35%" align="right" />
@@ -51,7 +56,7 @@
 
 						<row spans="4">
 						<div align="right">
-							<button id="btnCambFoto" tooltiptext="Cambiar Foto" label="..." sclass="btn-primary" upload="true" style="margin-bottom:0px" />
+							<button id="btnCambFoto" tooltiptext="Cambiar Foto" label="Buscar Imagen..." sclass="btn-primary" upload="true" style="margin-bottom:0px" />
 						</div>
 						</row>
 						<row>
@@ -93,9 +98,15 @@
 								value="@bind(vm.usuario.persona.correo)" />
 						</row>
 						<row>
+							<label value="Contraseña actual: " />
+							<textbox id="txtClaveAct" width="100%"
+								sclass="form-control" type="password" maxlength="50" />
+								
 							<label value="Nueva Contraseña: " />
 							<textbox id="txtClaveNueva" width="100%"
 								sclass="form-control" type="password" maxlength="50" />
+						</row>
+						<row>
 
 							<label value="Confirmar Contraseña: " />
 							<textbox id="txtClaveNuevaConf" width="100%"
@@ -105,7 +116,7 @@
 					</rows>
 				</grid>
 			</div>
-			<div align="right">
+			<div align="right" style="padding-right: 15%;">
 			<label value="* Campos Obligatorios" hflex="1" sclass="requerido margen" />
 				<button id="btnLimpiar" label="Limpiar" type="submit"
 					onClick="@command('limpiar')" sclass="btn-sm btn-info" />
