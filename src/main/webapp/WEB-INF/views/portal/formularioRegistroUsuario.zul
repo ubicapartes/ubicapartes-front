@@ -74,9 +74,12 @@
 													placeholder="Ej: 401402375" maxlength="9"
 													value="@bind(vm.cliente.cedula)"
 													constraint="@bind(vm.validatorClienteCedulaRif)"
-													  onBlur="@command('buscarCliente')"
-													onOK="@command('buscarCliente')"/>
+													onChange="@command('verificarCedulaRif')" 
+                            						onOK="@command('verificarCedulaRif')"/>
 											</vbox>
+											 <label id="msgCedulaRifC" visible="false" sclass="requerido"/>
+ 
+                     
 										</hbox>
 									</row>
 								<row>
@@ -110,7 +113,10 @@
 												placeholder="Ej. correo@gmail.com"
 												value="@bind(vm.cliente.correo)"
 												constraint="@bind(vm.emailValidator)"
-												onChange="@command('verificarCorreo')" />
+												onChange="@command('verificarCorreo')" 
+                          						onOK="@command('verificarCorreo')"/>
+												 <label id="msgCorreoC" visible="false" sclass="requerido"/>
+												
 										</vbox>
 											<!-- TELEFONO -->
 										<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Teléfono:" />
@@ -131,7 +137,7 @@
 												id="crearClave" sclass="form-control" mold="rounded"
 												value="@bind(vm.usuario.pasword)" type="password"
 												placeholder="entre 6 a 20 caracteres" hflex="1"
-												constraint="@bind(vm.notEmptyValidator)" />
+												constraint="@bind(vm.passwordValidator)" />
 										</vbox>	
 							
 								<!-- REPETIR CLAVE -->
@@ -141,7 +147,7 @@
 												id="repetirClave" sclass="form-control" mold="rounded"
 												value="@bind(vm.usuario.paswordRepeat)" type="password"
 												placeholder="entre 6 a 20 caracteres" hflex="1"
-												constraint="@bind(vm.notEmptyValidator)" />
+												constraint="@bind(vm.repeatPasswordValidator)" />
 										</vbox>		
 								</row>
 									

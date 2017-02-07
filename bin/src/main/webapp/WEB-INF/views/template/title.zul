@@ -1,0 +1,7 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<n:div class="btn-primary card-header">
+		<n:div class="card-inner">
+			<n:h1 class="card-heading">${requestScope.titulo}</n:h1>
+		</n:div>
+	</n:div>
+</zk>

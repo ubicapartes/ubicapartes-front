@@ -13,7 +13,7 @@ import com.okiimport.persistencia.AbstractJpaConfiguration;
 public class JpaConfiguration extends AbstractJpaConfiguration {
 
 	public JpaConfiguration() {
-		super("requerimientos.urbicars@gmail.com", "R123456789");
+		super("requerimientos.urbicars@outlook.com", "Ubica.partes123");
 	}
 
 //	@Bean(name="sMaestros")

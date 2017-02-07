@@ -13,17 +13,19 @@ import org.zkoss.zul.Label;
 import org.zkoss.zul.Menuitem;
 import org.zkoss.zul.Span;
 
+import com.okiimport.app.model.Cliente;
 import com.okiimport.app.model.Usuario;
 import com.okiimport.app.mvvm.AbstractRequerimientoViewModel;
 import com.okiimport.app.mvvm.resource.BeanInjector;
 import com.okiimport.app.service.transaccion.STransaccion;
-
+import com.okiimport.app.service.maestros.SMaestros;
 
 public class PerfilViewModel extends AbstractRequerimientoViewModel {
 	
 	//Servicios
 	@BeanInjector("sTransaccion")
 	private STransaccion sTransaccion;
+	
 	
 	//GUI
 	@Wire("#menInfoUsuario")
@@ -41,10 +43,21 @@ public class PerfilViewModel extends AbstractRequerimientoViewModel {
 		super.doAfterCompose(view);
 		
 		UserDetails user = super.getUser();
+		
 		if(user!=null){
 			Usuario usuario = sControlUsuario.consultarUsuario(user.getUsername(), user.getPassword(), null);
-			menInfoUsuario.setTooltiptext(usuario.getUsername()+" Avatar");
+			Cliente objCliente = sMaestros.consultarClienteByPersonaId(usuario.getPersona().getId());
+			if(objCliente==null){
+				menCarrito.setVisible(false);
+			}
+			menInfoUsuario.setTooltiptext("Bienvenido "+usuario.getUsername());
 			menInfoUsuario.setLabel(usuario.getUsername().toUpperCase());
+			if(usuario.getFoto64()!=null){
+				menInfoUsuario.setImage(usuario.getFoto64());
+			} else {
+				menInfoUsuario.setImage("/resources/img/user.png");
+			}
+			
 			setIdCliente(usuario.getPersona().getId());
 			getSizeShoppingCar();
 		}
@@ -55,6 +68,22 @@ public class PerfilViewModel extends AbstractRequerimientoViewModel {
 		Integer size = 0;
 		size = sTransaccion.consultarDetallesOfertaInShoppingCar(getIdCliente()).size();
 		menCarrito.setLabel("("+size+")");
+	}
+	
+	@GlobalCommand
+	public void updateProfile(){
+		UserDetails user = super.getUser();
+		
+		if(user!=null){
+			Usuario usuario = sControlUsuario.consultarUsuario(user.getUsername(), user.getPassword(), null);
+			menInfoUsuario.setTooltiptext("Bienvenido "+usuario.getUsername());
+			menInfoUsuario.setLabel(usuario.getUsername().toUpperCase());
+			if(usuario.getFoto64()!=null){
+				menInfoUsuario.setImage(usuario.getFoto64());
+			} else {
+				menInfoUsuario.setImage("/resources/img/user.png");
+			}
+		}
 	}
 	
 	@Command

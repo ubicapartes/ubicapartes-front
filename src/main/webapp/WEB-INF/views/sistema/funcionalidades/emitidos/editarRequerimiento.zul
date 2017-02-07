@@ -4,7 +4,7 @@
 		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.EditarRequerimientoViewModel')">
 		
 		<n:div aria-hidden="false" class="modal fade in" role="dialog" tabindex="-1" style="display: block;">
-			<div class="modal-dialog modal-full"  height="auto"><!-- modal-xs -->
+			<div class="modal-dialog modal-full"  height="auto">
 				<div sclass="modal-content">
 					<include src="/WEB-INF/views/template/modal/titleModal.zul" titulo="Requerimiento" />
 					<n:div class="modal-inner">
@@ -283,7 +283,8 @@
 																<combobox hflex="1" readonly="true" buttonVisible="@bind(vm.editar)"
 																	value="@bind(each.clasificacionRepuesto.descripcion)"
 																	model="@bind(vm.listaClasificacionRepuesto)"
-																	selectedItem="@bind(each.clasificacionRepuesto)">
+																	selectedItem="@bind(each.clasificacionRepuesto)"
+																	constraint="@bind(vm.notEmptyValidator)">
 																	<template name="model">
 																		<comboitem label="@bind(each.descripcion)" />
 																	</template>

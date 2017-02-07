@@ -1,0 +1,90 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window border="none" apply="org.zkoss.bind.BindComposer"
+		sclass="winMyList"
+		viewModel= "@id('vm') @init('com.okiimport.app.mvvm.controladores.ListaOrdenesCompraProveedorViewModel')">
+
+		<!-- LISTA DE ORDENES DE COMPRA POR PROVEEDOR-->
+		<panel sclass="borderGrid">
+			<panelchildren>
+				<hbox width="100%" align="center">
+					<paging id="pagMisOrdenesDeCompra" hflex="1"
+						onPaging="@command('paginarLista')" autohide="true" />
+					<div sclass="z-paging z-paging-info" height="28px">
+						<label id="lblMisOrdenesDeCompra" sclass="rRmWwb-info" />
+					</div>
+				</hbox>
+				<listbox id="gridMisOrdenesDeCompra" emptyMessage="No hay Ordenes de Compra" sclass="mylist"
+					onAfterRender="@command('updatePaging', paging = pagMisOrdenesDeCompra, label=lblMisOrdenesDeCompra)"
+					model="@load(vm.listaOrdenesDeCompra)">
+					<auxhead>
+						<auxheader/>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<spinner instant="true" hflex="1"
+								 />
+						</auxheader>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<datebox instant="true" hflex="1"
+								format="@bind(vm.formatDate)"
+								/>
+						</auxheader>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<textbox instant="true" hflex="1"
+								/>
+						</auxheader>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<spinner instant="true" hflex="1"
+								  />
+						</auxheader>
+<!-- 						<auxheader> -->
+<!-- 							<div sclass="z-icon-filter bigger-200" /> -->
+<!-- 							<combobox instant="true" readonly="true" hflex="1" -->
+<!-- 								selectedItem="@bind(vm.estatusFiltro)"  -->
+<!-- 								model="@load(vm.listaEstatus)"> -->
+<!-- 								<template name="model"> -->
+<!-- 									<comboitem label="@bind(each.nombre)" /> -->
+<!-- 								</template> -->
+<!-- 							</combobox> -->
+<!-- 						</auxheader> -->
+					</auxhead>
+					<listhead>
+						<listheader width="2%"/>
+						<listheader value="idOrdenCompra" width="10%" 
+							label="Nro. Solicitud" sort="auto(idOrdenCompra)"/>
+						<listheader value="fechaCreacion" width="15%"
+							label="Fecha de Creación" sort="auto(fechaCreacion)"/>
+						<listheader width="15%" sort="none"
+							label="Nro. Total de Productos"/>
+						<listheader value="requerimiento.idRequerimiento" width="15%"
+							label="Requerimiento" />
+						<listheader value="estatus" width="20%"
+							label="Estado" sort="none"/>
+						<listheader sort="none" label="Operaciones" />
+					</listhead>
+					<template name="model">
+						<listitem>
+							<listcell label="${forEachStatus.index+1}" sclass="boxed-grey" />
+							<listcell label="@bind(each.idOrdenCompra)" />
+							<listcell label="@bind(each.fechaCreacion)
+												@converter('formatedDate', format=vm.formatDate)" />
+							<listcell label="@bind(each.totalProductos)"/>
+							<listcell label="@bind(each.requerimiento.idRequerimiento)" />
+							<listcell label="@bind(each.estatus.nombre)" />
+							<listcell>
+								<hbox spacing="20px">
+									<div class="btn-group btn-group-sm">
+										
+									</div>
+								</hbox>
+							</listcell>
+						</listitem>
+					</template>
+					
+				</listbox>
+			</panelchildren>
+		</panel>
+	</window>
+</zk>

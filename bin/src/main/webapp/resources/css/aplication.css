@@ -1,0 +1,255 @@
+/**GENERAL*/
+span {
+	color: black;
+}
+
+a .z-hbox th, a .z-vbox th, a .z-hbox td, a .z-vbox td  {
+	padding-left: 5%;
+	padding-right: 5%;
+}
+
+.no_rezise {
+	resize: none;
+}
+
+.header-custom {
+	background-color:#2196f3;
+}
+
+.header-button {
+	//background-color:#2196f3;
+}
+
+/*.header-button table tr  {
+	padding: 5px;
+}*/
+
+.content-sub-heading {
+	margin-top: 20px;
+    margin-bottom: 14px;
+    font-weight: 700;
+}
+
+.z-include .content-sub-heading {
+	font-size: 18px;
+}
+
+.boxed-grey, .boxed-grey.z-listcell div {
+	background: #f9f9f9;
+}
+
+p.card-heading {
+	margin-top: 14px;
+	margin-bottom: 14px;
+	font-size: 17px;
+	font-weight: 600;
+	color: #03376b;
+}
+
+.card-inner {
+	padding-bottom: 1%;
+}
+
+.modal-dialog {
+	padding: 30px 16px!important;
+}
+
+.panel-footer.z-hbox table tbody tr td {
+	padding-top: 1%;
+	padding-bottom: 1%;
+}
+
+input.form-control, textarea.form-control {
+	font-size: 14px;
+	padding: 10px;
+}
+
+a.z-tab-content:hover {
+	text-decoration: none;
+}
+
+/*.card-header .card-inner, .card-inner-side, .tile-side {*/
+div .card-header .card-inner {
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+div .card-header .card-inner .card-heading {
+	font-size: 16px;
+}
+
+.z-fondo-principal .card-wrap {
+    margin-top: 10px;
+}
+
+/**IMAGENES*/
+.imagen-default {
+	background: #DDD9D9;
+}
+
+/**CAPTION*/
+.custom_caption {
+	font-size:12px;
+}
+
+.custom_caption_title {
+	font-size: 16px;
+}
+
+/**NOTAS*/
+.notas {
+	font-family: monospace;
+	font-size: 11px;
+	font-style: italic;
+	color: #838383;
+}
+
+.no_rezise.notas {
+	border: none;
+	background-color: white;
+	font-size: inherit;
+}
+
+.modal-content .no_rezise.notas {
+	font-size: 12px!important;
+}
+
+/* FUENTE PARA LAS LETRAS DE LA VENTANA*/
+.z-window-header {
+	color: white;
+	font-size: 17px;
+	font-weight: bolder;
+	font-family: serif;
+}
+
+.z-window-header .z-window-header-move {
+	color: white;
+}
+
+.z-fondo-principal { 
+	background-image: url("../../resources/img/fondo.jpg");
+	background-repeat: repeat;
+}	
+
+.z-letra-grande {
+	font-size: 17px;
+	color: #428bca;
+	font-weight: bold;
+}
+
+/*FUENTES*/
+/* FUENTE PARA LOS CAMPOS REQUERIDOS*/
+.requerido {
+	color: red;
+	font-weight: bold;
+	font-size: 13px;
+}
+
+.requerido.margen {
+	margin-left: 20px;
+}
+
+.titulo_blanco span{
+	color: white;
+}
+
+.base_contenedor_campos {
+	padding: 5px;
+}
+
+.base_division_campos {
+	margin-top:10px; 
+	margin-left:5px;
+	margin-right:15px;
+}
+
+.base_division_campos.z-columnchildren div.z-columnchildren-content span {
+	margin-left:10px;
+}
+
+/**FUENTES PARA TITULOS*/
+.z-groupbox-content legend, .z-include legend {
+    font-size: 18px;
+    line-height: 20px;
+    margin: 0 20px 14px;
+    color: #2196f3;
+}
+
+.modal-inner .z-include legend {
+    margin-top: 10px;
+}
+
+/*LOGIN*/
+div.alert.alert-danger {
+	background-color: #d64242;
+    border-color: #d64242;
+    margin-bottom: 0px;
+}
+
+div.alert.alert-danger span {
+	color: #FFF;
+}
+
+button.btn-primary.z-button, button.btn-info.z-button {
+	font-size: 14px;
+}
+
+div.z-vlayout-inner {
+	padding-bottom: 0px;
+}
+
+.label-not-mandatory {
+	font-style: oblique;
+}
+
+div.modal-footer {
+	padding: 15px 20px 10px;
+	padding-right: 32px;
+    padding-left: 32px;
+}
+
+div.tab-nav {
+	margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.modal-footer div {
+	float: left;
+}
+
+
+/**COUNTER*/
+.counter-div {
+	margin-top: 5%;
+   	display: -webkit-inline-box;
+    position: relative;
+    text-align: right;
+    color: #2e7b1b;
+    border: 1px solid #e9e9e9;
+    padding: 0px;
+    background-image: -webkit-gradient(linear,left bottom, left top, color-stop(0, rgb(249,249,249)), color-stop(0.3, rgb(253,253,253)), color-stop(0.74, rgb(246,246,246)), color-stop(1, rgb(242,242,242)));
+    background-image: -moz-linear-gradient(center bottom, rgb(249,249,249) 0%, rgb(253,253,253) 30%, rgb(246,246,246) 74%, rgb(242,242,242) 100%);
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    border-radius: 100px;    
+}
+
+.counter-div span.z-label{
+    margin: 30px;
+    font-size: 15px;
+}
+
+.breadcrumbs.z-div, .breadcrumb.z-div {
+    margin-bottom: initial;
+    margin-top: initial;
+}
+
+/**MODAL*/
+.z-window-modal .modal-title, .z-window-modal div.tab-nav {
+	margin-bottom: 15px;
+	color: black;
+}
+
+.z-window-modal .z-groupbox-content legend {
+	margin-bottom: 10px;
+}
