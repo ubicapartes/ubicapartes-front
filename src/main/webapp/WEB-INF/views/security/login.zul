@@ -65,9 +65,8 @@
 									</div>
 								</div>
 
-								<n:a href="recuperarUsuario">
-									Recuperar Usuario
-								</n:a>
+								<n:a href="recuperarUsuario">Recuperar Usuario</n:a>
+								<n:a href="recuperarPassword">Recuperar Contraseña</n:a>
 
 							</vlayout>
 						</row>

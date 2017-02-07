@@ -3,7 +3,7 @@ package com.okiimport.app.mvvm.constraint;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.WrongValueException;
 
-import com.okiimport.app.model.Cliente;
+import com.okiimport.app.model.Persona;
 
 public class PasswordConstraint extends CustomConstraint {
 	
@@ -11,13 +11,13 @@ public class PasswordConstraint extends CustomConstraint {
 	
 	private PasswordConstraintComunicator comunicator;
 	
-	private Cliente cliente;
+	private Persona persona;
 
-	public PasswordConstraint(Cliente cliente, CustomConstraint passwordGeneralConstraint, PasswordConstraintComunicator comunicator) {
+	public PasswordConstraint(Persona persona, CustomConstraint passwordGeneralConstraint, PasswordConstraintComunicator comunicator) {
 		super(EConstraint.CUSTOM);
 		this.passwordGeneralConstraint = passwordGeneralConstraint;
 		this.comunicator = comunicator;
-		this.cliente = cliente;
+		this.persona = persona;
 	}
 
 	@Override
@@ -26,11 +26,11 @@ public class PasswordConstraint extends CustomConstraint {
 		
 		String password = String.valueOf(value);
 		
-		if(cliente.getCedula()!=null && cliente.getCedula().equalsIgnoreCase(password)){
+		if(persona.getCedula()!=null && persona.getCedula().equalsIgnoreCase(password)){
 			String mensaje = "La contrase\u00f1a ingresada no puede ser igual a la cedula o rif!";
 			throw new WrongValueException(comp, mensaje);
 		}
-		else if(cliente.getCorreo()!=null && cliente.getCorreo().equalsIgnoreCase(password)){
+		else if(persona.getCorreo()!=null && persona.getCorreo().equalsIgnoreCase(password)){
 			String mensaje = "La contrase\u00f1a ingresada no puede ser igual a al correo!";
 			throw new WrongValueException(comp, mensaje);
 		}

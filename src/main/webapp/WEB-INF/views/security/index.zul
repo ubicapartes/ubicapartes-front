@@ -46,7 +46,7 @@
 
 <!-- 								<include src="/WEB-INF/views/template/title.zul" titulo="Inicio de Sesión" /> -->
 					<div align="center">
-						<include src="${ form }" />
+						<include src="${ form }" serverUrl="${ serverUrl }" usuario="${ usuario }"/>
 					</div>
 				</div>
 			</div>

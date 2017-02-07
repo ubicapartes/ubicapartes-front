@@ -20,10 +20,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.zkoss.json.JSONObject;
 
 import com.okiimport.app.model.Analista;
+import com.okiimport.app.model.Usuario;
 import com.okiimport.app.service.maestros.SMaestros;
 import com.okiimport.app.service.mail.MailProveedor;
 import com.okiimport.app.service.mail.MailService;
@@ -85,6 +87,27 @@ public class HomeController {
 	public String recuperarUsuario(Model model){
 		model.addAttribute("form", "recuperarUsuario.zul");
 		return "security/index.zul";
+	}
+	
+	@RequestMapping(value="/recuperarPassword", method = RequestMethod.GET)
+	public String recuperarPassword(HttpServletRequest request, Model model){
+		String baseUrl = String.format("%s://%s:%d",request.getScheme(),  request.getServerName(), request.getServerPort());
+
+		model.addAttribute("serverUrl", baseUrl);
+		model.addAttribute("form", "recuperarPassword.zul");
+		return "security/index.zul";
+	}
+	
+	@RequestMapping(value="/password/new", method = RequestMethod.GET)
+	public String cambiarPassword(Model model, @RequestParam("token") String token){
+		Usuario usuario = this.sAcceso.consultarToken(token);
+		if(usuario!=null){
+			model.addAttribute("usuario", usuario);
+			model.addAttribute("form", "cambiarPassword.zul");
+			return "security/index.zul";
+		}
+		else
+			return this.iniciarSession(model);
 	}
 	
 	
