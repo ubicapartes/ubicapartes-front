@@ -152,7 +152,7 @@
 																	field="Cantidad" />
 															</listheader>
 															<listheader
-																label="Foto" sort="auto" width="20%" />
+																label="Foto" sort="none" width="20%" />
 														</listhead>
 														<template
 															name="model">

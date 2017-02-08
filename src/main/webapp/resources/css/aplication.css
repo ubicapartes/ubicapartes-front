@@ -253,3 +253,8 @@ div.tab-nav {
 .z-window-modal .z-groupbox-content legend {
 	margin-bottom: 10px;
 }
+
+/**UPLOAD*/
+span.z-upload input {
+    max-width: 0px;
+}
