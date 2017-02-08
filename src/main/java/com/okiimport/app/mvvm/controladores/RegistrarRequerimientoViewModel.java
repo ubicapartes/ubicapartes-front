@@ -119,9 +119,10 @@ public class RegistrarRequerimientoViewModel extends AbstractCargaMasivaViewMode
 	 * Nota: Ninguna
 	 * */
 	@Command
-	@NotifyChange({ "requerimiento", "cliente", "tipoRepuesto" })
+	@NotifyChange({ "requerimiento", "cliente", "tipoRepuesto", "vehiculo" })
 	public void limpiar() {
 		try{
+			vehiculo = null;
 			requerimiento = new Requerimiento();
 			requerimiento.setCliente(cliente);
 			tipoRepuesto=new ModeloCombo<Boolean>();
