@@ -1,6 +1,6 @@
 <zk xmlns:w="client" xmlns:n="native">
 	<div align="center" apply="org.zkoss.bind.BindComposer"
-		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.seguridad.RecuperarUsuario')">
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.seguridad.RecuperarUsuarioViewModel')">
 		<div hflex="1" align="center">
 			<n:div class="inicio"></n:div>
 			<grid>
