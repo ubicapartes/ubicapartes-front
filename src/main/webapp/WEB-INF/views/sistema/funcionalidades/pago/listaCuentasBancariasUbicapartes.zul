@@ -1,0 +1,92 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window border="none" apply="org.zkoss.bind.BindComposer" sclass="winMyList"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.maestros.ListaCuentasUbicapartesViewModel')">
+
+		<!-- LISTA DE Mis Cuentas-->
+		<panel sclass="borderGrid">
+			<panelchildren>
+				<hbox width="100%" align="center">
+					<paging id="pagCuentas" hflex="1"
+						onPaging="@command('paginarLista')" autohide="true" />
+					<div sclass="z-paging z-paging-info" height="28px">
+						<label id="lblMisCuentas" sclass="rRmWwb-info" />
+					</div>
+				</hbox>
+				<listbox id="gridCuentas" emptyMessage="No hay cuentas registradas" sclass="mylist"
+					onAfterRender="@command('updatePaging', paging = pagCuentas, label=lblMisCuentas)"
+					model="@load(vm.cuentas)">
+					<auxhead>
+						<auxheader/>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<textbox instant="true" hflex="1" value="@bind(vm.cuentaFiltro.banco.nombre)" onChange="@command('aplicarFiltro')"/>
+						</auxheader>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<textbox instant="true" hflex="1" value="@bind(vm.cuentaFiltro.numero)" onChange="@command('aplicarFiltro')"/>
+						</auxheader>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<textbox instant="true" hflex="1" value="@bind(vm.cuentaFiltro.tipo)" onChange="@command('aplicarFiltro')"/>
+						</auxheader>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<textbox instant="true" hflex="1" value="@bind(vm.cuentaFiltro.titular)" onChange="@command('aplicarFiltro')"  />
+						</auxheader>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<textbox instant="true" hflex="1" value="@bind(vm.cuentaFiltro.identificacion)"	onChange="@command('aplicarFiltro')"  />
+						</auxheader>
+						<auxheader width="20%">
+							<button label="Agregar Cuenta" visible="@bind(vm.isAdminOrAnalista())" onClick="@command('nuevaCuenta')" sclass="btn-primary" />
+						</auxheader>
+					</auxhead>
+					
+					<listhead>
+						<listheader width="2%"/>
+						<listheader value="banco" label="Banco" sort="auto(banco.nombre)"/>
+						<listheader value="numero"  label="Nro Cuenta" sort="auto(numero)"/>
+						<listheader value="tipo"  label="Tipo" sort="auto(tipo)"/>
+						<listheader value="titular"  label="Titular" sort="auto(titular)"/>
+						<listheader value="identificacion" label="Identificacion" sort="auto(identificacion)"/>
+						<listheader sort="none" label="Operaciones" />
+					</listhead>
+					
+					<template name="model">
+						<listitem>
+							<listcell label="${forEachStatus.index+1}" sclass="boxed-grey" />
+							<listcell label="@bind(each.banco.nombre)" />
+							<listcell label="@bind(each.numero)" />
+							<listcell label="@bind(each.tipo)"/>
+							<listcell label="@bind(each.titular)" />
+							<listcell label="@bind(each.identificacion)" />
+							<listcell>
+								<hbox spacing="20px">
+									<div class="btn-group btn-group-sm">
+										<button visible="@bind(vm.isAdminOrAnalista())"
+											iconSclass="z-icon-pencil green bigger-160"
+											tooltiptext="Editar"
+											onClick="@command('editarCuenta', cuenta = each)"
+										     />
+										<button
+											iconSclass="z-icon-eye blue bigger-160"
+											tooltiptext="Ver Cuenta"
+											onClick="@command('verCuenta', cuenta = each)"
+											 />
+										<button visible="@bind(vm.isAdminOrAnalista())"
+											iconSclass="z-icon-trash-o red bigger-160"
+											tooltiptext="Eliminar Cuenta"
+											onClick="@command('eliminarCuenta', cuenta = each)"
+											 />
+										
+									</div>
+								</hbox>
+							</listcell>
+						</listitem>
+					</template>
+					
+				</listbox>
+			</panelchildren>
+		</panel>
+	</window>
+</zk>
