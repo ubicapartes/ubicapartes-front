@@ -350,12 +350,22 @@ public abstract class AbstractRequerimientoViewModel extends AbstractViewModel {
 		return new GeneralConstraint(EConstraint.NO_EMPTY,
 				EConstraint.NO_NEGATIVE, EConstraint.NO_ZERO);
 	}
+	
 
 	public CustomConstraint getCantValidator() {
 		RegExpression[] constrains = new RegExpression[] { new RegExpression(
 				"/.[0-9]+/", "Debe Contener Un Numero Valido") };
 		return new RegExpressionConstraint(constrains, EConstraint.NO_EMPTY,
 				EConstraint.NO_NEGATIVE, EConstraint.NO_ZERO,
+				EConstraint.CUSTOM);
+
+	}
+	
+	public CustomConstraint getNumeroCuentaValidator() {
+		RegExpression[] constrains = new RegExpression[] { new RegExpression(
+				"/^[0-9]{20}/", "Debe Contener 20 digitos") };
+		return new RegExpressionConstraint(constrains, EConstraint.NO_EMPTY,
+				EConstraint.NO_NEGATIVE,
 				EConstraint.CUSTOM);
 
 	}

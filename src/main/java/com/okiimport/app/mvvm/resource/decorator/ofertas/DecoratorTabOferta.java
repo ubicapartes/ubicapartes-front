@@ -29,6 +29,7 @@ public class DecoratorTabOferta extends AbstractRequerimientoViewModel {
 	//Atributos
 	private Oferta oferta;
 	private Boolean visibleBtnOfertas;
+	private Boolean visibleTotalOferta = false;
 	private Double totalOferta = 0.0;
 	private HistoricoMoneda historicoMoneda;
 	
@@ -39,10 +40,21 @@ public class DecoratorTabOferta extends AbstractRequerimientoViewModel {
 		this.setOferta(oferta);
 		for(DetalleOferta detalle : oferta.getDetalleOfertas()){
 			detalle.setAprobado(null);
-			totalOferta+= detalle.getDetalleCotizacion().getPrecioVenta() * detalle.getDetalleCotizacion().getCantidad();
-			setHistoricoMoneda(detalle.getDetalleCotizacion().getCotizacion().getHistoricoMoneda());
-
+			sumarMontos();
 		}
+	}
+	
+	@NotifyChange({"totalOferta", "visibleTotalOferta"})
+	public void sumarMontos(){
+		visibleTotalOferta = false;
+		totalOferta = 0.0;
+		for(DetalleOferta detalle : oferta.getDetalleOfertas()){
+			if(detalle.getAprobado()!=null && detalle.getAprobado()){
+				visibleTotalOferta = true;
+				totalOferta+= detalle.getDetalleCotizacion().getPrecioVenta() * detalle.getDetalleCotizacion().getCantidad();
+				setHistoricoMoneda(detalle.getDetalleCotizacion().getCotizacion().getHistoricoMoneda());
+			}
+		}	
 	}
 	
 	public HistoricoMoneda getHistoricoMoneda(){
@@ -65,21 +77,23 @@ public class DecoratorTabOferta extends AbstractRequerimientoViewModel {
 	
 	/**COMMANDS*/
 	@Command
-	@NotifyChange({"oferta", "visibleBtnOfertas"})
+	@NotifyChange({"oferta", "visibleBtnOfertas", "totalOferta", "visibleTotalOferta"})
 	public void updateOferta(@BindingParam("acept") boolean acept){
 		List<DetalleOferta> detalles = this.oferta.getDetalleOfertas();
 		for(DetalleOferta detalle : detalles)
 			detalle.setAprobado(acept);
 		cambiarEstatusOferta(acept);
+		sumarMontos();
 	}
 	
 	@Command
-	@NotifyChange({"oferta", "visibleBtnOfertas"})
+	@NotifyChange({"oferta", "visibleBtnOfertas", "totalOferta", "visibleTotalOferta"})
 	public void aprobar(@BindingParam("detalleOferta") DetalleOferta detalleOferta,
 			@BindingParam("acept") boolean acept){
 		detalleOferta.setAprobado(acept);
 		updateRow(detalleOferta);
 		cambiarEstatusOferta(acept);
+		sumarMontos();
 	}
 	
 	@Command
@@ -120,6 +134,13 @@ public class DecoratorTabOferta extends AbstractRequerimientoViewModel {
 		}
 	}
 	
+	public String createToolTip(String telefono){
+		String text ="No posee telefono";
+		if(!telefono.isEmpty())
+			text = "Nro de telefono "+telefono;
+		return text;
+	}
+	
 	//Metodos Privados
 	private void cambiarEstatusOferta(boolean acept){
 		if(!acept)
@@ -158,7 +179,14 @@ public class DecoratorTabOferta extends AbstractRequerimientoViewModel {
 	public void setTotalOferta(Double totalOferta) {
 		this.totalOferta = totalOferta;
 	}
+	
+	public Boolean getVisibleTotalOferta() {
+		return visibleTotalOferta;
+	}
 
+	public void setVisibleTotalOferta(Boolean visibleTotalOferta) {
+		this.visibleTotalOferta = visibleTotalOferta;
+	}
 
 	/**
 	 * Descripcion: listener para la comunicacion con el viewmodel respectivo
