@@ -412,7 +412,6 @@
 						<div visible="@bind(!vm.makeAsReadOnly)" width="100%">
 							<include src="/WEB-INF/views/template/textFieldsMandatory.zul" hflex="1" />
 							<div class="btn-group btn-group-sm pull-right">
-
 								<button id="btnLimpiar" label="Limpiar"
 									type="submit" onClick="@command('limpiar')"
 									sclass="btn-sm btn-info" />

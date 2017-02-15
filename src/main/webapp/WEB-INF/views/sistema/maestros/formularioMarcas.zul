@@ -1,10 +1,11 @@
 <zk xmlns:w="client" xmlns:n="native">
 	<window id="winFormularioMarca" closable="true" width="0px"
-		height="0px" border="none" apply="org.zkoss.bind.BindComposer" sclass="btn-primary"
+		height="0px" border="none" apply="org.zkoss.bind.BindComposer"
+		sclass="btn-primary"
 		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.RegistrarMarcasViewModel')"
 		form="@id('fx') @load(vm.marca) @save(vm.marca, before='registrar')">
-		
-		
+
+
 		<n:div aria-hidden="false" class="modal fade in" role="dialog"
 			tabindex="-1" style="display: block;">
 			<div class="modal-dialog modal-full" width="500px"
@@ -14,42 +15,44 @@
 						src="/WEB-INF/views/template/modal/titleModal.zul"
 						titulo="Registrar Marca" />
 					<n:div class="modal-inner">
-		
-		
-		<groupbox>
 
-			<div>
 
-				<grid>
-					<columns>
-						<column width="35%" align="right" />
-						<column width="65%" />
-					</columns>
+						<groupbox>
 
-					<rows>
-						<row>
-						
-							<label value="Nombre Marca: *" />
+							<div>
 
-                            <vbox>
-							<textbox id="nombre" width="110%" sclass="form-control"
-								readonly="@bind(vm.makeAsReadOnly)" mold="rounded" value="@bind(vm.marca.nombre)"
-								placeholder="Ej: Toyota"
-								constraint="@bind(vm.notEmptyValidator)" />
-							</vbox>
-						</row>
-					</rows>
-				</grid>
-			</div>
-		</groupbox>
-		
-		</n:div>
+								<grid>
+									<columns>
+										<column width="35%"
+											align="right" />
+										<column width="65%" />
+									</columns>
+
+									<rows>
+										<row>
+
+											<label
+												value="Nombre Marca: *" />
+
+											<vbox>
+												<textbox id="nombre"
+													width="110%" sclass="form-control"
+													readonly="@bind(vm.makeAsReadOnly)" mold="rounded"
+													value="@bind(vm.marca.nombre)" placeholder="Ej: Toyota"
+													constraint="@bind(vm.notEmptyValidator)" />
+											</vbox>
+										</row>
+									</rows>
+								</grid>
+							</div>
+						</groupbox>
+
+					</n:div>
 
 					<n:div class="modal-footer">
-						<hbox width="100%" visible="@bind(!vm.makeAsReadOnly)"  hflex="1">
-							<include
-								src="/WEB-INF/views/template/textFieldsMandatory.zul" hflex="1" />
-							<div align="right" >
+						<div visible="@bind(!vm.makeAsReadOnly)" width="100%">
+							<include src="/WEB-INF/views/template/textFieldsMandatory.zul" hflex="1" />
+							<div class="btn-group btn-group-sm pull-right">
 								<button id="btnLimpiar" label="Limpiar"
 									type="submit" onClick="@command('limpiar')"
 									sclass="btn-sm btn-info" />
@@ -58,7 +61,7 @@
 									onClick="@command('registrar', btnEnviar=self, btnLimpiar=btnLimpiar, edicion=vm.valor)"
 									sclass="btn-sm btn-primary" />
 							</div>
-						</hbox>
+						</div>
 					</n:div>
 				</div>
 			</div>
