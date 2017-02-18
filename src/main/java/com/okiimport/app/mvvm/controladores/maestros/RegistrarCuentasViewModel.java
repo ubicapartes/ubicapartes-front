@@ -20,6 +20,7 @@ import org.zkoss.zk.ui.event.SortEvent;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Listheader;
+import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 import org.zkoss.zul.Messagebox.ClickEvent;
 
@@ -43,6 +44,7 @@ public class RegistrarCuentasViewModel extends AbstractRequerimientoViewModel {
 	//GUI
 	@Wire("#winFormularioCuenta")
 	private Window winFormularioCuenta;
+
 	
 	//Atributos
 	private Cuenta cuenta;
@@ -81,7 +83,7 @@ public class RegistrarCuentasViewModel extends AbstractRequerimientoViewModel {
 			tipoCuenta= (cuenta==null? "CORRIENTE": cuenta.getTipo());
 			this.valor=valor;
 			makeAsReadOnly = (recordMode != null && recordMode.equalsIgnoreCase("READ"))? true : false;
-			this.cuenta.setBanco(listaBancos.get(0));
+			cargarDatosCuenta(cuenta);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -161,6 +163,18 @@ public class RegistrarCuentasViewModel extends AbstractRequerimientoViewModel {
 		else
 			ejecutarGlobalCommand("cambiarCuentas", null);
 			
+	}
+	
+	public void cargarDatosCuenta(Cuenta cuenta){
+		if(cuenta!=null && cuenta.getBanco()!=null){
+			this.cuenta.setBanco(cuenta.getBanco());
+		} else {
+			this.cuenta.setBanco(listaBancos.get(0));
+		}
+		
+		if(cuenta!=null && cuenta.getTipo()!=null && !cuenta.getTipo().isEmpty()){
+			this.tipoCuenta = cuenta.getTipo();
+		}
 	}
 
 	/**METODOS PROPIOS DE LA CLASE*/

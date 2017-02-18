@@ -193,9 +193,8 @@ public class ListaCuentasUbicapartesViewModel extends AbstractRequerimientoViewM
 	 * */
 	@Command
 	public void eliminarCuenta(@BindingParam("cuenta") final Cuenta cuenta){
-		super.mostrarMensaje("Confirmacion", "�Desea Eliminar Cuenta?", Messagebox.EXCLAMATION, new Messagebox.Button[]{Messagebox.Button.YES,Messagebox.Button.NO}, 
+		super.mostrarMensaje("Confirmacion", "Desea Eliminar Cuenta?", Messagebox.EXCLAMATION, new Messagebox.Button[]{Messagebox.Button.YES,Messagebox.Button.NO}, 
 				new EventListener(){
-
 					@Override
 					public void onEvent(Event event) throws Exception {
 						// TODO Auto-generated method stub
@@ -204,9 +203,8 @@ public class ListaCuentasUbicapartesViewModel extends AbstractRequerimientoViewM
 							cuenta.setEstatus(EEstatusGeneral.INACTIVO);
 							sMaestros.registrarCuenta(cuenta);
 							cambiarCuentasUbicapartes(0, null, null);
-							notifyChange("cuentas");							          
+							notifyChange("cuentas");
 						}
-						
 					}
 					
 		}, null);
