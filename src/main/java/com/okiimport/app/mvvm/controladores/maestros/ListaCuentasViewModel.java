@@ -196,9 +196,8 @@ public class ListaCuentasViewModel extends AbstractRequerimientoViewModel implem
 	 * */
 	@Command
 	public void eliminarCuenta(@BindingParam("cuenta") final Cuenta cuenta){
-		super.mostrarMensaje("Confirmacion", "�Desea Eliminar Cuenta?", Messagebox.EXCLAMATION, new Messagebox.Button[]{Messagebox.Button.YES,Messagebox.Button.NO}, 
-				new EventListener(){
-
+		super.mostrarMensaje("Confirmacion", "Desea Eliminar Cuenta?", Messagebox.EXCLAMATION, new Messagebox.Button[]{Messagebox.Button.YES,Messagebox.Button.NO}, 
+				new EventListener(){					
 					@Override
 					public void onEvent(Event event) throws Exception {
 						// TODO Auto-generated method stub
@@ -207,13 +206,12 @@ public class ListaCuentasViewModel extends AbstractRequerimientoViewModel implem
 							cuenta.setEstatus(EEstatusGeneral.INACTIVO);
 							sMaestros.registrarCuenta(cuenta);
 							cambiarCuentas(0, null, null);
-							notifyChange("cuentas");							          
+							notifyChange("cuentas");
 						}
-						
 					}
 					
-		}, null);
-	}
+			}, null);
+		}
 	
 	
 	/**

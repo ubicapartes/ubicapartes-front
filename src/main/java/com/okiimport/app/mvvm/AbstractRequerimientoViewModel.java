@@ -363,7 +363,7 @@ public abstract class AbstractRequerimientoViewModel extends AbstractViewModel {
 	
 	public CustomConstraint getNumeroCuentaValidator() {
 		RegExpression[] constrains = new RegExpression[] { new RegExpression(
-				"/^[0-9]{20}/", "Debe Contener 20 digitos") };
+				"/^[0-9]{20}/", "Debe Contener 20 digitos Ej: 01084455147889960002") };
 		return new RegExpressionConstraint(constrains, EConstraint.NO_EMPTY,
 				EConstraint.NO_NEGATIVE,
 				EConstraint.CUSTOM);
