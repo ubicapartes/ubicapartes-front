@@ -69,8 +69,8 @@
 											<row>												
 												<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Identificacion" />
 												<vbox hflex="1">
-													<textbox  hflex="1" placeholder="V15241085 o J34512545" sclass="form-control"
-													readonly="@bind(vm.makeAsReadOnly)" constraint="@bind(vm.notEmptyValidator)"
+													<textbox  hflex="1" placeholder="V-15241085 o J-34512545" maxlength="11" sclass="form-control"
+													readonly="@bind(vm.makeAsReadOnly)" constraint="@bind(vm.identificacionValidator)"
 													value="@bind(vm.cuenta.identificacion)" />
 												</vbox>
 											</row>

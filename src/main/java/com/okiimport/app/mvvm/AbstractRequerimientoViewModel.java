@@ -370,6 +370,14 @@ public abstract class AbstractRequerimientoViewModel extends AbstractViewModel {
 
 	}
 	
+	public CustomConstraint getIdentificacionValidator() {
+		RegExpression[] constrains = new RegExpression[] { new RegExpression(
+				"/^([VEJ]{1})-([0-9]{8,9})$/", "La identificacion debe estar en el formato V-18352025 ó J-35512349") };
+		return new RegExpressionConstraint(constrains, EConstraint.NO_EMPTY,
+				EConstraint.CUSTOM);
+
+	}
+	
 	public CustomConstraint getCantValidatorOrEmptyString() {
 		RegExpression[] constrains = new RegExpression[] { new RegExpression(
 				"/^(\\s*|\\d+)$/", "Debe contener un numero valido") };
