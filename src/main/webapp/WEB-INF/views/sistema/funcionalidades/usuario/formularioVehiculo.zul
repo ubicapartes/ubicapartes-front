@@ -92,7 +92,8 @@
 												sclass="form-label" />
 										</hbox>
 										<bandbox id="bdMotor"
-											mold="rounded" autodrop="true" disabled="@bind(vm.makeAsReadOnly)"
+											mold="rounded" autodrop="true" readonly="true"
+											disabled="@bind(vm.makeAsReadOnly)"
 											placeholder="Seleccione..." hflex="1"
 											value="@bind(vm.vehiculo.motor.nombre)">
 											<bandpopup>

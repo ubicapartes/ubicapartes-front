@@ -224,8 +224,7 @@ public class ListaMisVehiculosViewModel extends AbstractRequerimientoViewModel i
 							Messagebox.Button button = (Messagebox.Button) event.getData();
 							if (button == Messagebox.Button.YES) {
 								
-									vehiculo.setEstatus(EEstatusGeneral.INACTIVO);
-									sMaestros.registrarVehiculo(vehiculo);
+									sMaestros.eliminarVehiculo(vehiculo);
 									cambiarVehiculos(0, null, null);
 									notifyChange("vehiculos");
 								}
