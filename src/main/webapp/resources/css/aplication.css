@@ -217,6 +217,10 @@ div.tab-nav {
 	float: left;
 }
 
+.pull-right {
+	float: right !important;
+}
+
 
 /**COUNTER*/
 .counter-div {
