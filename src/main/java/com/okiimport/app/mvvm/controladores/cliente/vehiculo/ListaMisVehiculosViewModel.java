@@ -193,8 +193,8 @@ public class ListaMisVehiculosViewModel extends AbstractRequerimientoViewModel i
 		public void nuevoVehiculo(){
 			Map<String, Object> parametros = new HashMap<String, Object>();
 
-			//parametros.put("recordMode", "NEW");
-			llamarFormulario("usuario/formularioVehiculo.zul", null);
+			parametros.put("recordMode", "NEW");
+			llamarFormulario("usuario/formularioVehiculo.zul", parametros);
 		}
 		
 		/**

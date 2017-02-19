@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.WordUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
@@ -116,9 +117,7 @@ public class RegistrarVehiculoViewModel extends AbstractRequerimientoViewModel
 	 * */
 	@Command
 	public void registrar(@BindingParam("btnEnviar") Button btnEnviar,
-			@BindingParam("btnLimpiar") Button btnLimpiar,
-			@BindingParam("recordMode") String recordMode,
-			@BindingParam("edicion") String valor) {
+			@BindingParam("btnLimpiar") Button btnLimpiar) {
 		try {
 			if (checkIsFormValid()) {
 
@@ -133,19 +132,10 @@ public class RegistrarVehiculoViewModel extends AbstractRequerimientoViewModel
 				vehiculo.setEstatus(EEstatusGeneral.ACTIVO);
 
 				sTransaccion.actualizarVehiculo(vehiculo);
-
-				// El Objecto que se envia debe declararse final, esto quiere
-				// decir que no puede instanciarse sino solo una vez
 			
-				this.valor = valor;
-				if (this.valor != null)
-					mostrarMensaje("Informaci\u00F3n",
-							"Vehiculo Actualizado con Exito", null, null, null,
-							null);
-				else
-					mostrarMensaje("Informaci\u00F3n",
-							"Vehiculo Registrado con Exito", null, null, null,
-							null);
+				mostrarMensaje("Informaci\u00F3n", "Vehiculo "+operacion()+" con Exito", 
+						null, null, null, null);
+				
 				this.setValor(null);
 				this.recargar();
 			}
@@ -228,6 +218,18 @@ public class RegistrarVehiculoViewModel extends AbstractRequerimientoViewModel
 	@NotifyChange("listaMotores")
 	public void aplicarFiltroMotor() {
 		cambiarMotores(0, null, null);
+	}
+	
+	public String operacion(){
+		return WordUtils.capitalize(translateRecordMode());
+	}
+	
+	private String translateRecordMode(){
+		switch(recordMode){
+		case "NEW": return "registrado";
+		case "EDIT": return "editado";
+		case "READ": default: return "";
+		}
 	}
 
 	// METODOS PROPIOS DE LA CLASE
