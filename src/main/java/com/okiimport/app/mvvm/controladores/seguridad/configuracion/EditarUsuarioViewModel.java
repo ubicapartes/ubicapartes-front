@@ -1,5 +1,6 @@
 package com.okiimport.app.mvvm.controladores.seguridad.configuracion;
 
+import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.ValidationContext;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.Command;
@@ -11,6 +12,7 @@ import org.zkoss.bind.validator.AbstractValidator;
 import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.EventQueues;
 import org.zkoss.zk.ui.event.UploadEvent;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Button;
@@ -41,8 +43,8 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 	@Wire("#imgFoto")
 	private Image imgFoto;
 	
-	@Wire("#btnCambFoto")
-	private Button btnCambFoto;
+	@Wire("#btnCambFoto2")
+	private Button btnCambFoto2;
 	
 	@Wire("#msgUsername") 
 	  private Label lblMsgUsername;
@@ -50,7 +52,18 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 	@Wire("#msgPassword") 
 	  private Label lblMsgPassword;
 	
+	@Wire("#closeFoto")
+	private Component closeFoto;
+	
+	@Wire("#txtClaveNueva")
+	private Textbox txtClaveNueva;
+	
+	@Wire("#txtClaveNuevaConf")
+	private Textbox txtClaveNuevaConf;
+	
+	@Wire("#txtUsername")
 	private Textbox txtUsername;
+	
 	
 	//Modelos
 	private Persona persona;
@@ -60,6 +73,8 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 	private AbstractValidator validadorUsername;
 	private String username;
 	private String repetirPassword;
+	private boolean isValidFoto;
+	private String originalUsername;
 
 	@AfterCompose
 	public void doAfterCompose(@ContextParam(ContextType.VIEW) Component view,
@@ -68,12 +83,12 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 		persona = usuario.getPersona();
 		this.usuario = usuario;
 		this.usuario.setPasword(null);
-		username = this.usuario.getUsername();
-		
-		btnCambFoto.addEventListener("onUpload", this);
+		//username = this.usuario.getUsername();
+		originalUsername = this.usuario.getUsername();
+		btnCambFoto2.addEventListener("onUpload", this);
 		this.lblMsgPassword.setVisible(false);
 		this.lblMsgUsername.setVisible(false);
-		validadorUsername = new AbstractValidator() {
+		/*validadorUsername = new AbstractValidator() {
 			
 			@Override
 			public void validate(ValidationContext ctx) {
@@ -88,7 +103,27 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 						addInvalidMessage(ctx, mensaje);
 					}
 			}
-		};
+		};*/
+		
+		/*super.doAfterCompose(view);
+		btnCambFoto.addEventListener("onUpload", this);
+		usuario = super.getUsuario();
+		setOriginalUsername(usuario.getUsername());
+		if(usuario.getFoto64()!=null && !usuario.getFoto64().isEmpty()){
+			setValidFoto(true);
+			closeFoto.setVisible(true);
+		} else {
+			setValidFoto(false);
+			closeFoto.setVisible(false);
+		}*/
+		
+		if(this.usuario.getFoto64()!=null && !this.usuario.getFoto64().isEmpty()){
+			setValidFoto(true);
+			closeFoto.setVisible(true);
+		} else {
+			setValidFoto(false);
+			closeFoto.setVisible(false);
+		}
 	}
 	
 	/**INTERFACES*/
@@ -103,14 +138,76 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 			mostrarMensaje("Error", "No es una imagen: " + media, null, null, null, null);
 	}
 	
+	@Command
+	@NotifyChange("usuario")
+	public void eliminarFoto(){
+		usuario.setFoto(null);
+		closeFoto.setVisible(false);
+		setValidFoto(true);
+	}
+	
 	/**COMMAND*/
 	@Command
 	@NotifyChange("usuario")
 	public void guardar(){
+		//org.zkoss.image.Image foto = this.imgFoto.getContent();
+		String nuevaClave = txtClaveNueva.getValue();
+		String nuevaClaveConf = txtClaveNuevaConf.getValue();
 		org.zkoss.image.Image foto = this.imgFoto.getContent();
+		String severidad ="";
+		String msg="";
+		if(foto!=null && isValidFoto())
+			usuario.setFoto(foto.getByteData());
 		
-		
-				if(usuario.getPasword().equals(usuario.getPaswordRepeat())){
+		if (!txtUsername.getValue().equalsIgnoreCase("")){
+			try {
+				
+					if (validarCambioUsuario() && sControlUsuario.verificarUsername(txtUsername.getValue())){
+						severidad = "Error";
+						msg ="El username ya se encuentra registrado";
+					}else{
+						if(!(nuevaClave.equalsIgnoreCase("") && nuevaClaveConf.equalsIgnoreCase(""))){
+							if((nuevaClave.equals(nuevaClaveConf))){
+								if(verificarContrasenia(nuevaClaveConf)){
+									usuario.setPasword(nuevaClave);
+									usuario=sControlUsuario.actualizarUsuario(usuario, false);
+									severidad = "Informacion";
+									msg ="Datos guardados satisfactoriamente";
+									setOriginalUsername(txtUsername.getValue());
+									
+								}else{
+									severidad = "Error";
+									msg ="La clave debe contener al menos un numero y una letra mayuscula";
+								}
+							}else{
+								severidad = "Error";
+								msg ="Las claves no coinciden, por favor verifique";
+							}
+						}else{
+							ejecutarGlobalCommand("cambiarUsuario", null);
+							usuario=sControlUsuario.actualizarUsuario(usuario, false);
+							severidad = "Informacion";
+							msg ="Datos guardados satisfactoriamente";
+							setOriginalUsername(txtUsername.getValue());
+							winEditarUsuario.onClose();
+							
+						}
+					}
+				
+			}catch(Exception e){
+				System.out.println(e.getMessage());
+				severidad="Error";
+				msg="Error interno";
+			}
+		}else{
+			severidad = "Error";
+			msg ="Campos obligatorios vacios";
+		}
+			mostrarMensaje(severidad, msg, null, null, null, null);
+			txtClaveNueva.setValue("");
+			txtClaveNuevaConf.setValue("");
+			
+				/*if(usuario.getPasword().equals(usuario.getPaswordRepeat())){
 							if (checkIsFormValid()) {
 							
 									if(foto!=null)
@@ -124,13 +221,41 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 									
 							}
 				}else{
-					this.lblMsgPassword.setValue("Las contraseñas no coinciden");
+					this.lblMsgPassword.setValue("Las contraseï¿½as no coinciden");
 					this.lblMsgPassword.setVisible(true);
-					mostrarMensaje("Informaci\u00F3n", "Las contraseñas no coinciden", Messagebox.EXCLAMATION, null, null, null);
+					mostrarMensaje("Informaci\u00F3n", "Las contraseï¿½as no coinciden", Messagebox.EXCLAMATION, null, null, null);
 					
-				}
+				}*/
 		
 		
+	}
+	
+	/**
+	 * Metodo que verifica si el formato de la contraseï¿½a es correcto
+	 * @param clave contrasenia a verificar
+	 * @return true si el formato es correcto, false caso contrario
+	 */
+	public boolean verificarContrasenia(String clave){
+		boolean m=false;
+		boolean n=false;
+		for(char x: clave.toCharArray()){
+			if(Character.isUpperCase(x)){
+				m=true;
+			}
+			if(Character.isDigit(x)){
+				n=true;
+			}
+		}
+		return n && m?true:false;
+	}
+	
+	public boolean validarCambioUsuario(){
+		boolean respuesta = false;
+		if(!getOriginalUsername().equalsIgnoreCase(txtUsername.getValue())){
+			respuesta = true;
+			
+		}
+		return respuesta;
 	}
 
 	/**SETTERS Y GETTERS*/	
@@ -172,6 +297,22 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 
 	public void setRepetirPassword(String repetirPassword) {
 		this.repetirPassword = repetirPassword;
+	}
+	
+	public boolean isValidFoto() {
+		return isValidFoto;
+	}
+
+	public void setValidFoto(boolean isValidFoto) {
+		this.isValidFoto = isValidFoto;
+	}
+	
+	public String getOriginalUsername() {
+		return originalUsername;
+	}
+
+	public void setOriginalUsername(String originalUsername) {
+		this.originalUsername = originalUsername;
 	}
 	
 	

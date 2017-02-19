@@ -13,6 +13,33 @@
 				<include src="/WEB-INF/views/template/modal/titleModal.zul" titulo="Editar Usuario" />
 					<n:div class="modal-inner">
 						<groupbox closable="false">
+							<style>
+			.boxImagen {
+			    position: relative;
+			    display: inline-block;
+			}
+			.close:before {
+			    content: '✕';
+			    font-size:16px;
+			    color:white;
+			    border-radius:50%;
+			    background-color:black;
+			}
+			.close {
+			    position: absolute;
+			    top: 0;
+			    right: 0;
+			    cursor: pointer;
+			    color:white;
+			    border-radius:50%;
+			    background-color:black;
+			}
+			.container-style {
+				margin-top: -5px;
+				padding-top: -5px;
+				
+			}
+		</style>
 						
 				<include src="/WEB-INF/views/template/modal/subTitleModal.zul" subtitulo="Datos personales" />
 				<div sclass="card card-main card-inner">
@@ -56,34 +83,42 @@
 					</columns>
 					<rows>
 						<row>
-							<label value="Nombre de usuario:" sclass="label-not-mandatory" />
+							<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Nombre de usuario:" />
 							<vbox>
-							<textbox value="@bind(fx.username) @validator(vm.validadorUsername, txtUsername=self)"
+							<textbox  id="txtUsername" value="@bind(fx.username)"
 								constraint="@bind(vm.notEmptyValidator)" />
 								<label id="msgUsername" visible="false" sclass="requerido"/>
 							</vbox>
 							
 							<label value="Foto:" sclass="label-not-mandatory" />
 							<vbox width="100%" >
-							<image id="imgFoto" width="110px" height="110px" src="@bind(vm.usuario.getFoto64())" />
+							
+							<div class="boxImagen" align="right">
+								<image id="imgFoto" width="110px"
+									height="110px" src="@bind(vm.usuario.getFoto64())" />
+									<span id="closeFoto" class="close" tooltiptext="Eliminar Foto" onClick="@command('eliminarFoto')"></span>
+
+								
+							</div>
+							<!--<image id="imgFoto" width="110px" height="110px" src="@bind(vm.usuario.getFoto64())" /> -->
 					
 							</vbox>
-							<button id="btnCambFoto" label="..." sclass="btn-primary" 
-						upload="true" style="margin-bottom:0px" />
+							<div>
+								<button id="btnCambFoto2" tooltiptext="Cambiar Foto" label="Buscar..." sclass="btn-primary" upload="true" style="margin-bottom:0px" />
+							</div>
+							<!--<button id="btnCambFoto" label="..." sclass="btn-primary" upload="true" style="margin-bottom:0px" />-->
 						</row>
 						
 						<row>
 							<label value="Nueva contraseña:" sclass="label-not-mandatory" />
 							<vbox>
-							<textbox type="password" value="@bind(fx.pasword)" 
-								constraint="@bind(vm.notEmptyValidator)" />
+							<textbox id="txtClaveNueva" maxlength="50" type="password" value="@bind(fx.pasword)" />
 								
 							</vbox>
 							
 							<label value="Repetir contraseña:" sclass="label-not-mandatory" />
 							<vbox>
-							<textbox type="password" value="@bind(fx.paswordRepeat)" 
-								constraint="@bind(vm.notEmptyValidator)" />
+							<textbox id="txtClaveNuevaConf"  maxlength="50" type="password" value="@bind(fx.paswordRepeat)"  />
 								<label id="msgPassword" visible="false" sclass="requerido"/>
 							</vbox>
 						</row>

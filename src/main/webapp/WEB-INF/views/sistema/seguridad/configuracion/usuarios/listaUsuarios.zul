@@ -69,7 +69,7 @@
 						<image src="@bind(each.getFoto64())"
 							width="50px" height="50px" />
 					</listcell>
-					<listcell>
+					<!-- <listcell>
 					 	<div sclass=" action">
 							<a
 								iconSclass="z-icon-pencil green bigger-200" tooltiptext="Editar"
@@ -85,7 +85,31 @@
 								onClick="@command('actualizarEstado', usuario=each, estado=false)"
 								if="${each.activo}" />
 						</div>
-					</listcell>
+					</listcell>-->
+					<listcell>
+								<hbox spacing="20px">
+									<div class="btn-group btn-group-sm">
+										<button 
+											iconSclass="z-icon-pencil green bigger-160" 
+											tooltiptext="Editar"
+											onClick="@command('editarUsuario', usuario = each)"
+										     />
+										<button
+											iconSclass="fa fa-unlock-alt blue fa-160"
+											tooltiptext="Activar"
+											onClick="@command('actualizarEstado', usuario=each, estado=true)"
+											if="${not each.activo}"
+											 />
+										<button 
+											iconSclass="fa fa-unlock blue fa-160"
+											tooltiptext="Desactivar"
+											onClick="@command('actualizarEstado', usuario=each, estado=false)"
+											if="${each.activo}"
+											 />
+										
+									</div>
+								</hbox>
+							</listcell>
 				</listitem>
 			</template>
 		</listbox>
