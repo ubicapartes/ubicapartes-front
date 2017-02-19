@@ -215,7 +215,7 @@ public class ListaMisVehiculosViewModel extends AbstractRequerimientoViewModel i
 		 * */
 		@Command
 		public void eliminarVehiculo(@BindingParam("vehiculo") final Vehiculo vehiculo){
-			super.mostrarMensaje("Confirmacion", "�Desea Eliminar el Vehiculo?", Messagebox.EXCLAMATION, new Messagebox.Button[]{Messagebox.Button.YES,Messagebox.Button.NO}, 
+			super.mostrarMensaje("Confirmacion", "\u00bfDesea Eliminar el Vehiculo?", Messagebox.EXCLAMATION, new Messagebox.Button[]{Messagebox.Button.YES,Messagebox.Button.NO}, 
 					new EventListener(){
 
 						@Override
