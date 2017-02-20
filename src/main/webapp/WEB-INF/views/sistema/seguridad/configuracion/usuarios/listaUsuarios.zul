@@ -26,7 +26,7 @@
 						instant="true"
 						onChange="@command('aplicarFiltro')" />
 				</auxheader>
-				<auxheader colspan="1">
+				<auxheader colspan="3">
 					<div sclass="z-icon-filter bigger-200" />
 					<label value="Estado: " />
 					<radiogroup id="radEstado" orient="horizontal"
@@ -41,13 +41,9 @@
 					<button label="Limpiar"
 						onClick="@command('limpiarRadios')" sclass="btn-primary" />
 				</auxheader>
-				<auxheader colspan="1" />
-				<auxheader width="20%">
-					<button label="Nuevo Usuario"
-						onClick="@command('nuevoUsuario')" sclass="btn-primary" />
-				</auxheader>
+	  
 			</auxhead>
-			<listhead menupopup="auto">
+			<listhead>
 				<listheader width="2%" />
 				<listheader id="id" label="Código" sort="auto(id)"
 					width="18%" />
@@ -67,25 +63,32 @@
 					<listcell label="@bind(each.isActivo())" />
 					<listcell>
 						<image src="@bind(each.getFoto64())"
-							width="50px" height="50px" />
+							width="25px" height="25px" />
 					</listcell>
 					<listcell>
-					 	<div sclass=" action">
-							<a
-								iconSclass="z-icon-pencil green bigger-200" tooltiptext="Editar"
-								onClick="@command('editarUsuario', usuario = each)" />
-
-							<a iconSclass="fa fa-unlock-alt fa-2x"
-								tooltiptext="Activar"
-								onClick="@command('actualizarEstado', usuario=each, estado=true)"
-								if="${not each.activo}" />
-
-							<a iconSclass="fa fa-unlock fa-2x"
-								tooltiptext="Desactivar"
-								onClick="@command('actualizarEstado', usuario=each, estado=false)"
-								if="${each.activo}" />
-						</div>
-					</listcell>
+								<hbox spacing="20px">
+									<div class="btn-group btn-group-sm">
+										<button 
+											iconSclass="z-icon-pencil green bigger-160" 
+											tooltiptext="Editar"
+											onClick="@command('editarUsuario', usuario = each)"
+										     />
+										<button
+											iconSclass="fa fa-unlock-alt blue fa-160"
+											tooltiptext="Activar"
+											onClick="@command('actualizarEstado', usuario=each, estado=true)"
+											if="${not each.activo}"
+											 />
+										<button 
+											iconSclass="fa fa-unlock blue fa-160"
+											tooltiptext="Desactivar"
+											onClick="@command('actualizarEstado', usuario=each, estado=false)"
+											if="${each.activo}"
+											 />
+										
+									</div>
+								</hbox>
+							</listcell>
 				</listitem>
 			</template>
 		</listbox>
