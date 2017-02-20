@@ -82,11 +82,6 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 			@ExecutionArgParam("usuario") Usuario usuario){
 		super.doAfterCompose(view);
 		
-		this.cuenta = (usuario==null) ? new Usuario() : u;
-		this.cerrar = (cerrar==null) ? true : cerrar;
-		tipoCuenta= (cuenta==null? "CORRIENTE": cuenta.getTipo());
-		this.valor=valor;
-		
 		persona = usuario.getPersona();
 		this.usuario = usuario;
 		this.usuario.setPasword(null);
