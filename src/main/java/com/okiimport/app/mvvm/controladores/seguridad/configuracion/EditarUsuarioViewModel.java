@@ -23,6 +23,7 @@ import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
 import com.okiimport.app.model.Analista;
+import com.okiimport.app.model.Cuenta;
 import com.okiimport.app.model.Persona;
 import com.okiimport.app.model.Usuario;
 import com.okiimport.app.mvvm.AbstractRequerimientoViewModel;
@@ -80,6 +81,12 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 	public void doAfterCompose(@ContextParam(ContextType.VIEW) Component view,
 			@ExecutionArgParam("usuario") Usuario usuario){
 		super.doAfterCompose(view);
+		
+		this.cuenta = (usuario==null) ? new Usuario() : u;
+		this.cerrar = (cerrar==null) ? true : cerrar;
+		tipoCuenta= (cuenta==null? "CORRIENTE": cuenta.getTipo());
+		this.valor=valor;
+		
 		persona = usuario.getPersona();
 		this.usuario = usuario;
 		this.usuario.setPasword(null);
@@ -88,22 +95,6 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 		btnCambFoto2.addEventListener("onUpload", this);
 		this.lblMsgPassword.setVisible(false);
 		this.lblMsgUsername.setVisible(false);
-		/*validadorUsername = new AbstractValidator() {
-			
-			@Override
-			public void validate(ValidationContext ctx) {
-				// TODO Auto-generated method stub
-				String username = (String) ctx.getProperty().getValue();
-				txtUsername = (Textbox) ctx.getBindContext().getValidatorArg("txtUsername");
-				if(username!=null)
-					if(sControlUsuario.verificarUsername(username) && 
-							!username.equalsIgnoreCase(EditarUsuarioViewModel.this.username)){
-						String mensaje = "El Username "+username+" ya esta en uso!";
-						mostrarNotification(mensaje, "error", 5000, true, txtUsername);
-						addInvalidMessage(ctx, mensaje);
-					}
-			}
-		};*/
 		
 		/*super.doAfterCompose(view);
 		btnCambFoto.addEventListener("onUpload", this);
@@ -132,10 +123,15 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 	public void onEvent(UploadEvent event) throws Exception {
 		// TODO Auto-generated method stub
 		Media media = event.getMedia();
-		if (media instanceof org.zkoss.image.Image)
+		if (media instanceof org.zkoss.image.Image){
 			imgFoto.setContent((org.zkoss.image.Image) media);
-		else if (media != null)
+			closeFoto.setVisible(true);
+			setValidFoto(true);
+		}else if (media != null){
 			mostrarMensaje("Error", "No es una imagen: " + media, null, null, null, null);
+			closeFoto.setVisible(false);
+			setValidFoto(false);
+		}
 	}
 	
 	@Command
@@ -156,6 +152,8 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 		org.zkoss.image.Image foto = this.imgFoto.getContent();
 		String severidad ="";
 		String msg="";
+		System.out.println("foto -> "+foto);
+		System.out.println("isValidFoto() -> "+isValidFoto());
 		if(foto!=null && isValidFoto())
 			usuario.setFoto(foto.getByteData());
 		
@@ -184,7 +182,7 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 								msg ="Las claves no coinciden, por favor verifique";
 							}
 						}else{
-							ejecutarGlobalCommand("cambiarUsuario", null);
+							ejecutarGlobalCommand("cambiarUsuarios", null);
 							usuario=sControlUsuario.actualizarUsuario(usuario, false);
 							severidad = "Informacion";
 							msg ="Datos guardados satisfactoriamente";

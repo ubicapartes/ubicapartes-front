@@ -67,25 +67,8 @@
 					<listcell label="@bind(each.isActivo())" />
 					<listcell>
 						<image src="@bind(each.getFoto64())"
-							width="50px" height="50px" />
+							width="25px" height="25px" />
 					</listcell>
-					<!-- <listcell>
-					 	<div sclass=" action">
-							<a
-								iconSclass="z-icon-pencil green bigger-200" tooltiptext="Editar"
-								onClick="@command('editarUsuario', usuario = each)" />
-
-							<a iconSclass="fa fa-unlock-alt fa-2x"
-								tooltiptext="Activar"
-								onClick="@command('actualizarEstado', usuario=each, estado=true)"
-								if="${not each.activo}" />
-
-							<a iconSclass="fa fa-unlock fa-2x"
-								tooltiptext="Desactivar"
-								onClick="@command('actualizarEstado', usuario=each, estado=false)"
-								if="${each.activo}" />
-						</div>
-					</listcell>-->
 					<listcell>
 								<hbox spacing="20px">
 									<div class="btn-group btn-group-sm">
