@@ -4,9 +4,12 @@ package com.okiimport.app;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
-
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +20,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.zkoss.json.JSONObject;
 
+import com.okiimport.app.model.Analista;
+import com.okiimport.app.model.Usuario;
+import com.okiimport.app.service.maestros.SMaestros;
+import com.okiimport.app.service.mail.MailProveedor;
+import com.okiimport.app.service.mail.MailService;
 import com.okiimport.app.service.seguridad.SAcceso;
 
 /**
@@ -30,6 +41,14 @@ public class HomeController {
 	
 	@Autowired
 	private SAcceso sAcceso;
+	
+	@Inject MailService mailService;
+	
+	@Autowired
+	private SMaestros sMaestros;
+	
+	@Autowired
+	private MailProveedor mailProveedor;
 	
 	/**
 	 * Simply selects the home view to render by returning its name. web/login
@@ -49,7 +68,7 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value= "/inicioSession", method = RequestMethod.GET)
-	public String iniciarSession(){
+	public String iniciarSession(Model model){
 //		1. Simple
 //		mailService.send("eugeniohernandez17@gmail.com", "SISTEMA", "PRUEBA DE MENSAJE");
 //		2.Completo
@@ -60,11 +79,46 @@ public class HomeController {
 //		model.put("cliente", cliente);
 //		String archivo = obtenerDirectorioRecursos("prueba.html");
 //		mailService.send("eugeniohernandez17@gmail.com", "SISTEMA", "prueba2.html", model, new File(archivo));
+		model.addAttribute("form", "login.zul");
 		return "security/index.zul";
 	}
 	
+	@RequestMapping(value="/recuperarUsuario", method = RequestMethod.GET)
+	public String recuperarUsuario(Model model){
+		model.addAttribute("form", "recuperarUsuario.zul");
+		return "security/index.zul";
+	}
+	
+	@RequestMapping(value="/recuperarPassword", method = RequestMethod.GET)
+	public String recuperarPassword(HttpServletRequest request, Model model){
+		String baseUrl = String.format("%s://%s:%d",request.getScheme(),  request.getServerName(), request.getServerPort());
+
+		model.addAttribute("serverUrl", baseUrl);
+		model.addAttribute("form", "recuperarPassword.zul");
+		return "security/index.zul";
+	}
+	
+	@RequestMapping(value="/password/new", method = RequestMethod.GET)
+	public String cambiarPassword(Model model, @RequestParam("token") String token){
+		Usuario usuario = this.sAcceso.consultarToken(token);
+		if(usuario!=null){
+			model.addAttribute("usuario", usuario);
+			model.addAttribute("form", "cambiarPassword.zul");
+			return "security/index.zul";
+		}
+		else
+			return this.iniciarSession(model);
+	}
+	
+	
+	@RequestMapping(value= "/contacto", method = RequestMethod.GET)
+	public String contactar(){
+		return "security/contactanos.zul";
+	}
+	
 	@RequestMapping(value= "/admin/home", method = RequestMethod.GET)
-	public String iniciarAdministrador(){
+	public String iniciarAdministrador(Model model){
+		model.addAttribute("form", "login.zul");
 		return "sistema/index.zul";
 	}
 	
@@ -117,5 +171,36 @@ public class HomeController {
 		return "portal/formularioRegistroUsuario.zul";
 	}
 	
+
+
+	@RequestMapping(value= "/sendMessage", method = RequestMethod.GET, headers = {"content-type=application/json"})
+	public @ResponseBody JSONObject sendMessage(HttpServletRequest request){
+		JSONObject resp = new JSONObject();
+		try {
+			List<Analista> admins = sMaestros.consultarAdministradores();
+			Iterator<Analista> iter=admins.iterator();
+			Analista p=new Analista();
+			while (iter.hasNext() ) {
+	            p = iter.next();
+	            mailProveedor.enviarInformacionContacto(p.getCorreo(), request.getParameter("nombre"), request.getParameter("telefono"), request.getParameter("correo"), request.getParameter("mensaje"), mailService);
+			}
+			resp.put("status", "OK");
+			resp.put("statusCode", 200);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			resp.put("status", "ERROR");
+			resp.put("statusCode", 500);
+		}		
+		  return resp;
+	}
+	
+	public MailProveedor getMailProveedor() {
+		return mailProveedor;
+	}
+
+	public void setMailProveedor(MailProveedor mailProveedor) {
+		this.mailProveedor = mailProveedor;
+	}
 	
 }

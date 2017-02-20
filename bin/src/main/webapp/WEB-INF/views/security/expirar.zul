@@ -1,0 +1,6 @@
+<?page title="Session Expirada" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window title="Sesión Expirada" border="normal">
+New Content Here!
+</window>
+</zk>

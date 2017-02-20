@@ -14,6 +14,7 @@ import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Button;
+import org.zkoss.zul.Label;
 import org.zkoss.zul.Window;
 
 import com.okiimport.app.model.Analista;
@@ -35,6 +36,12 @@ public class RegistrarAnalistasViewModel extends AbstractRequerimientoViewModel 
 	@Wire("#winFormularioAnalista")
 	private Window winFormularioAnalista;
 	
+		@Wire("#msgCorreoA") 
+	  private Label lblMsgCorreo; 
+	 
+	  @Wire("#msgCedulaRifA") 
+	  private Label lblMsgCedulaRif;
+	
 	//Atributos
 	private Analista analista;
 	private Ciudad ciudad;
@@ -44,6 +51,8 @@ public class RegistrarAnalistasViewModel extends AbstractRequerimientoViewModel 
 	private String recordMode;
 	private Boolean cerrar;
 	private String valor=null;
+	private Boolean validacionCorreo=false; 
+	  private Boolean validacionCedulaRif=false; 
 	private boolean makeAsReadOnly;
 	
 	/**
@@ -60,14 +69,13 @@ public class RegistrarAnalistasViewModel extends AbstractRequerimientoViewModel 
 			@ExecutionArgParam("cerrar") Boolean cerrar) {
 		super.doAfterCompose(view);
 		this.recordMode = (recordMode == null) ? "EDIT" : recordMode;
-		//System.out.println("imprimir analista  ----- "+analista.getNombre()+" "+analista.getApellido());
+		
 		this.analista = (analista==null) ? new Analista() :  analista;
 		this.cerrar = (cerrar==null) ? true : cerrar;
 		makeAsReadOnly = (recordMode != null && recordMode.equalsIgnoreCase("READ"))? true : false; 
 		//limpiar();
 		this.valor=valor;
-		
-		System.out.println("ciudad esta en:"+this.analista.getCiudad());
+	
 		if(this.analista.getCiudad()==null){
 			this.ciudad=new Ciudad();
 			this.estado=new Estado();
@@ -83,6 +91,13 @@ public class RegistrarAnalistasViewModel extends AbstractRequerimientoViewModel 
 		listaEstados = llenarListaEstados();
 		listaTipoPersona = llenarListaTipoPersona();
 		this.tipoPersona = listaTipoPersona.get(1);
+		 tipoPersona=consultarTipoPersona(this.analista.getCedula(),listaTipoPersona); 
+		    String cedula = this.analista.getCedula(); 
+		    this.valor=valor;
+		    if(cedula!=null) 
+		        this.analista.setCedula(this.analista.getCedula().substring(1)); 
+		      if(this.analista.getCiudad() != null) 
+		        this.estado = this.analista.getCiudad().getEstado();
 		
 		
 	}
@@ -147,10 +162,69 @@ public class RegistrarAnalistasViewModel extends AbstractRequerimientoViewModel 
 		analista = new Analista();
 		this.ciudad=new Ciudad();
 		this.estado=new Estado();
+		 this.validacionCorreo=false; 
+		 this.validacionCedulaRif=false;
 		super.cleanConstraintForm();
 	}
 	
 	/**METODOS PROPIOS DE LA CLASE*/
+	/**
+	 * Descripcion: Permitira verificar que el correo ingresado existe o no en la BD 
+	   * Parametros: Ninguno 
+	   * Retorno Ninguno 
+	   * Nota: Ninguna 
+	   * */ 
+	 @Command 
+	  public void verificarCorreo(){ 
+	     
+	    this.lblMsgCorreo.setValue("El correo ya existe"); 
+	    this.validacionCorreo=this.sMaestros.consultarCorreoAnalista(analista.getCorreo()); 
+	    //llamada al metodo del validar  
+	    if(this.validacionCorreo){ 
+	      this.lblMsgCorreo.setVisible(true); 
+	    }else{ 
+	        this.lblMsgCorreo.setVisible(false); 
+	        this.validacionCorreo=false; 
+	      } 
+	    } 
+	 
+	 
+	 @Command 
+	  public void verificarCedulaRif(){ 
+	     
+	    this.lblMsgCedulaRif.setValue("La cedula/Rif ya existe"); 
+	    //System.out.println("cedula que ingresada es: "+analista.getCedula()); 
+	    this.validacionCedulaRif=this.sMaestros.consultarCedulaRifAnalista(this.getCedulaCompleta()); 
+	    //llamada al metodo del validar  
+	    if(this.validacionCedulaRif){ 
+	    	 this.lblMsgCedulaRif.setVisible(true); 
+	    }else{ 
+	      this.lblMsgCedulaRif.setVisible(false); 
+	      this.validacionCedulaRif=false; 
+	    } 
+	  } 
+	    
+	 private String getCedulaCompleta(){ 
+		    //String tipo = (this.tipoPersona.getValor()) ? "J" : "V"; 
+		    return this.tipoPersona.getNombre() + analista.getCedula(); 
+		  } 
+	 
+	 
+	 /** 
+	   * Descripcion: Permite Consultar el tipo de persona 
+	   * Parametros: @param view: formularioAnalista.zul  
+	   * Retorno: Ninguno 
+	   * Nota: Ninguna 
+	   * */
+	 private ModeloCombo<Boolean> consultarTipoPersona(String cedula, List <ModeloCombo<Boolean>> listaTipoPersona){ 
+		    if (cedula!=null){ 
+		      String tipoPersona = cedula.substring(0, 1); 
+		      for(ModeloCombo<Boolean> tipoPersonal: listaTipoPersona ) 
+		        if (tipoPersonal.getNombre().equalsIgnoreCase(tipoPersona)) 
+		          return tipoPersonal; 
+		    } 
+		    return this.tipoPersona; 
+	  } 
 	
     /**METODOS SETTERS AND GETTERS */
 	
@@ -249,6 +323,22 @@ public class RegistrarAnalistasViewModel extends AbstractRequerimientoViewModel 
 	public void setValor(String valor) {
 		this.valor = valor;
 	}
+	
+	public Boolean getValidacionCorreo() { 
+	    return validacionCorreo; 
+	  } 
+	 
+	  public void setValidacionCorreo(Boolean validacionCorreo) { 
+	    this.validacionCorreo = validacionCorreo; 
+	  } 
+	  
+	  public Boolean getValidacionCedulaRif() { 
+		    return validacionCedulaRif; 
+		  } 
+		 
+		  public void setValidacionCedulaRif(Boolean validacionCedulaRif) { 
+		    this.validacionCedulaRif = validacionCedulaRif; 
+		  } 
 	
 	
 

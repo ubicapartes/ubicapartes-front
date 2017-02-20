@@ -93,10 +93,11 @@
 																	placeholder="Ej: 402405375" sclass="form-control"
 																	readonly="@bind(vm.makeAsReadOnly)"
 																	value="@bind(vm.proveedor.cedula)"
-																	constraint="@bind(vm.validatorClienteCedulaRif)" />
-																<!-- onBlur="@command('buscarProveedor')"-->
-																<!-- onOK="@command('buscarProveedor')" -->
-															</vbox>
+																	constraint="@bind(vm.validatorClienteCedulaRif)" 
+																	onChange="@command('verificarCedulaRif')" 
+                                  									onOK="@command('verificarCedulaRif')"/>
+																<label id="msgCedulaRifP" visible="false" sclass="requerido"/> 
+                                						   </vbox>
 														</hbox>
 
 														<!-- NOMBRE O RAZON SOCIAL -->
@@ -408,12 +409,9 @@
 						</tabbox>
 					</n:div>
 					<n:div class="modal-footer">
-						<hbox width="100%"
-							visible="@bind(!vm.makeAsReadOnly)" hflex="1">
-							<include
-								src="/WEB-INF/views/template/textFieldsMandatory.zul" hflex="1" />
-							<div align="right">
-
+						<div visible="@bind(!vm.makeAsReadOnly)" width="100%">
+							<include src="/WEB-INF/views/template/textFieldsMandatory.zul" hflex="1" />
+							<div class="btn-group btn-group-sm pull-right">
 								<button id="btnLimpiar" label="Limpiar"
 									type="submit" onClick="@command('limpiar')"
 									sclass="btn-sm btn-info" />
@@ -422,7 +420,7 @@
 									onClick="@command('registrar', btnEnviar=self, btnLimpiar=btnLimpiar, tipoReg='interno')"
 									sclass="btn-sm btn-primary" />
 							</div>
-						</hbox>
+						</div>
 					</n:div>
 				</div>
 			</div>

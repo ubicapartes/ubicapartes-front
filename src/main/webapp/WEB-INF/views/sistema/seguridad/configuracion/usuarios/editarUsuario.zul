@@ -1,68 +1,151 @@
-<zk>
-	<window id="winEditarUsuario" title="Editar Usuario"
-		border="none" width="500px"  closable="true" sclass="btn-primary"
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winEditarUsuario" border="none" height="0px"
 		apply="org.zkoss.bind.BindComposer"
 		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.seguridad.configuracion.EditarUsuarioViewModel')"
 		form="@id('fx') @load(vm.usuario) @save(vm.usuario, before='guardar')">
-		
-		<columnlayout>
-			<columnchildren width="60%">
-				<grid>
-					<columns>
-						<column width="120px" />
-						<column />
-					</columns>
-					<rows>
-						<row>
-							<label value="Cédula" />
-							<vbox>
-							<textbox readonly="true" value="@bind(vm.persona.cedula)"
-							constraint="@bind(vm.validatorClienteCedulaRif)" />
-							</vbox>
-						</row>
-						<row>
-							<label value="Nombre" />
-							<vbox>
-							<textbox readonly="true" value="@bind(vm.persona.nombre)" 
-							constraint="@bind(vm.notEmptyValidator)"/>
-							</vbox>
-						</row>
-						<row>
-							<label value="Apellido" />
-							<vbox>
-							<textbox readonly="true" value="@bind(vm.persona.apellido)" 
-							constraint="@bind(vm.notEmptyValidator)"/>
-							</vbox>
-						</row>
-						<row>
-							<label value="Username" />
-							<vbox>
-							<textbox value="@bind(fx.username) @validator(vm.validadorUsername, txtUsername=self)"
-								constraint="@bind(vm.notEmptyValidator)" />
-							</vbox>
-						</row>
-						<row>
-							<label value="Nuevo Password" />
-							<vbox>
-							<textbox type="password" value="@bind(fx.pasword)" 
-								constraint="@bind(vm.notEmptyValidator)" />
-							</vbox>
-						</row>
-					</rows>
-				</grid>
-			</columnchildren>
-			<columnchildren width="40%">
-				<vbox width="100%" align="center">
-					<image id="imgFoto" width="110px" height="110px" src="@bind(vm.usuario.getFoto64())" />
-					<button id="btnCambFoto" label="..." sclass="btn-primary" 
-						upload="true" style="margin-bottom:0px" />
-				</vbox>
-				
-				
-			</columnchildren>
-		</columnlayout>
-		<toolbar>
-			<button label="Guardar" sclass="btn-primary" onClick="@command('guardar')"/>
-        </toolbar>
+
+		<n:div aria-hidden="false" class="modal fade in" role="dialog"
+			tabindex="-1" style="display: block;">
+
+			<div class="modal-dialog modal-full" height="auto"><!-- modal-xs -->
+				<div sclass="modal-content">
+					<include src="/WEB-INF/views/template/modal/titleModal.zul"
+						titulo="Editar Usuario" />
+					<n:div class="modal-inner">
+
+						<style>
+							.boxImagen {
+							position: relative;
+							display: inline-block;
+							}
+							.close:before {
+							content: '✕';
+							font-size:16px;
+							color:white;
+							border-radius:50%;
+							background-color:black;
+							}
+							.close {
+							position:
+							absolute;
+							top: 0;
+							right: 0;
+							cursor: pointer;
+							color:white;
+							border-radius:50%;
+							background-color:black;
+							}
+							.container-style {
+							margin-top: -5px;
+							padding-top: -5px;
+
+							}
+						</style>
+						<tabbox maximalHeight="true" sclass="tab-nav tab-nav-blue">
+							<tabs>
+								<tab sclass="waves-color-blue waves-effect">
+									<label value="Datos del  Usuario" />
+								</tab>
+							</tabs>
+							<tabpanels>
+								<tabpanel height="200px">
+
+
+									<grid>
+										<columns>
+											<column width="15%" />
+											<column width="20%" />
+											<column width="15%" />
+											<column width="20%" />
+											<column />
+
+										</columns>
+										<rows>
+											<row>
+												<!-- CEDULA -->
+												<label value="Cédula/RIF:" />
+												<label value="@bind(vm.persona.cedula)" />
+
+												<!-- NOMBRE O RAZON SOCIAL -->
+												<label value="Nombre/Razón Social: " />
+												<label
+													value="@bind((vm.persona.nombre).concat(' ').concat(vm.persona.apellido))" />
+
+											</row>
+
+											<row>
+												<div>
+													<label value="Nombre de usuario:" />
+													<label value="*" sclass="requerido" />
+												</div>
+												<vbox>
+													<textbox id="txtUsername" value="@bind(fx.username)"
+														constraint="@bind(vm.notEmptyValidator)" />
+													<label id="msgUsername" visible="false" sclass="requerido" />
+												</vbox>
+
+												<label value="Foto:" />
+												<vbox width="100%">
+
+													<div class="boxImagen" align="right">
+														<image id="imgFoto" width="110px" height="110px"
+															src="@bind(vm.usuario.getFoto64())" />
+														<span id="closeFoto" class="close" tooltiptext="Eliminar Foto"
+															onClick="@command('eliminarFoto')"></span>
+
+
+													</div>
+
+												</vbox>
+												<div>
+													<button id="btnCambFoto2" tooltiptext="Cambiar Foto"
+														label="Buscar..." sclass="btn-primary" upload="true"
+														style="margin-bottom:0px" />
+												</div>
+											</row>
+
+											<row>
+												<label value="Nueva contraseña:" />
+												<vbox>
+													<textbox id="txtClaveNueva" maxlength="50" type="password"
+														value="@bind(fx.pasword)" />
+
+												</vbox>
+
+												<label value="Repetir contraseña:" />
+												<vbox>
+													<textbox id="txtClaveNuevaConf" maxlength="50"
+														type="password" value="@bind(fx.paswordRepeat)" />
+													<label id="msgPassword" visible="false" sclass="requerido" />
+												</vbox>
+											</row>
+											<row>
+											</row>
+
+
+										</rows>
+									</grid>
+								</tabpanel>
+							</tabpanels>
+						</tabbox>
+					</n:div>
+					<n:div class="modal-footer">
+						<hbox width="100%">
+							<include src="/WEB-INF/views/template/textFieldsMandatory.zul"
+								hflex="1" />
+							<div align="right" hflex="1">
+								<button label="Guardar" sclass="btn-primary" onClick="@command('guardar')" />
+							</div>
+						</hbox>
+					</n:div>
+
+				</div>
+			</div>
+
+			<!-- LOS QUE AGREGUE NUEVOOO -->
+		</n:div>
+		<!-- AQUI VAN LOS BOTONES -->
+
+
 	</window>
 </zk>

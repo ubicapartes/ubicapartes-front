@@ -1,0 +1,120 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window border="none" apply="org.zkoss.bind.BindComposer"
+		sclass="winMyList"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.RequerimientosProveedorViewModel')">
+
+		<!-- LISTA DE REQUERIMIENTOS POR PROVEEDOR-->
+		<panel sclass="borderGrid">
+			<panelchildren>
+				<hbox width="100%" align="center">
+					<paging id="pagMisRequerimientos" hflex="1"
+						onPaging="@command('paginarLista')" autohide="true" />
+					<div sclass="z-paging z-paging-info"
+						height="28px">
+						<label id="lblMisRequerimientos"
+							sclass="rRmWwb-info" />
+					</div>
+				</hbox>
+				<listbox id="gridMisRequerimientos" mold="paging"
+					emptyMessage="No hay solicitudes"
+					pagingPosition="top" sclass="mylist"
+					model="@load(vm.listaRequerimientos)"
+					onAfterRender="@command('updatePaging', paging = pagMisRequerimientos, label=lblMisRequerimientos)">
+
+					<auxhead>
+						<auxheader />
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<spinner constraint="no negative, no zero"
+								value="@bind(vm.requerimientoFiltro.idRequerimiento)"
+								instant="true" placeholder=""
+								onChange="@command('aplicarFiltro')" width="70px" />
+						</auxheader>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<datebox format="dd/MM/yyyy"
+								value="@bind(vm.requerimientoFiltro.fechaCreacion)"
+								instant="true" onChange="@command('aplicarFiltro')"
+								width="100px" />
+						</auxheader>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<datebox format="dd/MM/yyyy"
+								value="@bind(vm.requerimientoFiltro.fechaVencimiento)"
+								instant="true" onChange="@command('aplicarFiltro')"
+								width="100px" />
+						</auxheader>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<textbox instant="true" placeholder=""
+								value="@bind(vm.requerimientoFiltro.marcaVehiculo.nombre)"
+								onChange="@command('aplicarFiltro')" width="110px" />
+						</auxheader>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<textbox instant="true" placeholder=""
+								value="@bind(vm.requerimientoFiltro.modeloV)"
+								onChange="@command('aplicarFiltro')" width="110px" />
+						</auxheader>
+
+					</auxhead>
+
+
+					<listhead>
+						<listheader width="2%" />
+						<listheader value="idRequerimiento"
+							width="100px" label="Nro." sort="auto(idRequerimiento)" />
+						<listheader value="fechaCreacion"
+							label="F. Creación" sort="auto(fechaCreacion)" width="140px" />
+						<listheader value="fechaVencimiento"
+							label="F. Vencimiento" sort="auto(fechaVencimiento)"
+							width="160px" />
+						<listheader value="marcaVehiculo.marcaV"
+							label="Marca" sort="auto(marcaV)" width="130px" />
+						<listheader value="modeloV" label="Modelo"
+							sort="auto(modeloV)" width="130px" />
+						<listheader width="10%" label="Operaciones" />
+
+					</listhead>
+					<template name="model">
+						<listitem>
+							<listcell label="${forEachStatus.index+1}"
+								sclass="boxed-grey" />
+							<listcell
+								label="@bind(each.idRequerimiento)" />
+							<listcell>
+								<datebox
+									value="@bind(each.fechaCreacion)" format="dd/MM/yyyy"
+									buttonVisible="false" readonly="true" />
+							</listcell>
+							<listcell>
+								<datebox
+									value="@bind(each.fechaVencimiento)" format="dd/MM/yyyy"
+									buttonVisible="false" readonly="true" />
+							</listcell>
+							<listcell
+								label="@bind(each.marcaVehiculo.nombre)" />
+							<listcell label="@bind(each.modeloV)" />
+							<listcell>
+								<hbox spacing="20px">
+									<div
+										class="btn-group btn-group-sm">
+										<button
+											iconSclass="fa fa-check-square-o blue bigger-160"
+											tooltiptext="Ver Solicitudes"
+											onClick="@command('verSolicitudes', requerimiento = each)" />
+										<button
+											iconSclass="fa fa-credit-card green bigger-160"
+											tooltiptext="Ver Compra"
+											onClick="@command('verCompra', requerimiento = each)" />
+									</div>
+								</hbox>
+							</listcell>
+						</listitem>
+					</template>
+
+				</listbox>
+			</panelchildren>
+		</panel>
+	</window>
+</zk>

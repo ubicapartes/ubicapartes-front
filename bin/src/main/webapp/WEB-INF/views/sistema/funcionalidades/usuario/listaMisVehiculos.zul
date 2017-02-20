@@ -1,0 +1,106 @@
+<zk xmlns:w="client" xmlns:n="native">
+
+	<style>
+	.filterVehiculoAnno span{
+		display:block !important;
+	}
+	</style>
+	<window border="none" apply="org.zkoss.bind.BindComposer" sclass="winMyList" id="winListaMisVehiculos"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.cliente.vehiculo.ListaMisVehiculosViewModel')">
+
+		<!-- LISTA DE MIS VEHICULOS-->
+		<panel sclass="borderGrid">
+			<panelchildren>
+				<hbox width="100%" align="center">
+					<paging id="pagMisVehiculos" hflex="1"
+						onPaging="@command('paginarLista')" autohide="true" />
+					<div sclass="z-paging z-paging-info" height="28px">
+						<label id="lblMisVehiculos" sclass="rRmWwb-info" />
+					</div>
+				</hbox>
+				<listbox id="gridMisVehiculos" emptyMessage="No hay vehiculos registrados" sclass="mylist"
+					onAfterRender="@command('updatePaging', paging = pagMisVehiculos, label=lblMisVehiculos)"
+					model="@load(vm.vehiculos)">
+					<auxhead>
+						<auxheader/>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<textbox instant="true" hflex="1"
+								value="@bind(vm.vehiculoFiltro.marcaVehiculo.nombre)"
+								onChange="@command('aplicarFiltro')"/>
+						</auxheader>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<textbox instant="true" hflex="1"
+								value="@bind(vm.vehiculoFiltro.modelo)"
+								onChange="@command('aplicarFiltro')"/>
+						</auxheader>
+						<auxheader sclass="filterVehiculoAnno">
+							<div sclass="z-icon-filter bigger-200" />
+							<textbox instant="true" hflex="1"
+								value="@bind(vm.vehiculoFiltro.anno)"
+								onChange="@command('aplicarFiltro')"
+								constraint="@bind(vm.cantValidatorOrEmptyString)"/>
+						</auxheader>
+						<auxheader>
+							<div sclass="z-icon-filter bigger-200" />
+							<textbox instant="true" hflex="1"
+								value="@bind(vm.vehiculoFiltro.motor.nombre)"
+								onChange="@command('aplicarFiltro')"  />
+						</auxheader>
+						<auxheader width="20%">
+					<button label="Agregar Vehiculo"
+						onClick="@command('nuevoVehiculo')" sclass="btn-primary" />
+				</auxheader>
+					</auxhead>
+					
+					<listhead>
+						<listheader width="2%"/>
+						<listheader value="marcaVehiculo" width="26%"
+							label="Marca" sort="auto(marcaVehiculo.nombre)"/>
+						<listheader value="modelo" width="24%"
+							label="Modelo" sort="auto(modelo)"/>
+						<listheader value="anno" width="15%"
+							label="Año" sort="auto(anno)"/>
+							<listheader value="motor" width="15%"
+							label="Motor" sort="auto(motor.nombre)"/>
+						<listheader sort="none" label="Operaciones" />
+					</listhead>
+					
+					<template name="model">
+						<listitem>
+							<listcell label="${forEachStatus.index+1}" sclass="boxed-grey" />
+							<listcell label="@bind(each.marcaVehiculo.nombre)" />
+							<listcell label="@bind(each.modelo)" />
+							<listcell label="@bind(each.anno)"/>
+							<listcell label="@bind(each.motor.nombre)" />
+							<listcell>
+								<hbox spacing="20px">
+									<div class="btn-group btn-group-sm">
+										<button
+											iconSclass="z-icon-pencil green bigger-160"
+											tooltiptext="Editar"
+											onClick="@command('editarVehiculo', vehiculo = each)"
+										     />
+										<button
+											iconSclass="z-icon-eye blue bigger-160"
+											tooltiptext="Ver Vehiculo"
+											onClick="@command('verVehiculo', vehiculo = each)"
+											 />
+										<button
+											iconSclass="z-icon-trash-o red bigger-160"
+											tooltiptext="Eliminar Vehiculo"
+											onClick="@command('eliminarVehiculo', vehiculo = each)"
+											 />
+										
+									</div>
+								</hbox>
+							</listcell>
+						</listitem>
+					</template>
+					
+				</listbox>
+			</panelchildren>
+		</panel>
+	</window>
+</zk>

@@ -1,0 +1,100 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winFormularioCuenta" closable="true" height="0px"
+		border="none" apply="org.zkoss.bind.BindComposer" sclass="btn-primary"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.maestros.RegistrarCuentasViewModel')">
+
+		<n:div aria-hidden="false" class="modal fade in" role="dialog"
+			tabindex="-1" style="display: block;">
+			<div class="modal-dialog modal-full" height="auto">
+				<div sclass="modal-content" >
+					<include src="/WEB-INF/views/template/modal/titleModal.zul"	titulo="Cuenta" />
+					<n:div class="modal-inner" height="200px">
+						<tabbox maximalHeight="true" sclass="tab-nav tab-nav-blue">
+							<tabs>
+								<tab sclass="waves-color-blue waves-effect">
+									<label value="Datos de la Cuenta" />
+								</tab>
+							</tabs>
+							<tabpanels>
+								<tabpanel height="200px">
+									<grid>
+										<columns>
+											<column width="18%" />
+											<column width="32%" />
+											<column width="18%" />
+											<column width="32%" />
+										</columns>
+
+										<rows>
+											<row>
+
+												<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Banco:" />
+												<vbox hflex="1">
+													<combobox id="cmbBanco" style="width: inherit;" placeholder="Seleccione..."
+														readonly="true" hflex="1" disabled="@bind(vm.makeAsReadOnly)"
+														value="@bind(vm.cuenta.banco.nombre)" selectedItem="@bind(vm.cuenta.banco)"
+														constraint="@bind(vm.notEmptyValidator)" model="@load(vm.listaBancos)">
+														<template name="model">
+															<comboitem label="@bind(each.nombre)" />
+														</template>
+													</combobox>
+												</vbox>
+
+
+												<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Tipo Cuenta:" />
+												<vbox hflex="1">
+													<combobox id="cmbTipoCuenta" disabled="@bind(vm.makeAsReadOnly)" 
+													constraint="@bind(vm.notEmptyValidator)" hflex="1" tabindex="15"
+														model="@load(vm.listaTiposCuenta)" selectedItem="@bind(vm.tipoCuenta)">
+														<template name="model">
+															<comboitem label="@load(each)" />
+														</template>
+													</combobox>
+												</vbox>
+											</row>
+											<row>
+												<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Numero de cuenta:" />
+												<vbox hflex="1">
+													<textbox hflex="1" id="txtNumeroCuenta" placeholder="Ej: 01084455147889960002" maxlength="20"
+														sclass="form-control" readonly="@bind(vm.makeAsReadOnly)"
+														constraint="@bind(vm.numeroCuentaValidator)" value="@bind(vm.cuenta.numero)"> </textbox>
+												</vbox>
+												<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Titular:" />
+												<vbox hflex="1">
+													<textbox hflex="1" id="txtTitular" placeholder="Pedro Rojas" sclass="form-control"
+														readonly="@bind(vm.makeAsReadOnly)" constraint="@bind(vm.notEmptyValidator)"
+														value="@bind(vm.cuenta.titular)" />
+												</vbox>
+											</row>
+											<row>												
+												<include src="/WEB-INF/views/template/fieldMandatory.zul" field="Identificacion" />
+												<vbox hflex="1">
+													<textbox  hflex="1" placeholder="V-15241085 o J-34512545" maxlength="11" sclass="form-control"
+													readonly="@bind(vm.makeAsReadOnly)" constraint="@bind(vm.identificacionValidator)"
+													value="@bind(vm.cuenta.identificacion)" />
+												</vbox>
+											</row>
+										</rows>
+									</grid>
+								</tabpanel>
+							</tabpanels>
+						</tabbox>
+					</n:div>
+					<n:div class="modal-footer">
+						<hbox width="100%" visible="@bind(not vm.makeAsReadOnly)">
+							<include src="/WEB-INF/views/template/textFieldsMandatory.zul"
+								hflex="1" />
+							<div align="right" hflex="1">
+								<button id="btnLimpiar" label="Cancelar" type="submit"
+									onClick="@command('limpiar')" sclass="btn-sm btn-info" />
+								<button id="btnEnviar" label="Guardar" type="submit"
+									onClick="@command('registrar', btnEnviar=self, btnLimpiar=btnLimpiar)"
+									sclass="btn-sm btn-primary" />
+							</div>
+						</hbox>
+					</n:div>
+				</div>
+			</div>
+		</n:div>
+	</window>
+</zk>

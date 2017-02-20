@@ -36,6 +36,8 @@ public class ListaAnalistasViewModel extends AbstractRequerimientoViewModel impl
 	//Servicios
 	@BeanInjector("sMaestros")
 	private SMaestros sMaestros;
+	
+	
 	@BeanInjector("sTransaccion")
 	private STransaccion sTransaccion;
 	
@@ -241,30 +243,19 @@ public class ListaAnalistasViewModel extends AbstractRequerimientoViewModel impl
 						Messagebox.Button button = (Messagebox.Button) event.getData();
 						if (button == Messagebox.Button.YES) {
 							
-							analista.setiEstatus(EstatusPersonaFactory.getEstatusInactivo());
-		//				EL METODO DICE ACTUTALIZARPERSONA
-						sMaestros.acutalizarPersona(analista);
-						cambiarAnalistas(0, null, null);
-						notifyChange("analistas");
-						
-//										if (sTransaccion.validarAnalistaEnRequerimientos(analista)){
-//											analista.setiEstatus(EstatusPersonaFactory.getEstatusInactivo());
-//											//EL METODO DICE ACTUTALIZARPERSONA
-//											sMaestros.acutalizarPersona(analista);
-//											cambiarAnalistas(0, null, null);
-//											notifyChange("analistas");
-//										}
-//										else
-//											mostrarMensaje("Informacion", "No se Puede eliminar el analista, esta asignado a un requerimiento que esta activo", Messagebox.EXCLAMATION, null, null, null);
-//										}
-								
+										if (sTransaccion.validarAnalistaEnRequerimientos(analista)){
+											analista.setiEstatus(EstatusPersonaFactory.getEstatusInactivo());
+											//EL METODO DICE ACTUTALIZARPERSONA
+											sMaestros.acutalizarPersona(analista);
+											cambiarAnalistas(0, null, null);
+											notifyChange("analistas");
+										}
+										else
+											mostrarMensaje("Informacion", "No se Puede eliminar el analista, esta asignado a un requerimiento que esta activo", Messagebox.EXCLAMATION, null, null, null);
+										}
 								
 							}
-					}
-							
-				
 					
-			
 		}, null);
 	}
 	
@@ -336,5 +327,13 @@ public class ListaAnalistasViewModel extends AbstractRequerimientoViewModel impl
 		this.sMaestros = sMaestros;
 	}
 	
+	public STransaccion getsTransaccion() {
+		return sTransaccion;
+	}
+	
+	public void setsTransaccion(STransaccion sTransaccion) {
+		this.sTransaccion = sTransaccion;
+	}
+
 	
 }

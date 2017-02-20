@@ -133,7 +133,7 @@ public class ListaUsuariosViewModel extends AbstractRequerimientoViewModel imple
 	@NotifyChange("usuarios")
 	public void actualizarEstado(@BindingParam("usuario") final Usuario usuario, @BindingParam("estado") final Boolean estado){
 				
-		super.mostrarMensaje("Confirmacion", "¿Está seguro que desea cambiar el estatus del usuario?", Messagebox.EXCLAMATION, new Messagebox.Button[]{Messagebox.Button.YES,Messagebox.Button.NO}, 
+		super.mostrarMensaje("Confirmacion", "ï¿½Estï¿½ seguro que desea cambiar el estatus del usuario?", Messagebox.EXCLAMATION, new Messagebox.Button[]{Messagebox.Button.YES,Messagebox.Button.NO}, 
 				new EventListener(){
 
 					

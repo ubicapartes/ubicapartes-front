@@ -3,13 +3,39 @@
 		sclass="winMyList"
 		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.configuracion.EditarPerfilViewModel')"
 		form="@id('rs') @load(vm.usuario) @save(vm.usuario, before='enviar')">
-		<groupbox closable="false" width="80%">
-
-			<caption label="Datos Personales" sclass="custom_caption" />
-			<div align="center">
-
-				<label value="Editar Datos Personales" sclass="z-letra-grande" />
-
+		<groupbox closable="false" width="100%" class= "container-style">
+		<style>
+			.boxImagen {
+			    position: relative;
+			    display: inline-block;
+			}
+			.close:before {
+			    content: '✕';
+			    font-size:16px;
+			    color:white;
+			    border-radius:50%;
+			    background-color:black;
+			}
+			.close {
+			    position: absolute;
+			    top: 0;
+			    right: 0;
+			    cursor: pointer;
+			    color:white;
+			    border-radius:50%;
+			    background-color:black;
+			}
+			.container-style {
+				margin-top: -5px;
+				padding-top: -5px;
+				
+			}
+		</style>
+			<div align="center" style="padding-right: 15%;">
+				<hbox>
+					<n:h2 class="modal-title">Editar Datos Personales</n:h2>
+				</hbox>
+				
 				<grid>
 					<columns>
 						<column width="35%" align="right" />
@@ -19,60 +45,68 @@
 					</columns>
 					<rows>
 						<row spans="4">
-							<div align="right">
+							<div class="boxImagen" align="right">
 								<image id="imgFoto" width="110px"
 									height="110px" src="@bind(vm.usuario.getFoto64())" />
+									<span id="closeFoto" class="close" tooltiptext="Eliminar Foto" onClick="@command('eliminarFoto')"></span>
 
-								<button id="btnCambFoto" label="..."
-									sclass="btn-primary" upload="true" style="margin-bottom:0px" />
+								
 							</div>
 						</row>
 
-						<row></row>
+						<row spans="4">
+						<div align="right">
+							<button id="btnCambFoto" tooltiptext="Cambiar Foto" label="Buscar Imagen..." sclass="btn-primary" upload="true" style="margin-bottom:0px" />
+						</div>
+						</row>
 						<row>
-							<label value="Usuario: "
-								sclass="label-not-mandatory" />
+						<div>
+						<label value="Usuario:" />
+							<label value="*" sclass="requerido"/>
+						</div>
+							
 							<textbox id="txtUsername" width="100%"
-								sclass="form-control" disabled="true"
-								value="@bind(rs.username)" />
+								sclass="form-control" placeholder="Ingresa el usuario"
+								value="@bind(vm.usuario.username)" />
 
-							<label value="Cédula: "
-								sclass="label-not-mandatory" />
+							<label value="Cédula: "/>
 							<textbox id="txtcodCedula" width="100%"
-								sclass="form-control" disabled="true"
-								value="@bind(rs.persona.cedula)" />
+								sclass="form-control" disabled="true" style="border-style: none;"
+								value="@bind(vm.usuario.persona.cedula)" />
 						</row>
 						<row>
-							<label value="Nombre: "
-								sclass="label-not-mandatory" />
+							<label value="Nombre: " />
 							<textbox id="txtNombre" width="100%"
-								sclass="form-control" disabled="true"
-								value="@bind(rs.persona.nombre)" />
+								sclass="form-control" placeholder="Ingresa el nombre"
+								value="@bind(vm.usuario.persona.nombre)" />
 
-							<label value="Apellido: "
-								sclass="label-not-mandatory" />
+							<label value="Apellido: " />
 							<textbox id="txtApellido" width="100%"
-								sclass="form-control" disabled="true"
-								value="@bind(rs.persona.apellido)" />
+								sclass="form-control" placeholder="Ingresa el apellido"
+								value="@bind(vm.usuario.persona.apellido)" />
 						</row>
 
 						<row>
-							<label value="Dirección: "
-								sclass="label-not-mandatory" />
-							<textbox id="txtDireccion" width="100%"
-								sclass="form-control" disabled="true" maxlength="100" rows="2"
-								value="@bind(rs.persona.direccion)" />
+							<label value="Dirección: "/>
+							<textbox id="txtDireccion" width="100%" placeholder="Ingresa la dirección"
+								sclass="form-control" maxlength="100" rows="2"
+								value="@bind(vm.usuario.persona.direccion)" />
 
-							<label value="Correo: "
-								sclass="label-not-mandatory" />
+							<label value="Correo: "/>
 							<textbox id="txtCorreo" width="100%"
-								sclass="form-control" disabled="true" maxlength="50"
-								value="@bind(rs.persona.correo)" />
+								sclass="form-control" disabled="true" style="border-style: none;" maxlength="50"
+								value="@bind(vm.usuario.persona.correo)" />
 						</row>
 						<row>
+							<label value="Contraseña actual: " />
+							<textbox id="txtClaveAct" width="100%"
+								sclass="form-control" type="password" maxlength="50" />
+								
 							<label value="Nueva Contraseña: " />
 							<textbox id="txtClaveNueva" width="100%"
 								sclass="form-control" type="password" maxlength="50" />
+						</row>
+						<row>
 
 							<label value="Confirmar Contraseña: " />
 							<textbox id="txtClaveNuevaConf" width="100%"
@@ -82,11 +116,12 @@
 					</rows>
 				</grid>
 			</div>
-			<div align="right">
+			<div align="right" style="padding-right: 15%;">
+			<label value="* Campos Obligatorios" hflex="1" sclass="requerido margen" />
 				<button id="btnLimpiar" label="Limpiar" type="submit"
 					onClick="@command('limpiar')" sclass="btn-sm btn-info" />
 				<button label="Enviar" type="submit"
-					onClick="@command('actualizar', btnEnviar=self, btnLimpiar=btnLimpiar)"
+					onClick="@command('enviar', btnEnviar=self, btnLimpiar=btnLimpiar)"
 					sclass="btn-sm btn-primary" />
 			</div>
 		</groupbox>

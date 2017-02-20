@@ -1,0 +1,92 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window border="none" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.ListaRequerimientosGeneralViewModel')">
+		
+		 <!-- LISTA DE MIS REQUERIMIENTOS EMITIDOS-->
+		 <panel sclass="borderGrid">
+				<panelchildren>
+					<hbox width="100%" align="center">
+						<paging id="pagMisRequerimientos" hflex="1"
+							onPaging="@command('paginarLista')" autohide="true" />
+						<div sclass="z-paging z-paging-info" height="28px">
+							<label id="lblMisRequerimientos" sclass="rRmWwb-info"/>
+						</div>
+					</hbox>
+		<listbox id="gridMisRequerimientos" emptyMessage="No hay solicitudes" mold="paging" pageSize="10" pagingPosition="top"
+		onAfterRender="@command('updatePaging', paging = pagMisRequerimientos, label=lblMisRequerimientos)"
+			sclass="mylist" model="@load(vm.listaRequerimientos)">
+
+			<listhead>
+
+				<listheader 
+						value="idRequerimiento" width="9%"
+						label="Nro." sort="auto(idRequerimiento)">
+						
+					<spinner 
+						value="@bind(vm.requerimientoFiltro.idRequerimiento)"
+						instant="true"
+						onChange="@command('aplicarFiltro') "
+						width="62px" />
+					
+					<div sclass="z-icon-filter bigger-200" />
+				</listheader>
+
+				<listheader value="cliente.nombre" label="Cliente"
+					sort="auto(idRequerimiento)" width="22%">
+					
+					<textbox instant="true" value="@bind(vm.requerimientoFiltro.cliente.nombre)"
+						onChange="@command('aplicarFiltro')" width="185px"   />
+					
+					<div sclass="z-icon-filter bigger-200" />
+				</listheader>
+
+				<listheader value="fechaCreacion" label="F. Creación"
+					sort="auto(fechaCreacion)" width="100px">
+					
+					<datebox format="dd/MM/yyyy" value="@bind(vm.requerimientoFiltro.fechaCreacion)"
+						instant="true" onChange="@command('aplicarFiltro')" width="105px" />
+					
+					<div sclass="z-icon-filter bigger-200" />
+				</listheader>
+
+				<listheader value="modeloV" label="Modelo"
+					sort="auto(modeloV)" width="98px">
+					
+					<textbox instant="true" value="@bind(vm.requerimientoFiltro.modeloV)"
+						onChange="@command('aplicarFiltro')" width="123px"  />
+					
+					<div sclass="z-icon-filter bigger-200" />
+				</listheader>
+				
+				<listheader value="analista" label="Analista"
+					sort="none" width="21%">
+				</listheader>
+				
+				<listheader value="estatus" label="Estado" sort="none" width="15%">
+					<combobox instant="true" selectedItem="@bind(vm.estatusFiltro)" readonly="true"
+						model="@load(vm.listaEstatus)" onChange="@command('aplicarFiltro')" width="110px"
+						value="@bind(vm.estatusFiltro.nombre)">
+						<template name="model">
+							<comboitem label="@bind(each.nombre)"/>
+						</template>
+					</combobox>
+					<div sclass="z-icon-filter bigger-200" />
+				</listheader>
+
+			</listhead>
+			<template name="model">
+				<listitem>
+					<listcell label="@bind(each.idRequerimiento)" />
+					<listcell label="@bind((each.cliente.nombre).concat(' ').concat(each.cliente.apellido))" />
+					<listcell label="@bind(each.fechaCreacion) @converter('formatedDate', format=vm.formatDate)"/>
+					<listcell label="@bind(each.modeloV)" />
+					<listcell label="@bind((each.analista.nombre).concat(' ').concat(each.analista.apellido))"/>
+					<listcell label="@bind(each.determinarEstatus())"/>
+				</listitem>
+			</template>
+
+		</listbox>
+		</panelchildren>
+			</panel>
+	</window>
+</zk>

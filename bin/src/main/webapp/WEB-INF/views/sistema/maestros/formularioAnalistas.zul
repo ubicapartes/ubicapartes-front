@@ -1,0 +1,210 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winFormularioAnalista" closable="true" width="0px"
+		height="0px" border="none" apply="org.zkoss.bind.BindComposer"
+		sclass="btn-primary"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.RegistrarAnalistasViewModel')"
+		form="@id('fx') @load(vm.analista) @save(vm.analista, before='registrar')">
+
+		<n:div aria-hidden="false" class="modal fade in" role="dialog"
+			tabindex="-1" style="display: block;">
+			<div class="modal-dialog modal-full" width="700"
+				height="auto"><!-- modal-xs -->
+				<div sclass="modal-content">
+					<include
+						src="/WEB-INF/views/template/modal/titleModal.zul"
+						titulo="Registrar Analista" />
+					<n:div class="modal-inner">
+
+
+						<groupbox>
+
+							<div>
+
+								<grid>
+									<columns>
+										<column width="35%"
+											align="right" />
+										<column width="65%" />
+										<column width="35%"
+											align="right" />
+										<column width="65%" />
+									</columns>
+
+									<rows>
+										<row>
+											<!-- CEDULA/RIF -->
+														<include
+															src="/WEB-INF/views/template/fieldMandatory.zul"
+															field="Cédula / RIF:" />
+
+											<hbox>
+												<vbox>
+													<combobox
+														width="100%" cols="3" readonly="true"
+														disabled="@bind(vm.makeAsReadOnly)"
+														selectedItem="@bind(vm.tipoPersona)"
+														model="@load(vm.listaTipoPersona)"
+														constraint="@bind(vm.notEmptyValidator)">
+														<template
+															name="model">
+															<comboitem
+																label="@bind(each.nombre)">
+
+															</comboitem>
+														</template>
+													</combobox>
+												</vbox>
+
+												<vbox>
+													<textbox
+														id="cedula_Rif" width="83%" readonly="@bind(vm.makeAsReadOnly)" mold="rounded"
+														value="@bind(vm.analista.cedula)" sclass="form-control"
+														placeholder="Ej: 402405375" maxlength="12"
+														constraint="@bind(vm.validatorClienteCedulaRif)" />
+												</vbox>
+											</hbox>
+
+											<!-- NOMBRE O RAZON SOCIAL -->
+														<include
+															src="/WEB-INF/views/template/fieldMandatory.zul"
+															field="Nombre: " />
+
+											<vbox>
+												<textbox id="nombre" sclass="form-control"
+													width="125%" readonly="@bind(vm.makeAsReadOnly)" mold="rounded"
+													value="@bind(vm.analista.nombre)"
+													placeholder="Ej: Alejandro Urbina"
+													constraint="@bind(vm.notEmptyValidator)" />
+											</vbox>
+										</row>
+
+										<row>
+
+											<!-- TELEFONO -->
+														<include
+															src="/WEB-INF/views/template/fieldMandatory.zul"
+															field="Teléfono: " />
+
+											<vbox>
+												<textbox id="telefono" sclass="form-control"
+													width="120%" readonly="@bind(vm.makeAsReadOnly)" mold="rounded"
+													value="@bind(vm.analista.telefono)" maxlength="11"
+													placeholder="Ej: 02512552233"
+													constraint="@bind(vm.telefonoValidator)" />
+											</vbox>
+
+
+											<!-- CORREO -->
+														<include
+															src="/WEB-INF/views/template/fieldMandatory.zul"
+															field="Correo: " />
+											<vbox>
+												<textbox id="email" sclass="form-control"
+													width="125%" readonly="@bind(vm.makeAsReadOnly)" mold="rounded"
+													value="@bind(vm.analista.correo)"
+													placeholder="Ej. fusa@gmail.com"
+													constraint="@bind(vm.emailValidator)">
+												</textbox>
+											</vbox>
+
+
+										</row>
+										
+
+										<row>
+											<!-- ESTADO -->
+														<include
+															src="/WEB-INF/views/template/fieldMandatory.zul"
+															field="Estado: " />
+											<vbox>
+												<combobox
+													placeholder="Seleccione..." width="100%" cols="30" readonly="true"
+													value="@bind(vm.estado.nombre)"
+													height="15px" 
+													disabled="@bind(vm.makeAsReadOnly)"
+													selectedItem="@bind(vm.estado)"
+													model="@load(vm.listaEstados)"
+													onSelect="@command('buscarCiudades')"
+													onChange="@command('buscarCiudades')"
+													constraint="@bind(vm.notEmptyValidator)">
+													<template
+														name="model">
+														<comboitem
+															label="@bind(each.nombre)">
+
+														</comboitem>
+													</template>
+												</combobox>
+											</vbox>
+										
+										
+											<!-- CIUDAD -->
+														<include
+															src="/WEB-INF/views/template/fieldMandatory.zul"
+															field="Ciudad: "  />
+											<vbox>
+												<combobox
+													placeholder="Seleccione..." width="100%" cols="30" readonly="true"
+													height="45"
+													disabled="@bind(vm.makeAsReadOnly)"
+													value="@bind(vm.ciudad.nombre)"
+													selectedItem="@bind(vm.ciudad)"
+													model="@load(vm.listaCiudades)"
+													constraint="@bind(vm.notEmptyValidator)">
+
+													<template
+														name="model">
+														<comboitem
+															label="@bind(each.nombre)">
+
+														</comboitem>
+													</template>
+												</combobox>
+											</vbox>
+											
+												
+
+										</row>
+										<row>
+										<!-- DIRECCION -->
+											<include
+											 src="/WEB-INF/views/template/fieldMandatory.zul"
+											 field="Dirección: " />
+
+											<vbox hflex="1">
+												<textbox id="direccion" sclass="form-control no_rezise"
+													width="100%" rows="3" cols="50" readonly="@bind(vm.makeAsReadOnly)" mold="rounded"
+													value="@bind(vm.analista.direccion)"
+													placeholder="Ej: zona industrial 2 "
+													constraint="@bind(vm.notEmptyValidator)" />
+											</vbox>
+										</row>
+										
+
+
+									</rows>
+								</grid>
+							</div>
+						</groupbox>
+					</n:div>
+
+					<n:div class="panel-footer">
+						<hbox width="100%" visible="@bind(!vm.makeAsReadOnly)" hflex="1" >
+							<include
+								src="/WEB-INF/views/template/textFieldsMandatory.zul" hflex="1" />
+							<div align="right" >
+								<button id="btnLimpiar" label="Limpiar"
+									type="submit" onClick="@command('limpiar')"
+									sclass="btn-sm btn-info" />
+								<button id="btnEnviar" label="Registrar"
+									type="submit"
+									onClick="@command('registrar', btnEnviar=self, btnLimpiar=btnLimpiar, edicion=vm.valor)"
+									sclass="btn-sm btn-primary" />
+							</div>
+						</hbox>
+					</n:div>
+				</div>
+			</div>
+		</n:div>
+	</window>
+</zk>

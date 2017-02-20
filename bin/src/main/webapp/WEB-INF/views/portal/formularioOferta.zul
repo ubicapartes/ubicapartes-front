@@ -1,0 +1,196 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winOferta" border="none" height="0px"
+		apply="org.zkoss.bind.BindComposer" closable="true"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.VerOfertaViewModel')"
+		onClose="@command('onCloseWindow')">
+		<n:div aria-hidden="false" class="modal fade in" role="dialog" tabindex="-1" style="display: block;">
+			<div class="modal-dialog modal-full" height="auto"><!-- modal-xs -->
+				<div sclass="modal-content">
+					<include src="/WEB-INF/views/template/modal/titleModal.zul" titulo="Oferta" />
+					<n:div class="modal-inner">
+						<groupbox closable="false">
+							<!--DATOS DE LA OFERTA-->
+							<hbox>
+								<grid>
+									<columns>
+										<column width="15%" />
+										<column />
+										<column />
+										<column  />
+									</columns>
+									<rows>
+										<row>
+											<div>
+												<label value="N° Oferta:" sclass="label-not-mandatory" />
+												<label value="@bind(vm.oferta.idOferta)" />
+											</div>
+											<div>
+												<label value="Fecha de Creación:" sclass="label-not-mandatory" />
+												<label value="@bind(vm.oferta.fechaCreacion)
+																@converter('formatedDate', format=vm.formatDate)" />
+											</div>
+										</row>
+									</rows>
+								</grid>	
+								<div sclass="counter-div" hflex="1" tooltiptext="Carrito">
+									<div sclass="avatar avatar-yellow avatar-sm">
+										<span sclass="icon icon-shopping-basket bigger-130 black"/>
+									</div>
+									<label value="@bind(vm.cantArticulos)"/>
+								</div>					
+							</hbox>
+							<div align="right">
+								<label value="Total a Pagar:" sclass="label-not-mandatory"/>
+								<label value="@bind(vm.totalArticulos)
+												@converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+													converterMoneda=vm.monedaBase, monedaBase=vm.monedaBase)"/>
+							</div>
+							<tabbox maximalHeight="true" sclass="tab-nav tab-nav-blue">
+								<tabs>
+									<tab sclass="waves-color-blue waves-effect">
+										<label value="Datos del Requerimiento" />
+									</tab>
+									<tab sclass="waves-color-blue waves-effect">
+										<label value="Datos del Vehículo" />
+									</tab>
+								</tabs>
+								<tabpanels>
+									<!-- DATOS DEL REQUERIMIENTO -->
+									<tabpanel>
+										<grid>
+											<columns>
+												<column width="15%" />
+												<column  width="20%"/>
+												<column  width="20%"/>
+												<column  />
+											</columns>
+											<rows>
+												<row>
+													<label value="Número:" sclass="label-not-mandatory"/>
+													<label value="@bind(vm.requerimiento.idRequerimiento)"/>
+												</row>
+												<row>
+													<label value="Fecha de Creación:" sclass="label-not-mandatory"/>
+													<label value="@bind(vm.requerimiento.fechaCreacion)
+																	@converter('formatedDate', format=vm.formatDate)" />
+													<label value="Fecha de Vencimiento: " sclass="label-not-mandatory"/>
+													<label value="@bind(vm.requerimiento.fechaVencimiento)
+																	@converter('formatedDate', format=vm.formatDate)" />
+												</row>
+											</rows>
+										</grid>
+									</tabpanel>
+									
+									<!-- DATOS DEL VEHICULO -->
+									<tabpanel>
+										<grid>
+											<columns>
+												<column width="15%" />
+												<column  width="20%"/>
+												<column  width="20%"/>
+												<column  />
+												<column width="15%" />
+												<column  />
+											</columns>
+											<rows>
+												<row>
+													<label value="Marca:" sclass="label-not-mandatory"/>
+													<label value="@bind(vm.requerimiento.marcaVehiculo.nombre)"/>
+													<label value="Modelo:" sclass="label-not-mandatory"/>
+													<label value="@bind(vm.requerimiento.modeloV)" />
+													<label value="Tipo de Repuesto:" sclass="label-not-mandatory"/>
+													<label value="@bind(vm.requerimiento.determinarTipoRepuesto())"/>
+												</row>
+												<row>
+													<label value="Año:" sclass="label-not-mandatory"/>
+													<label value="@bind(vm.requerimiento.annoV)"/>
+													<label value="Serial de Carrocería:" sclass="label-not-mandatory"/>
+													<label value="@bind(vm.requerimiento.serialCarroceriaV)" />
+												</row>
+											</rows>
+										</grid>
+									</tabpanel>
+								</tabpanels>
+							</tabbox>
+							
+							<!-- REPUESTOS -->
+							<include src="/WEB-INF/views/template/modal/subTitleModal.zul" subtitulo="Repuestos"/>
+							<panel sclass="borderGrid">
+								<panelchildren>
+                                   <!-- LISTA DETALLE OFERTA-->
+                                   <listbox id="listaOferta" mold="paging" pagingPosition="top" pageSize="3"
+                                   		model="@load(vm.oferta.detalleOfertas)"
+                                   		emptyMessage="No Existen Repuestos Validos para Seleccionar">
+                                   	
+                                   	<listhead>
+                                   		<listheader width="3%"/>
+                                   		<listheader label="Descripción" sort="none" width="30%"/>
+                                   		<listheader label="Marca" sort="none" />
+                                   		<listheader label="Cant. Solict." sort="none"  width="10%" />
+                                   		<listheader label="Cant. Ofert." sort="none" width="10%"/>
+                                   		<listheader label="Pcio. Unit." sort="none" width="10%"/>
+                                   		<listheader label="Pcio. Venta s/flete" sort="none" width="15%"/>
+                                   		<listheader sort="none" align="center" width="5%"/>
+                                   	</listhead>
+
+                                   	<template name="model">
+                                   		<listitem>
+											<listcell label="${forEachStatus.index+1}" sclass="boxed-grey" />
+                                   			<listcell label="@bind(each.detalleCotizacion.detalleRequerimiento.descripcion)" />
+                                   			<listcell label="@bind(each.detalleCotizacion.marcaRepuesto)" />
+                                   			<listcell label="@bind(each.detalleCotizacion.detalleRequerimiento.cantidad)" />
+                                   			<listcell label="@bind(each.detalleCotizacion.cantidad)" />
+                                   			<listcell label="@bind(each.calcularPrecioVentaUnit())
+                                   								@converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+																	converterMoneda=each.detalleCotizacion.cotizacion.historicoMoneda, monedaBase=vm.monedaBase)" />
+                                   			<listcell label="@bind(each.calcularPrecioVenta())
+                                   								@converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+																	converterMoneda=each.detalleCotizacion.cotizacion.historicoMoneda, monedaBase=vm.monedaBase)" />
+                                   			<listcell>
+												<a onClick="@command('aprobarDetalleOferta', detalleOferta = each)"
+													sclass="@bind((each.aprobado) ? vm.quitarCarrito.css : vm.agregarCarrito.css)"
+													tooltiptext="@bind((each.aprobado) ? vm.quitarCarrito.tool : vm.agregarCarrito.tool)"/>
+                                   			</listcell>
+                                   		</listitem>
+                                   	</template>
+
+                                   	<listfoot>
+                                   		<listfooter />
+                                   		<listfooter />
+                                   		<listfooter />
+                                   		<listfooter />
+                                   		<listfooter />
+                                   		<listfooter />
+                                   		<listfooter label="Total:">
+                                   			<label
+                                   				value="@bind(vm.oferta.calcularTotal())
+                                   						@converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+															converterMoneda=vm.monedaBase, monedaBase=vm.monedaBase)" />
+                                   		</listfooter>
+                                   	</listfoot>
+                                   </listbox>
+								</panelchildren>
+                          	</panel>
+						</groupbox>
+					</n:div>
+					<n:div class="modal-footer">
+						<n:div>
+							<button label="Oferta Anterior" sclass="btn-sm btn-inverse" 
+								visible="@bind(vm.visbOfertaAnterior)"
+								onClick="@command('mostrarOferta', tipo=1)"/>
+							<button label="Siguiente Oferta" sclass="btn-sm btn-warning" 
+								visible="@bind(vm.visbOfertaSiguiente)"
+								onClick="@command('mostrarOferta', tipo=2)"/>
+						</n:div>
+						<button label="Enviar" sclass="btn-sm btn-primary"
+							onClick="@command('enviar')"/>
+						<button label="Vaciar Carrito" sclass="btn-sm btn-info"
+							onClick="@command('limpiar')"/>
+						<button label="Cancelar" sclass="btn-sm btn-danger"
+							onClick="@command('closeModal')"/>
+					</n:div>
+				</div>
+			</div>
+		</n:div>
+	</window>
+</zk>

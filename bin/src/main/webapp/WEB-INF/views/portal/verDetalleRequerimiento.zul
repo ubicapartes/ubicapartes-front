@@ -1,0 +1,150 @@
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winVerDetalleRequerimiento" border="none" height="0px"
+		apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('com.okiimport.app.mvvm.controladores.VerDetalleRequerimientoViewModel')">
+		
+		<n:div aria-hidden="false" class="modal fade in" role="dialog" tabindex="-1" style="display: block;">
+			<div class="modal-dialog modal-full"  height="auto"><!-- modal-xs -->
+				<div sclass="modal-content">
+					<include src="/WEB-INF/views/template/modal/titleModal.zul" titulo="Requerimiento" />
+					<n:div class="modal-inner">
+						<groupbox closable="false">
+							<div> 
+		    					<space/>
+		    					<space/> 
+		    					<label value="N° Solicitud:" sclass="label-not-mandatory"/>
+		    					<label value="@bind(vm.requerimiento.idRequerimiento)"/>
+		    					<space/>
+		    					<space/> 
+		    					<label value="Fecha de Creación:" sclass="label-not-mandatory"/>
+		    					<label value="@bind(vm.requerimiento.fechaCreacion)
+		    									@converter('formatedDate', format=vm.formatDate)"/>
+		    					<space/>
+		    					<space/> 
+		   						<label value="Estado" sclass="label-not-mandatory"/>
+		    					<label value="@bind(vm.requerimiento.determinarEstatus())" sclass="z-letra-grande" /> 
+		    
+							</div>
+							<tabbox maximalHeight="true" sclass="tab-nav tab-nav-blue">
+								<tabs>
+									<tab sclass="waves-color-blue waves-effect">
+										<label value="Datos Personales" />
+									</tab>
+									<tab sclass="waves-color-blue waves-effect">
+										<label value="Datos del Vehiculo" />
+									</tab>
+								</tabs>
+								<tabpanels>
+									<!-- DATOS PERSONALES -->
+									<tabpanel>
+										<grid>
+											<columns>
+												<column width="10%" />
+												<column  width="20%"/>
+												<column  width="20%"/>
+												<column  />
+											</columns>
+											<rows>
+												<row>
+													<!-- CEDULA -->
+													<label value="Cédula/RIF: " sclass="label-not-mandatory"/>
+													<label value="@bind(vm.requerimiento.cliente.cedula)"/>
+
+													<!-- NOMBRE O RAZON SOCIAL -->
+													<label value="Nombre / Razón Social: " sclass="label-not-mandatory"/>
+													<label value="@bind(vm.requerimiento.cliente.nombre)" />
+												</row>
+							
+												<row>
+													<!-- ESTADO -->
+							    					<label value="Estado: " sclass="label-not-mandatory"/>
+							    					<label value="@bind(vm.requerimiento.cliente.ciudad.estado.nombre)"/>
+									
+													<!-- CIUDAD -->
+													<label value="Ciudad: " sclass="label-not-mandatory"/>
+													<label value="@bind(vm.requerimiento.cliente.ciudad.nombre)" />
+												</row>
+											</rows>
+										</grid>
+									</tabpanel>
+									
+									<!-- DATOS DEL VEHICULO -->
+									<tabpanel>
+										<grid>
+											<columns>
+												<column width="10%" />
+												<column  width="20%"/>
+												<column  width="20%"/>
+												<column  />
+											</columns>
+											<rows>
+												<row>
+													<!-- MARCA -->
+													<label value="Marca: " sclass="label-not-mandatory"/>
+													<label value="@bind(vm.requerimiento.marcaVehiculo.nombre)"/>
+													
+													<!-- MODELO -->
+													<label value="Modelo: " sclass="label-not-mandatory"/>
+													<label value="@bind(vm.requerimiento.modeloV)"/>
+												</row>
+
+												<row>
+													<!-- AÑO -->								
+													<label value="Año:" sclass="label-not-mandatory"/>
+													<label value="@bind(vm.requerimiento.annoV)"/>
+													
+													<!-- SERIAL DE CARROCERIA -->
+													<label value="Serial Carrocería: " sclass="label-not-mandatory"/>
+													<label value="@bind(vm.requerimiento.serialCarroceriaV)"/>
+												</row>
+											</rows>
+										</grid>
+									</tabpanel>
+								</tabpanels>
+							</tabbox>
+							
+							<!-- REPUESTOS -->
+							<include src="/WEB-INF/views/template/modal/subTitleModal.zul" subtitulo="Repuestos"/>
+							<panel sclass="borderGrid">
+								<panelchildren>
+                                   <!-- LISTA DETALLE REQUERIMIENTO-->
+									<listbox mold="paging" pageSize="5" pagingPosition="top"
+										model="@load(vm.requerimiento.detalleRequerimientos)" >
+										<listhead>
+											<listheader width="3%"/>
+											<listheader label="CódigoOEM" sort="none" width="20%" />
+											<listheader label="Descripción" sort="none" width="40%" />
+											<listheader label="Cantidad" sort="none" width="10%" />
+											<listheader label="Foto" sort="none" width="10%"/>
+											<listheader label="Estado" sort="none" />	
+										</listhead>
+							
+										<template name="model">
+											<listitem>
+												<listcell label="${forEachStatus.index+1}" sclass="boxed-grey" />
+												<listcell label="@bind(each.codigoOem)"/>
+												<listcell label="@bind(each.descripcion)"/>
+												<listcell label="@bind(each.cantidad)"/>
+												<listcell>
+													<button iconSclass="z-icon-picture-o blue bigger-160" 
+														tooltiptext="Ver Imagen"
+														onClick="@command('ampliarImagen', titulo='Repuesto', imagen=each.getFoto64())" 
+														if="${ not each.fotoVacia() }"/>
+												</listcell>
+												<listcell label="@bind(each.determinarEstatus())"/>
+											</listitem>
+										</template>
+									</listbox>
+								</panelchildren>
+							</panel>
+							
+						</groupbox>
+					</n:div>
+					<n:div class="modal-footer">
+<!-- 						<n:p class="text-right"><n:button class="btn btn-flat btn-alt" data-dismiss="modal" type="button">Close</n:button><n:button class="btn btn-flat btn-alt" data-dismiss="modal" type="button">OK</n:button></n:p> -->
+					</n:div>
+				</div>
+			</div>
+		</n:div>
+	</window>
+</zk>
