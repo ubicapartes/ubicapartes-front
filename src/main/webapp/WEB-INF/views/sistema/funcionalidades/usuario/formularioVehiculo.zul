@@ -165,11 +165,9 @@
 						</div>
 					</n:div>
 					<n:div class="modal-footer">
-						<hbox width="100%"
-							visible="@bind(!vm.makeAsReadOnly)" hflex="1">
-							<include
-								src="/WEB-INF/views/template/textFieldsMandatory.zul" hflex="1" />
-							<div align="right">
+						<div visible="@bind(!vm.makeAsReadOnly)" width="100%">
+							<include src="/WEB-INF/views/template/textFieldsMandatory.zul" hflex="1" />
+							<div class="btn-group btn-group-sm pull-right">
 								<button id="btnLimpiar" label="Limpiar"
 									type="submit" onClick="@command('limpiar')"
 									sclass="btn-sm btn-info" />
@@ -178,7 +176,7 @@
 									onClick="@command('registrar', btnEnviar=self, btnLimpiar=btnLimpiar)"
 									sclass="btn-sm btn-primary" />
 							</div>
-						</hbox>
+						</div>
 					</n:div>
 				</div>
 			</div>
