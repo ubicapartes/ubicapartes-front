@@ -26,7 +26,7 @@
 						instant="true"
 						onChange="@command('aplicarFiltro')" />
 				</auxheader>
-				<auxheader colspan="3">
+				<auxheader colspan="2">
 					<div sclass="z-icon-filter bigger-200" />
 					<label value="Estado: " />
 					<radiogroup id="radEstado" orient="horizontal"
@@ -40,6 +40,10 @@
 						bar="false" />
 					<button label="Limpiar"
 						onClick="@command('limpiarRadios')" sclass="btn-primary" />
+				</auxheader>
+				<auxheader>
+				<button label="Nuevo Usuario"
+						onClick="@command('nuevoUsuario')" sclass="btn-primary" />
 				</auxheader>
 	  
 			</auxhead>
