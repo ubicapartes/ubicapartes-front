@@ -35,6 +35,9 @@ import com.okiimport.app.model.Usuario;
 import com.okiimport.app.model.Vehiculo;
 import com.okiimport.app.model.enumerados.EEstatusGeneral;
 import com.okiimport.app.mvvm.AbstractRequerimientoViewModel;
+import com.okiimport.app.mvvm.constraint.CustomConstraint;
+import com.okiimport.app.mvvm.constraint.GeneralConstraint;
+import com.okiimport.app.mvvm.constraint.CustomConstraint.EConstraint;
 import com.okiimport.app.mvvm.model.ModeloCombo;
 import com.okiimport.app.mvvm.resource.BeanInjector;
 import com.okiimport.app.service.maestros.SMaestros;
@@ -231,6 +234,13 @@ public class RegistrarVehiculoViewModel extends AbstractRequerimientoViewModel
 		case "READ": default: return "";
 		}
 	}
+	
+	// METHODOS OVERRIDE
+	@Override
+	public CustomConstraint getValidatorCantPositiva() {
+		return new GeneralConstraint(EConstraint.NO_NEGATIVE);
+	}
+	
 
 	// METODOS PROPIOS DE LA CLASE
 
