@@ -14,7 +14,7 @@
 					<n:div class="modal-inner">
 
 						<borderlayout height="480px">
-							<west width="35%"
+							<west id="westCotizacion" size="35%" flex="true"
 								title="Informacion del Vehiculo" collapsible="true"
 								onOpen="@command('openRegionWest',west=self, east = eastCotizacion, baseW='65%')">
 								
@@ -100,7 +100,7 @@
 								</div>
 								
 							</west>
-							<east id="eastCotizacion" width="65%" title="Cotizacion">
+							<east id="eastCotizacion" size="65%" title="Cotizacion" flex="true">
 								<div>
 									<groupbox closable="false">
 										<grid>
@@ -202,7 +202,7 @@
 													</listheader>
 													<listheader width="15%">
 														<include src="/WEB-INF/views/template/fieldMandatory.zul" 
-															field="Cant. Cotizada"/>
+															field="Cant. Cotiz."/>
 													</listheader>
 													<listheader width="11%">
 														<include src="/WEB-INF/views/template/fieldMandatory.zul" 
@@ -222,12 +222,10 @@
 														<listcell
 															label="@bind(each.detalleRequerimiento.cantidad)" />
 														<listcell>
-															<vbox>
-																<textbox
-																	value="@bind(each.marcaRepuesto)" width="100%"
-																	constraint="@bind(vm.notEmptyValidator)"
-																	tooltiptext="Marca del Repuesto" />
-															</vbox>
+															<textbox width="100%"
+																value="@bind(each.marcaRepuesto)"
+																constraint="@bind(vm.notEmptyValidator)"
+																tooltiptext="Marca del Repuesto" />
 														</listcell>
 														<listcell>
 															<combobox readonly="true" width="100%"
@@ -239,33 +237,28 @@
 															</combobox>
 														</listcell>
 														<listcell>
-															<spinner
-																value="@bind(each.cantidad)" width="100%"
+															<spinner width="100%"
+																value="@bind(each.cantidad)"
 																tooltiptext="Cantidad Cotizada del Repuesto"
 																constraint="@bind(vm.getValidatorCantidad(each.detalleRequerimiento.cantidad))" />
 														</listcell>
 														<listcell>
-															<vbox>
-																<decimalbox
-																	format="@bind(vm.formatNumber)"
-																	locale="@bind(vm.localeNumber)"
-																	tooltiptext="Precio de venta por las cantidades cotizadas del Repuesto con el Iva Incluido"
-																	value="@bind(each.precioVenta)" width="100%"
-																	constraint="@bind(vm.validatorPrecio)"
-																	onChange="@command('calcularPrecio', column=1)" />
-															</vbox>
+															<decimalbox width="100%"
+																format="@bind(vm.formatNumber)"
+																locale="@bind(vm.localeNumber)"
+																tooltiptext="Precio de venta por las cantidades cotizadas del Repuesto con el Iva Incluido"
+																value="@bind(each.precioVenta)"
+																constraint="@bind(vm.validatorPrecio)"
+																onChange="@command('calcularPrecio', column=1)" />
 														</listcell>
-														<listcell
-															visible="@bind(vm.tipoFlete.valor)">
-															<vbox>
-																<decimalbox
-																	format="@bind(vm.formatNumber)"
-																	locale="@bind(vm.localeNumber)"
-																	tooltiptext="Precio del flete por las cantidades cotizadas del Repuesto"
-																	value="@bind(each.precioFlete)" width="100%"
-																	constraint="@bind(vm.constraintPrecioFlete)"
-																	onChange="@command('calcularPrecio', column=2)" />
-															</vbox>
+														<listcell visible="@bind(vm.tipoFlete.valor)">
+															<decimalbox width="100%"
+																format="@bind(vm.formatNumber)"
+																locale="@bind(vm.localeNumber)"
+																tooltiptext="Precio del flete por las cantidades cotizadas del Repuesto"
+																value="@bind(each.precioFlete)"
+																constraint="@bind(vm.constraintPrecioFlete)"
+																onChange="@command('calcularPrecio', column=2)" />
 														</listcell>
 													</listitem>
 												</template>

@@ -28,6 +28,7 @@ import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Paging;
 import org.zkoss.zul.Textbox;
+import org.zkoss.zul.West;
 import org.zkoss.zul.Window;
 
 import com.okiimport.app.model.Cotizacion;
@@ -59,6 +60,9 @@ public class CotizacionesProveedorNacionalViewModel extends AbstractRequerimient
 	
 	@Wire("#pagCotizaciones")
 	private Paging pagCotizaciones;
+	
+	@Wire("#westCotizacion")
+	private West westCotizacion;
 	
 	@Wire("#eastCotizacion")
 	private East eastCotizacion;
@@ -310,12 +314,17 @@ public class CotizacionesProveedorNacionalViewModel extends AbstractRequerimient
 	@NotifyChange({"listaDetalleCotizacion", "constraintPrecioFlete"})
 	public void seleccionarTipoFlete(){
 		if(!this.tipoFlete.getValor()){
+			this.westCotizacion.setOpen(true);
+			this.openRegionWest(this.westCotizacion, this.eastCotizacion, "65%", null);
 			this.constraintPrecioFlete = null;
 			for(DetalleCotizacion detalle : this.listaDetalleCotizacion)
 				detalle.setPrecioFlete(null);
 		}
-		else
+		else {
 			this.constraintPrecioFlete = super.getValidatorCantPositiva();
+			this.westCotizacion.setOpen(false);
+			this.openRegionWest(this.westCotizacion, this.eastCotizacion, null, "97%");
+		}
 	}
 	
 	/**
