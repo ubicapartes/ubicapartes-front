@@ -82,6 +82,7 @@ public class CotizarProveedorNacionalViewModel extends AbstractRequerimientoView
 		private List<ModeloCombo<Boolean>> tiposFlete;
 		private ModeloCombo<Boolean> tipoFlete;
 		private List<ModeloCombo<Boolean>> listaTipoRepuesto;
+		private Double totalCotizacion = 0.0;
 		
 		
 		
@@ -104,7 +105,7 @@ public class CotizarProveedorNacionalViewModel extends AbstractRequerimientoView
 			this.cotizacionSelecionada = cotizacion;
 			titulo = TITULO_BASE + requerimiento.getIdRequerimiento();
 			cambiarMonedas(0);
-			eastCotizacionNacional.setTitle(TITULO_EAST+"N° "+cotizacionSelecionada.getIdCotizacion());	
+			eastCotizacionNacional.setTitle(TITULO_EAST+"Nï¿½ "+cotizacionSelecionada.getIdCotizacion());	
 			
 			listaDetalleCotizacion = sTransaccion.consultarDetallesCotizacion((int) cotizacion.getIdCotizacion());
 			
@@ -239,6 +240,11 @@ public class CotizarProveedorNacionalViewModel extends AbstractRequerimientoView
 				cotizacionSelecionada.setFechaVencimiento(AbstractServiceImpl.sumarORestarFDia(new Date(), 1));
 				cotizacionSelecionada.setCondiciones(null);
 			}
+		}
+		
+		@NotifyChange("totalCotizacion")
+		public void calcularTotalCotizacion(){
+			
 		}
 		
 		/**
@@ -445,6 +451,15 @@ public class CotizarProveedorNacionalViewModel extends AbstractRequerimientoView
 				CustomConstraint constraintCampoObligatorio) {
 			this.constraintCampoObligatorio = constraintCampoObligatorio;
 		}
+		
+		public Double getTotalCotizacion() {
+			return totalCotizacion;
+		}
+
+		public void setTotalCotizacion(Double totalCotizacion) {
+			this.totalCotizacion = totalCotizacion;
+		}
+
 		
 		
 		

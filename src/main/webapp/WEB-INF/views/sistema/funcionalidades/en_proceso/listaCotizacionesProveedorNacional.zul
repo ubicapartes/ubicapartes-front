@@ -192,7 +192,7 @@
 													<listheader label="Codigo OEM" width="10%" sclass="label-not-mandatory"  />
 													<listheader label="Repuesto" sclass="label-not-mandatory"  />
 													<listheader label="Cant. Solict." width="10%" />
-													<listheader width="15%">
+													<listheader width="10%">
 														<include src="/WEB-INF/views/template/fieldMandatory.zul" 
 															field="Marca"/>
 													</listheader>
@@ -200,7 +200,7 @@
 														<include src="/WEB-INF/views/template/fieldMandatory.zul" 
 															field="Tipo Reps."/>
 													</listheader>
-													<listheader width="15%">
+													<listheader width="10%">
 														<include src="/WEB-INF/views/template/fieldMandatory.zul" 
 															field="Cant. Cotizada"/>
 													</listheader>
@@ -212,6 +212,8 @@
 														<include src="/WEB-INF/views/template/fieldMandatory.zul" 
 															field="Pcio. Flete (**)"/>
 													</listheader>
+													<listheader width="10%" label="Total"  sclass="label-not-mandatory" align="center" />
+													
 												</listhead>
 												<template name="model">
 													<listitem>
@@ -241,7 +243,7 @@
 														<listcell>
 															<spinner
 																value="@bind(each.cantidad)" width="100%"
-																tooltiptext="Cantidad Cotizada del Repuesto"
+																tooltiptext="Cantidad Cotizada del Repuesto" 
 																constraint="@bind(vm.getValidatorCantidad(each.detalleRequerimiento.cantidad))" />
 														</listcell>
 														<listcell>
@@ -252,7 +254,7 @@
 																	tooltiptext="Precio de venta por las cantidades cotizadas del Repuesto con el Iva Incluido"
 																	value="@bind(each.precioVenta)" width="100%"
 																	constraint="@bind(vm.validatorPrecio)"
-																	onChange="@command('calcularPrecio', column=1)" />
+																	onChange="@command('calcularPrecio')" />
 															</vbox>
 														</listcell>
 														<listcell
@@ -267,6 +269,17 @@
 																	onChange="@command('calcularPrecio', column=2)" />
 															</vbox>
 														</listcell>
+														<listcell>
+															<vbox>
+																<decimalbox
+																    onChange="@command('calcularCotizacion')"
+																	format="@bind(vm.formatNumber)"
+																	locale="@bind(vm.localeNumber)"
+																	tooltiptext="Total"
+																	value="@bind((each.cantidad*each.precioVenta)+each.precioFlete)"
+																	constraint="@bind(vm.validatorPrecio)" disabled="true"  width="100%"/>
+															</vbox>
+														</listcell>
 													</listitem>
 												</template>
 											</listbox>
@@ -275,6 +288,15 @@
 								</div>
 							</east>
 						</borderlayout>
+					</n:div>
+					<n:div class="modal-footer">
+						<hbox id="totalCotizacion" width="100%" visible="@bind(vm.visibleTotalCotizacion)">
+							<div align="right">
+								<label value="Total de la Cotizacion:" sclass="label-not-mandatory" />
+								<label sclass="z-letra-grande" 
+									value="@bind(vm.totalCotizacion)"/>		
+							</div>
+						</hbox>
 					</n:div>
 					<n:div class="modal-footer">
 						<hbox id="btnBotones" width="100%" visible="false">
