@@ -108,14 +108,14 @@
 												<label value="Nueva contraseña:" />
 												<vbox>
 													<textbox id="txtClaveNueva" maxlength="50" type="password"
-														value="@bind(fx.pasword)" />
+														 />
 
 												</vbox>
 
 												<label value="Repetir contraseña:" />
 												<vbox>
 													<textbox id="txtClaveNuevaConf" maxlength="50"
-														type="password" value="@bind(fx.paswordRepeat)" />
+														type="password" />
 													<label id="msgPassword" visible="false" sclass="requerido" />
 												</vbox>
 											</row>
