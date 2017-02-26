@@ -257,3 +257,7 @@ div.tab-nav {
 .z-window-modal .z-groupbox-content legend {
 	margin-bottom: 10px;
 }
+
+.z-west-collapsed {
+	min-width: 35px!important;
+}

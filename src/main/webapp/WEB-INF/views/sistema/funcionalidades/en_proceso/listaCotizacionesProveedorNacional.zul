@@ -14,7 +14,7 @@
 					<n:div class="modal-inner">
 
 						<borderlayout height="480px">
-							<west width="35%"
+							<west id="westCotizacion" size="35%" flex="true"
 								title="Informacion del Vehiculo" collapsible="true"
 								onOpen="@command('openRegionWest',west=self, east = eastCotizacion, baseW='65%')">
 								
@@ -100,7 +100,7 @@
 								</div>
 								
 							</west>
-							<east id="eastCotizacion" width="65%" title="Cotizacion">
+							<east id="eastCotizacion" size="65%" title="Cotizacion" flex="true">
 								<div>
 									<groupbox closable="false">
 										<grid>
