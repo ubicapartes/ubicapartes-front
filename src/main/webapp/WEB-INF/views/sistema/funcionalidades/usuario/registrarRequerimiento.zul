@@ -102,7 +102,7 @@
 									</tabpanel>
 
 									<!-- REPUESTOS -->
-									<tabpanel>
+									<tabpanel id="tabRepuestos" class="auto-size">
 										<div hflex="1" vflex="1">
 											<hbox width="100%"
 												sclass="header-button">

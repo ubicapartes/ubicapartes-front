@@ -193,8 +193,8 @@ public class ListaMisVehiculosViewModel extends AbstractRequerimientoViewModel i
 		public void nuevoVehiculo(){
 			Map<String, Object> parametros = new HashMap<String, Object>();
 
-			//parametros.put("recordMode", "NEW");
-			llamarFormulario("usuario/formularioVehiculo.zul", null);
+			parametros.put("recordMode", "NEW");
+			llamarFormulario("usuario/formularioVehiculo.zul", parametros);
 		}
 		
 		/**
@@ -215,7 +215,7 @@ public class ListaMisVehiculosViewModel extends AbstractRequerimientoViewModel i
 		 * */
 		@Command
 		public void eliminarVehiculo(@BindingParam("vehiculo") final Vehiculo vehiculo){
-			super.mostrarMensaje("Confirmacion", "�Desea Eliminar el Vehiculo?", Messagebox.EXCLAMATION, new Messagebox.Button[]{Messagebox.Button.YES,Messagebox.Button.NO}, 
+			super.mostrarMensaje("Confirmacion", "\u00bfDesea Eliminar el Vehiculo?", Messagebox.EXCLAMATION, new Messagebox.Button[]{Messagebox.Button.YES,Messagebox.Button.NO}, 
 					new EventListener(){
 
 						@Override
@@ -224,8 +224,7 @@ public class ListaMisVehiculosViewModel extends AbstractRequerimientoViewModel i
 							Messagebox.Button button = (Messagebox.Button) event.getData();
 							if (button == Messagebox.Button.YES) {
 								
-									vehiculo.setEstatus(EEstatusGeneral.INACTIVO);
-									sMaestros.registrarVehiculo(vehiculo);
+									sMaestros.eliminarVehiculo(vehiculo);
 									cambiarVehiculos(0, null, null);
 									notifyChange("vehiculos");
 								}
