@@ -240,6 +240,7 @@
 														</listcell>
 														<listcell>
 															<spinner width="100%"
+															    onChange="@command('calcularCotizacion')"
 																value="@bind(each.cantidad)"
 																tooltiptext="Cantidad Cotizada del Repuesto"
 																constraint="@bind(vm.getValidatorCantidad(each.detalleRequerimiento.cantidad))" />
@@ -265,7 +266,6 @@
 														<listcell>
 															<vbox>
 																<decimalbox
-																    onChange="@command('calcularCotizacion')"
 																	format="@bind(vm.formatNumber)"
 																	locale="@bind(vm.localeNumber)"
 																	tooltiptext="Total"
@@ -284,10 +284,11 @@
 					</n:div>
 					<n:div class="modal-footer">
 						<hbox id="totalCotizacion" width="100%" visible="@bind(vm.visibleTotalCotizacion)">
-							<div align="right">
+							<div align="right" hflex="1">
 								<label value="Total de la Cotizacion:" sclass="label-not-mandatory" />
 								<label sclass="z-letra-grande" 
-									value="@bind(vm.totalCotizacion)"/>		
+									value="@bind(vm.totalCotizacion) @converter(vm.formatedMoneda, format=vm.formatNumber, locale=vm.localeNumber, 
+										 							converterMoneda=vm.historicoMoneda, monedaBase=vm.monedaBase)"/>		
 							</div>
 						</hbox>
 					</n:div>

@@ -186,7 +186,6 @@ public class CotizacionesProveedorNacionalViewModel extends AbstractRequerimient
 		listaCotizacion = (List<Cotizacion>) parametros.get("cotizaciones");
 		pagCotizaciones.setActivePage(page);
 		pagCotizaciones.setTotalSize(total);
-		calcularCotizacion();
 	}
 	
 	/**COMMAND*/
@@ -232,7 +231,6 @@ public class CotizacionesProveedorNacionalViewModel extends AbstractRequerimient
 		limpiarCotizacionSeleccionada();
 		mostrarBotones();
 		configurarAtributosCotizacion(false);
-		calcularCotizacion();
 	}
 	
 	/**
@@ -290,12 +288,13 @@ public class CotizacionesProveedorNacionalViewModel extends AbstractRequerimient
 	 * Nota: Ninguna
 	 * */
 	@Command
-	@NotifyChange("cotizacionSelecionada")
+	@NotifyChange({"cotizacionSelecionada","totalCotizacion", "visibleTotalCotizacion"})
 	public void seleccionMoneda(){
 		bandbMoneda.close();
 		if(this.cotizacionSelecionada!=null){
 			HistoricoMoneda historico = this.sControlConfiguracion.consultarActualConversion(monedaSeleccionada);
 			this.cotizacionSelecionada.setHistoricoMoneda(historico);
+			calcularCotizacion();
 		}
 	}
 	
@@ -315,16 +314,17 @@ public class CotizacionesProveedorNacionalViewModel extends AbstractRequerimient
 	@Command
 	@NotifyChange({"totalCotizacion", "visibleTotalCotizacion"})
 	public void calcularCotizacion(){
-		System.out.println("El total de la cotizacion es: "+this.totalCotizacion);
 		this.totalCotizacion = 0.0;
-		this.visibleTotalCotizacion = false;
+		this.visibleTotalCotizacion = false;		
+
 		if(this.listaDetalleCotizacion!=null){
 			for(DetalleCotizacion detalle : this.listaDetalleCotizacion){
-				if(detalle.getCantidad()!=null && detalle.getCantidad().toString()!="" && detalle.getCantidad() > 0 && detalle.getCantidad()<= detalle.getDetalleRequerimiento().getCantidad() 
+				if(detalle.getCantidad()!=null && detalle.getCantidad().toString()!="" && detalle.getCantidad() > 0 && (detalle.getCantidad() <= detalle.getDetalleRequerimiento().getCantidad()) 
 						&& detalle.getPrecioVenta()!=null && detalle.getPrecioVenta().toString()!=""){
 					this.visibleTotalCotizacion = true;
-					this.totalCotizacion = (double) (detalle.getCantidad() * detalle.getPrecioVenta()); 
-					System.out.println("El total de la cotizacion es: "+this.totalCotizacion);
+					this.totalCotizacion = (double) (detalle.getCantidad() * detalle.getPrecioVenta() + detalle.getPrecioFlete()); 
+					setHistoricoMoneda(this.cotizacionSelecionada.getHistoricoMoneda());
+
 				}
 			}
 		}
@@ -376,7 +376,7 @@ public class CotizacionesProveedorNacionalViewModel extends AbstractRequerimient
 	 * Nota: Ninguna
 	 * */
 	@Command
-	@NotifyChange("cotizacionSelecionada")
+	@NotifyChange({"cotizacionSelecionada", "visibleTotalCotizacion", "totalCotizacion"})
 	public void calcularPrecio(@BindingParam("column") int column){
 		float total = 0;
 		for(DetalleCotizacion detalle : this.listaDetalleCotizacion){
@@ -392,6 +392,8 @@ public class CotizacionesProveedorNacionalViewModel extends AbstractRequerimient
 		case 2: this.cotizacionSelecionada.setTotalFlete(total); break;
 		default: break;
 		}
+		calcularCotizacion();
+		
 	}
 	
 	/**
