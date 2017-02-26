@@ -23,6 +23,7 @@ import org.zkoss.zul.Datebox;
 import org.zkoss.zul.Fileupload;
 import org.zkoss.zul.Intbox;
 import org.zkoss.zul.Label;
+import org.zkoss.zul.Tabpanel;
 import org.zkoss.zul.Window;
 
 import com.okiimport.app.model.Cliente;
@@ -47,6 +48,9 @@ public class RegistrarRequerimientoViewModel extends AbstractCargaMasivaViewMode
 	private MailCliente mailCliente;
 	
 	// GUI
+	@Wire("#tabRepuestos")
+	private Tabpanel tabRepuestos; 
+	
 	@Wire("#cedulaRif")
 	public Intbox cedulaRif;
 	
@@ -198,8 +202,10 @@ public class RegistrarRequerimientoViewModel extends AbstractCargaMasivaViewMode
 	@Command
 	@NotifyChange({ "requerimiento", "cliente" })
 	public void agregarRepuesto() {
-		if (requerimiento.getDetalleRequerimientos().size() < 10)
+		if (requerimiento.getDetalleRequerimientos().size() < 10){
 			requerimiento.addDetalleRequerimiento(new DetalleRequerimiento());
+			tabRepuestos.invalidate();
+		}
 	}
 
 	 /**
@@ -214,6 +220,7 @@ public class RegistrarRequerimientoViewModel extends AbstractCargaMasivaViewMode
 		if (eliminarDetalle != null) {
 			for (DetalleRequerimiento detalle : eliminarDetalle)
 				requerimiento.removeDetalleRequerimiento(detalle);
+			tabRepuestos.invalidate();
 		}
 
 	}

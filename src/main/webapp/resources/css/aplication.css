@@ -257,6 +257,12 @@ div.tab-nav {
 	margin-bottom: 10px;
 }
 
+.z-window-modal .z-tabpanel.auto-size {
+     height: auto!important;
+     overflow: hidden;
+     position: relative;
+}
+
 /**UPLOAD*/
 span.z-upload input {
     max-width: 0px;
@@ -272,4 +278,8 @@ span.z-upload input {
 
 .z-listbox-body .z-listcell {
 	vertical-align: top;
+}
+
+.z-tabpanel.auto-size {
+	height: auto!important;
 }
