@@ -13,8 +13,8 @@ public abstract class CustomConstraint implements Constraint, org.zkoss.zul.Cust
 	public enum EConstraint {
 		NO_POSITIVE(SimpleConstraint.NO_POSITIVE, "Solo n\u00fameros negativos"),
 		NO_NEGATIVE(SimpleConstraint.NO_NEGATIVE, "Solo n\u00fameros positivos"),
-		NO_ZERO(SimpleConstraint.NO_ZERO, "Valor 0 no permitido"),
-		NO_EMPTY(SimpleConstraint.NO_EMPTY, "Valor vacio no permitido"),
+		NO_ZERO(SimpleConstraint.NO_ZERO, "Valor invalido"),
+		NO_EMPTY(SimpleConstraint.NO_EMPTY, "Valor obligatorio"),
 		STRICT(SimpleConstraint.STRICT, null),
 		SERVER(SimpleConstraint.SERVER, null),
 		NO_FUTURE(SimpleConstraint.NO_FUTURE, "Valores futuros no permitido"),

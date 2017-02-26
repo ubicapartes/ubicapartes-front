@@ -261,3 +261,11 @@ div.tab-nav {
 .z-west-collapsed {
 	min-width: 35px!important;
 }
+
+.z-listbox-body {
+	height: auto!important;
+}
+
+.z-listbox-body .z-listcell {
+	vertical-align: top;
+}
