@@ -221,7 +221,6 @@ div.tab-nav {
 	float: right !important;
 }
 
-
 /**COUNTER*/
 .counter-div {
 	margin-top: 5%;
@@ -258,6 +257,17 @@ div.tab-nav {
 	margin-bottom: 10px;
 }
 
+.z-window-modal .z-tabpanel.auto-size {
+     height: auto!important;
+     overflow: hidden;
+     position: relative;
+}
+
+/**UPLOAD*/
+span.z-upload input {
+    max-width: 0px;
+}
+
 .z-west-collapsed {
 	min-width: 35px!important;
 }
@@ -268,4 +278,8 @@ div.tab-nav {
 
 .z-listbox-body .z-listcell {
 	vertical-align: top;
+}
+
+.z-tabpanel.auto-size {
+	height: auto!important;
 }
