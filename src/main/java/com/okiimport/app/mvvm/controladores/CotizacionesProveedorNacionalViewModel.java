@@ -85,6 +85,8 @@ public class CotizacionesProveedorNacionalViewModel extends AbstractRequerimient
 	@Wire("#cmbFlete")
 	private Combobox cmbFlete;
 	
+	
+	
 	//le quite el atributo static al titulo
 	//Atributos
 	public static final String TITULO_EMPTY_COTIZACIONES = "No existen mas solicituces de cotizacion";
@@ -102,6 +104,10 @@ public class CotizacionesProveedorNacionalViewModel extends AbstractRequerimient
 	private List<ModeloCombo<Boolean>> tiposFlete;
 	private ModeloCombo<Boolean> tipoFlete;
 	private List<ModeloCombo<Boolean>> listaTipoRepuesto;
+	private Double totalCotizacion= 0.0;
+	private HistoricoMoneda historicoMoneda;
+	private Boolean visibleTotalCotizacion = false;
+
 
 	/**
 	 * Descripcion: Llama a inicializar la clase 
@@ -130,6 +136,19 @@ public class CotizacionesProveedorNacionalViewModel extends AbstractRequerimient
 		listaTipoRepuesto = llenarListaTipoRepuestoProveedor();
 		tiposFlete = llenarTiposFleteNacional();
 		tipoFlete = tiposFlete.get(0);
+	}
+	
+	public HistoricoMoneda getHistoricoMoneda(){
+		if (this.historicoMoneda==null){
+			this.historicoMoneda = new HistoricoMoneda();
+			this.historicoMoneda.setMontoConversion((float) 0);
+			this.historicoMoneda.convert(0);
+		}
+		return historicoMoneda;
+	}
+	
+	public void setHistoricoMoneda(HistoricoMoneda historicoMoneda){
+		this.historicoMoneda= historicoMoneda;
 	}
 	
 	/**Interface: EventListener<SortEvent>*/
@@ -269,12 +288,13 @@ public class CotizacionesProveedorNacionalViewModel extends AbstractRequerimient
 	 * Nota: Ninguna
 	 * */
 	@Command
-	@NotifyChange("cotizacionSelecionada")
+	@NotifyChange({"cotizacionSelecionada","totalCotizacion", "visibleTotalCotizacion"})
 	public void seleccionMoneda(){
 		bandbMoneda.close();
 		if(this.cotizacionSelecionada!=null){
 			HistoricoMoneda historico = this.sControlConfiguracion.consultarActualConversion(monedaSeleccionada);
 			this.cotizacionSelecionada.setHistoricoMoneda(historico);
+			calcularCotizacion();
 		}
 	}
 	
@@ -290,6 +310,27 @@ public class CotizacionesProveedorNacionalViewModel extends AbstractRequerimient
 		int page=pagMonedas.getActivePage();
 		cambiarMonedas(page);
 	}
+	
+	@Command
+	@NotifyChange({"totalCotizacion", "visibleTotalCotizacion"})
+	public void calcularCotizacion(){
+		this.totalCotizacion = 0.0;
+		this.visibleTotalCotizacion = false;		
+
+		if(this.listaDetalleCotizacion!=null){
+			for(DetalleCotizacion detalle : this.listaDetalleCotizacion){
+				if(detalle.getCantidad()!=null && detalle.getCantidad().toString()!="" && detalle.getCantidad() > 0 && (detalle.getCantidad() <= detalle.getDetalleRequerimiento().getCantidad()) 
+						&& detalle.getPrecioVenta()!=null && detalle.getPrecioVenta().toString()!=""){
+					this.visibleTotalCotizacion = true;
+					this.totalCotizacion = (double) (detalle.getCantidad() * detalle.getPrecioVenta() + detalle.getPrecioFlete()); 
+					setHistoricoMoneda(this.cotizacionSelecionada.getHistoricoMoneda());
+
+				}
+			}
+		}
+	}
+	
+	
 	
 	/**
 	 * Descripcion: Permitira cargar nuevamente las listas al cerrar la pantalla
@@ -335,7 +376,7 @@ public class CotizacionesProveedorNacionalViewModel extends AbstractRequerimient
 	 * Nota: Ninguna
 	 * */
 	@Command
-	@NotifyChange("cotizacionSelecionada")
+	@NotifyChange({"cotizacionSelecionada", "visibleTotalCotizacion", "totalCotizacion"})
 	public void calcularPrecio(@BindingParam("column") int column){
 		float total = 0;
 		for(DetalleCotizacion detalle : this.listaDetalleCotizacion){
@@ -351,6 +392,8 @@ public class CotizacionesProveedorNacionalViewModel extends AbstractRequerimient
 		case 2: this.cotizacionSelecionada.setTotalFlete(total); break;
 		default: break;
 		}
+		calcularCotizacion();
+		
 	}
 	
 	/**
@@ -535,5 +578,19 @@ public class CotizacionesProveedorNacionalViewModel extends AbstractRequerimient
 		this.listaTipoRepuesto = listaTipoRepuesto;
 	}
 	
+	public Double getTotalCotizacion() {
+		return totalCotizacion;
+	}
+
+	public void setTotalCotizacion(Double totalCotizacion) {
+		this.totalCotizacion = totalCotizacion;
+	}
 	
+	public Boolean getVisibleTotalCotizacion() {
+		return visibleTotalCotizacion;
+	}
+
+	public void setVisibleTotalCotizacion(Boolean visibleTotalCotizacion) {
+		this.visibleTotalCotizacion = visibleTotalCotizacion;
+	}
 }
