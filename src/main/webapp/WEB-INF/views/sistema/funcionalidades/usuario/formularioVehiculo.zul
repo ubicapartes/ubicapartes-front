@@ -92,7 +92,8 @@
 												sclass="form-label" />
 										</hbox>
 										<bandbox id="bdMotor"
-											mold="rounded" autodrop="true" disabled="@bind(vm.makeAsReadOnly)"
+											mold="rounded" autodrop="true" readonly="true"
+											disabled="@bind(vm.makeAsReadOnly)"
 											placeholder="Seleccione..." hflex="1"
 											value="@bind(vm.vehiculo.motor.nombre)">
 											<bandpopup>
@@ -104,12 +105,16 @@
 													<listhead>
 														<listheader
 															value="nombre" label="Nombre" sort="auto(nombre)">
-															<textbox
-																instant="true" placeholder=""
-																value="@bind(vm.motor.nombre)"
-																onChange="@command('aplicarFiltroMotor')" width="100px" />
-															<div
-																sclass="z-icon-filter bigger-200" />
+															<hbox hflex="1">
+																<vbox hflex="1">
+																	<intbox
+																		instant="true" placeholder="" hflex="1"
+																		value="@bind(vm.motor.nombre)"
+																		constraint="@bind(vm.validatorCantPositiva)"
+																		onChange="@command('aplicarFiltroMotor')" width="100px" />
+																</vbox>
+																<div sclass="z-icon-filter bigger-200" />
+															</hbox>
 														</listheader>
 													</listhead>
 													<template
