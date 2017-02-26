@@ -76,6 +76,7 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 	private String repetirPassword;
 	private boolean isValidFoto;
 	private String originalUsername;
+	private String originalPassword;
 
 	@AfterCompose
 	public void doAfterCompose(@ContextParam(ContextType.VIEW) Component view,
@@ -84,24 +85,15 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 		
 		persona = usuario.getPersona();
 		this.usuario = usuario;
+		originalPassword = this.usuario.getPasword();
 		this.usuario.setPasword(null);
 		//username = this.usuario.getUsername();
 		originalUsername = this.usuario.getUsername();
+	
 		btnCambFoto2.addEventListener("onUpload", this);
 		this.lblMsgPassword.setVisible(false);
 		this.lblMsgUsername.setVisible(false);
 		
-		/*super.doAfterCompose(view);
-		btnCambFoto.addEventListener("onUpload", this);
-		usuario = super.getUsuario();
-		setOriginalUsername(usuario.getUsername());
-		if(usuario.getFoto64()!=null && !usuario.getFoto64().isEmpty()){
-			setValidFoto(true);
-			closeFoto.setVisible(true);
-		} else {
-			setValidFoto(false);
-			closeFoto.setVisible(false);
-		}*/
 		
 		if(this.usuario.getFoto64()!=null && !this.usuario.getFoto64().isEmpty()){
 			setValidFoto(true);
@@ -144,11 +136,10 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 		//org.zkoss.image.Image foto = this.imgFoto.getContent();
 		String nuevaClave = txtClaveNueva.getValue();
 		String nuevaClaveConf = txtClaveNuevaConf.getValue();
+		
 		org.zkoss.image.Image foto = this.imgFoto.getContent();
 		String severidad ="";
 		String msg="";
-		System.out.println("foto -> "+foto);
-		System.out.println("isValidFoto() -> "+isValidFoto());
 		if(foto!=null && isValidFoto())
 			usuario.setFoto(foto.getByteData());
 		
@@ -178,6 +169,7 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 							}
 						}else{
 							ejecutarGlobalCommand("cambiarUsuarios", null);
+							usuario.setPasword(originalPassword);
 							usuario=sControlUsuario.actualizarUsuario(usuario, false);
 							severidad = "Informacion";
 							msg ="Datos guardados satisfactoriamente";
@@ -199,27 +191,6 @@ public class EditarUsuarioViewModel extends AbstractRequerimientoViewModel imple
 			mostrarMensaje(severidad, msg, null, null, null, null);
 			txtClaveNueva.setValue("");
 			txtClaveNuevaConf.setValue("");
-			
-				/*if(usuario.getPasword().equals(usuario.getPaswordRepeat())){
-							if (checkIsFormValid()) {
-							
-									if(foto!=null)
-										usuario.setFoto(foto.getByteData());
-									usuario=sControlUsuario.actualizarUsuario(usuario, false);
-									if(usuario.getPersona() instanceof Analista)
-										mailUsuario.enviarUsuarioyPassword(usuario, mailService);
-									mostrarMensaje("Informacion", "El usuario se ha actualizado exitosamente", null, null, null, null);
-									winEditarUsuario.detach();
-									ejecutarGlobalCommand("cambiarUsuarios", null);
-									
-							}
-				}else{
-					this.lblMsgPassword.setValue("Las contrase�as no coinciden");
-					this.lblMsgPassword.setVisible(true);
-					mostrarMensaje("Informaci\u00F3n", "Las contrase�as no coinciden", Messagebox.EXCLAMATION, null, null, null);
-					
-				}*/
-		
 		
 	}
 	

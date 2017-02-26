@@ -255,16 +255,21 @@ div.tab-nav {
 
 .z-window-modal .z-groupbox-content legend {
 	margin-bottom: 10px;
-
-}
-
-.z-window-modal .z-tabpanel {
-/*     height: auto!important; */
-/*     overflow: hidden; */
-/*     position: relative; */
 }
 
 /**UPLOAD*/
 span.z-upload input {
     max-width: 0px;
+}
+
+.z-west-collapsed {
+	min-width: 35px!important;
+}
+
+.z-listbox-body {
+	height: auto!important;
+}
+
+.z-listbox-body .z-listcell {
+	vertical-align: top;
 }
