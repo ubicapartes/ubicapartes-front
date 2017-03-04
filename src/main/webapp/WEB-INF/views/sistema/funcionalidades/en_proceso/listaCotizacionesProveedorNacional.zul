@@ -184,7 +184,7 @@
 									<include src="/WEB-INF/views/template/modal/subTitleModal.zul" subtitulo="Repuestos a Cotizar"/>
 									<panel sclass="borderGrid">
 										<panelchildren>
-											<listbox id="gridDetalleCotizacion" sclass="scroll-grid" vflex="min"
+											<listbox id="gridDetalleCotizacion" height="165px" style="overflow-y:scroll"
 												mold="paging" pageSize="4" pagingPosition="top"
 												model="@load(vm.listaDetalleCotizacion)"
 												emptyMessage="No se ha Seleccionado Ninguna Cotizacion">

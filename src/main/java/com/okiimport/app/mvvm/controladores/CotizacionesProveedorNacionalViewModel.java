@@ -316,13 +316,12 @@ public class CotizacionesProveedorNacionalViewModel extends AbstractRequerimient
 	public void calcularCotizacion(){
 		this.totalCotizacion = 0.0;
 		this.visibleTotalCotizacion = false;		
-
-		if(this.listaDetalleCotizacion!=null){
+		if(this.listaDetalleCotizacion!=null && this.cotizacionSelecionada.getHistoricoMoneda()!=null){
 			for(DetalleCotizacion detalle : this.listaDetalleCotizacion){
 				if(detalle.getCantidad()!=null && detalle.getCantidad().toString()!="" && detalle.getCantidad() > 0 && (detalle.getCantidad() <= detalle.getDetalleRequerimiento().getCantidad()) 
 						&& detalle.getPrecioVenta()!=null && detalle.getPrecioVenta().toString()!=""){
 					this.visibleTotalCotizacion = true;
-					this.totalCotizacion = (double) (detalle.getCantidad() * detalle.getPrecioVenta() + detalle.getPrecioFlete()); 
+					this.totalCotizacion += (double) (detalle.getCantidad() * detalle.getPrecioVenta() + detalle.getPrecioFlete()); 
 					setHistoricoMoneda(this.cotizacionSelecionada.getHistoricoMoneda());
 
 				}
