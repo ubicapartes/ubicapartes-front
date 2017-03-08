@@ -321,7 +321,12 @@ public class CotizacionesProveedorNacionalViewModel extends AbstractRequerimient
 				if(detalle.getCantidad()!=null && detalle.getCantidad().toString()!="" && detalle.getCantidad() > 0 && (detalle.getCantidad() <= detalle.getDetalleRequerimiento().getCantidad()) 
 						&& detalle.getPrecioVenta()!=null && detalle.getPrecioVenta().toString()!=""){
 					this.visibleTotalCotizacion = true;
-					this.totalCotizacion += (double) (detalle.getCantidad() * detalle.getPrecioVenta() + detalle.getPrecioFlete()); 
+					this.totalCotizacion += (double) (detalle.getCantidad() * detalle.getPrecioVenta()); 
+					System.out.println("this.tipoFlete.getValor() -> "+this.tipoFlete.getValor());
+					if(detalle.getPrecioFlete()!=null && this.tipoFlete.getValor()){
+						this.totalCotizacion += (double)detalle.getPrecioFlete();
+					}
+						
 					setHistoricoMoneda(this.cotizacionSelecionada.getHistoricoMoneda());
 
 				}
@@ -351,7 +356,7 @@ public class CotizacionesProveedorNacionalViewModel extends AbstractRequerimient
 	 * Nota: Ninguna
 	 * */
 	@Command
-	@NotifyChange({"listaDetalleCotizacion", "constraintPrecioFlete"})
+	@NotifyChange({"listaDetalleCotizacion", "constraintPrecioFlete", "totalCotizacion", "visibleTotalCotizacion"})
 	public void seleccionarTipoFlete(){
 		if(!this.tipoFlete.getValor()){
 			this.westCotizacion.setOpen(true);
@@ -365,6 +370,7 @@ public class CotizacionesProveedorNacionalViewModel extends AbstractRequerimient
 			this.westCotizacion.setOpen(false);
 			this.openRegionWest(this.westCotizacion, this.eastCotizacion, null, "97%");
 		}
+		calcularCotizacion();
 	}
 	
 	/**
