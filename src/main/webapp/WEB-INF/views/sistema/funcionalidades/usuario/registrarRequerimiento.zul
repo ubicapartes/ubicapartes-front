@@ -138,15 +138,15 @@
 
 														<listhead>
 															<listheader
-																label="CodigoOEM" sort="auto" width="20%" />
+																label="CodigoOEM" sort="auto(codigoOem)" width="20%" />
 															<listheader
-																width="40%" sort="auto">
+																width="40%" sort="auto(codigoOem)">
 																<include
 																	src="/WEB-INF/views/template/fieldMandatory.zul"
 																	field="Descripción" />
 															</listheader>
 															<listheader
-																width="15%" sort="auto">
+																width="15%" sort="auto(cantidad)">
 																<include
 																	src="/WEB-INF/views/template/fieldMandatory.zul"
 																	field="Cantidad" />
